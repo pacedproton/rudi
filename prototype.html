@@ -1,0 +1,1632 @@
+<!DOCTYPE html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <title>SES Poldi - Gamified & Audio Fix</title>
+    <style>
+      body {
+        margin: 0;
+        overflow: hidden;
+        background: #2c3e50;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        touch-action: none;
+        font-family: "Arial Rounded MT Bold", "Arial", sans-serif;
+      }
+      canvas {
+        box-shadow: 0 0 40px rgba(0, 0, 0, 0.5);
+        border-radius: 12px;
+        background: #fff;
+        max-width: 100%;
+        max-height: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="gameCanvas"></canvas>
+
+    <script>
+      /**
+       * SES POLDI - FULL VERSION (BUGFIX: IndexSizeError in drawPoldi)
+       * - Fixed negative radius in mouth animation.
+       * - Replaced confusing rhymes (Fisch/Sessel) with clear ones (Krone/Zitrone).
+       * - Added option narration ("Is it A or B?").
+       * - Improved voice stability.
+       */
+      (() => {
+        const canvas = document.getElementById("gameCanvas");
+        const ctx = canvas.getContext("2d");
+
+        // --- CONFIGURATION ---
+        const C = {
+          colors: {
+            sky: "#87CEEB",
+            grass: "#7CFC00",
+            poldiSkin: "#76c043",
+            poldiDark: "#4a8e22",
+            red: "#e74c3c",
+            wood: "#8B4513",
+            gold: "#FFD700",
+            white: "#FFFFFF",
+            text: "#333333",
+            ui: "#f0f0f0",
+            btn: "#fff",
+            btnBorder: "#8B4513",
+            path: "#bdc3c7",
+          },
+          font: "Arial Rounded MT Bold, Arial, sans-serif",
+        };
+
+        // --- GAME ENGINE STATE ---
+        let game = {
+          state: "MENU",
+          width: 0,
+          height: 0,
+          scale: 1,
+          time: 0,
+
+          modules: [],
+          currentModuleIdx: 0,
+          currentTaskIdx: 0,
+          score: {},
+          totalKeys: 0,
+
+          feedback: { active: false, success: false },
+          inputLocked: false,
+          particles: [],
+          isSpeaking: false,
+
+          drawPath: [],
+          memoryInput: [],
+          owlY: -100,
+          flashVisible: true,
+        };
+
+        // --- ASSETS & TRANSLATIONS ---
+        const ASSETS = {
+          icons: {
+            mushroom: "🍄",
+            clover: "☘️",
+            ladybug: "🐞",
+            butterfly: "🦋",
+            flower: "🌸",
+            sun: "☀️",
+            moon: "🌙",
+            star: "⭐",
+            tree: "🌳",
+            mouse: "🐭",
+            fish: "🐠",
+            cat: "🐱",
+            dog: "🐶",
+            elephant: "🐘",
+            donkey: "🫏",
+            monkey: "🐒",
+            frog: "🐸",
+            snake: "🐍",
+            bear: "🐻",
+            lion: "🦁",
+            bird: "🐦",
+            house: "🏠",
+            table: "🪑",
+            car: "🚗",
+            train: "🚂",
+            bus: "🚌",
+            ball: "⚽",
+            box: "📦",
+            crown: "👑",
+            scissors: "✂️",
+            shoe: "👞",
+            book: "📖",
+            key: "🔑",
+            bed: "🛏️",
+            apple: "🍎",
+            banana: "🍌",
+            cake: "🎂",
+            icecream: "🍦",
+            cherry: "🍒",
+            lemon: "🍋",
+            mouth: "👄",
+            hand: "🖐️",
+            nose: "👃",
+          },
+          // German labels for speech synthesis
+          labels: {
+            mushroom: "Pilz",
+            clover: "Klee",
+            ladybug: "Marienkäfer",
+            butterfly: "Schmetterling",
+            flower: "Blume",
+            sun: "Sonne",
+            moon: "Mond",
+            star: "Stern",
+            tree: "Baum",
+            mouse: "Maus",
+            fish: "Fisch",
+            cat: "Katze",
+            dog: "Hund",
+            elephant: "Elefant",
+            donkey: "Esel",
+            monkey: "Affe",
+            frog: "Frosch",
+            snake: "Schlange",
+            bear: "Bär",
+            lion: "Löwe",
+            bird: "Vogel",
+            house: "Haus",
+            table: "Tisch",
+            car: "Auto",
+            train: "Zug",
+            bus: "Lokomotive", // Context specific
+            ball: "Ball",
+            box: "Kiste",
+            crown: "Krone",
+            scissors: "Schere",
+            shoe: "Schuh",
+            book: "Buch",
+            key: "Schlüssel",
+            bed: "Bett",
+            apple: "Apfel",
+            banana: "Banane",
+            cake: "Kuchen",
+            icecream: "Eis",
+            cherry: "Kirsche",
+            lemon: "Zitrone",
+            mouth: "Mund",
+            hand: "Hand",
+            nose: "Nase",
+          },
+        };
+
+        // --- AUDIO SYSTEM ---
+        const audioCtx = new (window.AudioContext ||
+          window.webkitAudioContext)();
+        let voices = [];
+
+        function loadVoices() {
+          voices = window.speechSynthesis.getVoices();
+        }
+        loadVoices();
+        window.speechSynthesis.onvoiceschanged = loadVoices;
+
+        function ensureAudioContext() {
+          if (audioCtx.state === "suspended") audioCtx.resume();
+        }
+
+        function playSound(type) {
+          ensureAudioContext();
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          const now = audioCtx.currentTime;
+
+          if (type === "success") {
+            osc.type = "sine";
+            osc.frequency.setValueAtTime(600, now);
+            osc.frequency.exponentialRampToValueAtTime(1200, now + 0.1);
+            gain.gain.setValueAtTime(0.2, now);
+            gain.gain.exponentialRampToValueAtTime(0.01, now + 0.6);
+            osc.start(now);
+            osc.stop(now + 0.6);
+          } else if (type === "wrong") {
+            osc.type = "triangle";
+            osc.frequency.setValueAtTime(200, now);
+            osc.frequency.linearRampToValueAtTime(100, now + 0.2);
+            gain.gain.setValueAtTime(0.2, now);
+            gain.gain.linearRampToValueAtTime(0.01, now + 0.3);
+            osc.start(now);
+            osc.stop(now + 0.3);
+          } else if (type === "pop") {
+            osc.type = "sine";
+            osc.frequency.setValueAtTime(800, now);
+            gain.gain.setValueAtTime(0.1, now);
+            gain.gain.exponentialRampToValueAtTime(0.01, now + 0.1);
+            osc.start(now);
+            osc.stop(now + 0.1);
+          }
+        }
+
+        function speak(text, callback) {
+          window.speechSynthesis.cancel();
+          game.isSpeaking = true;
+          if (voices.length === 0) voices = window.speechSynthesis.getVoices();
+
+          const u = new SpeechSynthesisUtterance(text);
+          u.lang = "de-DE";
+          u.rate = 0.85;
+          u.pitch = 1.1; // Slightly slower for kids
+
+          let selectedVoice =
+            voices.find((v) => v.lang === "de-DE") ||
+            voices.find((v) => v.lang.includes("de")) ||
+            voices[0];
+          if (selectedVoice) u.voice = selectedVoice;
+
+          const finish = () => {
+            game.isSpeaking = false;
+            if (callback) callback();
+          };
+          u.onend = finish;
+          u.onerror = finish;
+          window.speechSynthesis.speak(u);
+          // Safety
+          setTimeout(() => {
+            if (game.isSpeaking) finish();
+          }, text.length * 120 + 2000);
+        }
+
+        function speakNumbers(seq, cb) {
+          let i = 0;
+          function next() {
+            if (i >= seq.length) {
+              if (cb) cb();
+              return;
+            }
+            speak(seq[i].toString(), () => {
+              setTimeout(() => {
+                i++;
+                next();
+              }, 600);
+            });
+          }
+          next();
+        }
+
+        // --- PARTICLE SYSTEM ---
+        function spawnParticles(x, y) {
+          for (let i = 0; i < 20; i++) {
+            game.particles.push({
+              x: x,
+              y: y,
+              vx: (Math.random() - 0.5) * 15,
+              vy: (Math.random() - 0.5) * 15,
+              life: 1.0,
+              color: ["#FFD700", "#FF6347", "#7CFC00", "#00BFFF"][
+                Math.floor(Math.random() * 4)
+              ],
+            });
+          }
+        }
+        function updateParticles() {
+          game.particles.forEach((p) => {
+            p.x += p.vx;
+            p.y += p.vy;
+            p.vy += 0.5;
+            p.life -= 0.03;
+          });
+          game.particles = game.particles.filter((p) => p.life > 0);
+        }
+        function drawParticles() {
+          game.particles.forEach((p) => {
+            ctx.globalAlpha = p.life;
+            ctx.fillStyle = p.color;
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, 6 * game.scale, 0, Math.PI * 2);
+            ctx.fill();
+          });
+          ctx.globalAlpha = 1.0;
+        }
+
+        // --- CONTENT ---
+
+        function loadOfficialExam() {
+          game.modules = [
+            {
+              id: "phonology",
+              title: "Hören & Sprache",
+              intro: "Wir hören uns Wörter an. Mach deine Ohren auf!",
+              tasks: [
+                // Rhymes: Now using Krone-Zitrone instead of Fisch-Tisch(Chair)
+                {
+                  type: "rhyme",
+                  word: "Maus",
+                  target: "house",
+                  distractors: ["car"],
+                },
+                {
+                  type: "rhyme",
+                  word: "Krone",
+                  target: "lemon",
+                  distractors: ["shoe"],
+                }, // New Clear Rhyme
+                // Word Length
+                {
+                  type: "wordlength",
+                  words: [
+                    { icon: "train", txt: "Zug", len: 1 },
+                    { icon: "bus", txt: "Lokomotive", len: 4 },
+                  ],
+                  correctIndex: 1,
+                },
+                // Syllables
+                {
+                  type: "syllables",
+                  word: "Schmetterling",
+                  icon: "butterfly",
+                  count: 3,
+                },
+              ],
+            },
+            {
+              id: "math",
+              title: "Mengen & Zahlen",
+              intro: "Wo sind MEHR Münzen? Schnell, bevor die Eule kommt!",
+              tasks: [
+                { type: "quantity", l: 4, r: 2 },
+                { type: "dice", count: 3 },
+                { type: "dice", count: 5 },
+              ],
+            },
+            {
+              id: "counting",
+              title: "Zählen",
+              intro: "Wie viele Dinge siehst du? Tippe auf die Zahl.",
+              tasks: [
+                { type: "counting", count: 3, icon: "apple" },
+                { type: "counting", count: 5, icon: "ladybug" },
+                { type: "counting", count: 4, icon: "car" },
+              ],
+            },
+            {
+              id: "memory",
+              title: "Merkfähigkeit",
+              intro: "Ich sage dir Zahlen. Merke sie dir gut!",
+              tasks: [
+                { type: "memory", seq: [4, 2] },
+                { type: "memory", seq: [7, 1, 5] },
+              ],
+            },
+            {
+              id: "visual",
+              title: "Willi der Maulwurf",
+              intro: "Willi sieht schlecht. Wo ist das gleiche Bild?",
+              tasks: [
+                {
+                  type: "discrimination",
+                  target: "mushroom",
+                  options: ["clover", "mushroom", "flower", "sun"],
+                },
+                {
+                  type: "discrimination",
+                  target: "ladybug",
+                  options: ["butterfly", "ladybug", "star", "moon"],
+                },
+              ],
+            },
+            {
+              id: "motor",
+              title: "Zeichnen",
+              intro: "Hilf Poldi, auf dem Weg zu bleiben!",
+              tasks: [
+                { type: "trace_path", shape: "curve" },
+                { type: "trace", shape: "cross" },
+              ],
+            },
+          ];
+        }
+
+        const EXTRA_MODULES = {
+          logic: {
+            id: "logic",
+            title: "🧠 Logik & Reihen",
+            intro: "Mach das Muster fertig!",
+            tasks: [
+              {
+                type: "pattern",
+                seq: ["🔴", "🔵", "🔴", "🔵"],
+                options: ["🔵", "🔴"],
+                correct: "🔴",
+              },
+              {
+                type: "pattern",
+                seq: ["⭐", "🌙", "⭐"],
+                options: ["🌙", "⭐"],
+                correct: "🌙",
+              },
+            ],
+          },
+          math_plus: {
+            id: "math_plus",
+            title: "🔢 Mathe Profi",
+            intro: "Rechnen und Vergleichen.",
+            tasks: [
+              { type: "missing", total: 5, visible: 3, hidden: 2 },
+              { type: "quantity", l: 5, r: 5 },
+            ],
+          },
+          lang_plus: {
+            id: "lang_plus",
+            title: "🗣️ Sprach-Forscher",
+            intro: "Anlaute hören.",
+            tasks: [
+              {
+                type: "initial",
+                letter: "E",
+                target: "elephant",
+                distractor: "dog",
+              },
+              {
+                type: "initial",
+                letter: "A",
+                target: "apple",
+                distractor: "tree",
+              },
+              {
+                type: "initial",
+                letter: "M",
+                target: "mouse",
+                distractor: "fish",
+              },
+              {
+                type: "rhyme",
+                word: "Hund",
+                target: "mouth",
+                distractors: ["flower"],
+              },
+            ],
+          },
+          spatial: {
+            id: "spatial",
+            title: "📍 Raum & Position",
+            intro: "Wo ist der Ball?",
+            tasks: [
+              {
+                type: "preposition",
+                audio: "Wo ist der Ball UNTER der Kiste?",
+                targetPos: "under",
+              },
+              {
+                type: "preposition",
+                audio: "Wo ist der Ball NEBEN der Kiste?",
+                targetPos: "right",
+              },
+            ],
+          },
+        };
+
+        // --- CORE SYSTEM ---
+
+        function resize() {
+          game.width = window.innerWidth;
+          game.height = window.innerHeight;
+          canvas.width = game.width;
+          canvas.height = game.height;
+          game.scale = Math.min(game.width / 800, game.height / 600);
+        }
+        window.addEventListener("resize", resize);
+        resize();
+
+        canvas.addEventListener("pointerdown", (e) =>
+          handleInput(e.offsetX, e.offsetY, "start")
+        );
+        canvas.addEventListener("pointermove", (e) =>
+          handleInput(e.offsetX, e.offsetY, "move")
+        );
+        canvas.addEventListener("pointerup", (e) =>
+          handleInput(e.offsetX, e.offsetY, "end")
+        );
+
+        function handleInput(x, y, type) {
+          ensureAudioContext();
+          if (
+            game.state !== "RESULTS" &&
+            (game.inputLocked || game.feedback.active)
+          )
+            return;
+
+          if (type === "start") {
+            playSound("pop");
+            if (
+              game.state === "TASK" &&
+              checkBtn(
+                x,
+                y,
+                game.width - 50 * game.scale,
+                game.height - 50 * game.scale,
+                60 * game.scale
+              )
+            ) {
+              playInstruction(
+                game.modules[game.currentModuleIdx].tasks[game.currentTaskIdx]
+              );
+              return;
+            }
+          }
+
+          if (game.state === "MENU") {
+            if (type === "start") {
+              if (
+                checkBtn(
+                  x,
+                  y,
+                  game.width / 2,
+                  game.height / 2 + 100 * game.scale
+                )
+              ) {
+                loadOfficialExam();
+                startExamSequence();
+              }
+              if (
+                checkBtn(
+                  x,
+                  y,
+                  game.width / 2,
+                  game.height / 2 + 180 * game.scale
+                )
+              ) {
+                game.state = "EXTRAS_MENU";
+                speak("Wähle eine Übung aus.");
+              }
+              if (
+                checkBtn(
+                  x,
+                  y,
+                  game.width - 80 * game.scale,
+                  40 * game.scale,
+                  150 * game.scale
+                )
+              ) {
+                playSound("success");
+                speak("Der Ton funktioniert.");
+              }
+            }
+          } else if (game.state === "EXTRAS_MENU") {
+            if (type === "start") {
+              const btnW = 220 * game.scale;
+              const btnH = 60 * game.scale;
+              const cx = game.width / 2;
+              const cy = game.height / 2;
+              const hit = (bx, by) =>
+                isInside(x, y, bx - btnW / 2, by - btnH / 2, btnW, btnH);
+              if (hit(cx - btnW / 2 - 10, cy - btnH / 2 - 10))
+                startExtra("logic");
+              if (hit(cx + btnW / 2 + 10, cy - btnH / 2 - 10))
+                startExtra("math_plus");
+              if (hit(cx - btnW / 2 - 10, cy + btnH / 2 + 10))
+                startExtra("lang_plus");
+              if (hit(cx + btnW / 2 + 10, cy + btnH / 2 + 10))
+                startExtra("spatial");
+              if (checkBtn(x, y, cx, game.height - 50 * game.scale))
+                game.state = "MENU";
+            }
+          } else if (game.state === "RESULTS") {
+            if (
+              type === "start" &&
+              checkBtn(x, y, game.width / 2, game.height - 80 * game.scale)
+            ) {
+              game.state = "MENU";
+              game.inputLocked = false;
+              game.feedback.active = false;
+              speak("Hallo! Ich bin Poldi.");
+            }
+          } else if (game.state === "MODULE_INTRO") {
+            if (
+              type === "start" &&
+              checkBtn(x, y, game.width / 2, game.height / 2 + 100 * game.scale)
+            )
+              startTask();
+          } else if (game.state === "TASK") {
+            const task =
+              game.modules[game.currentModuleIdx].tasks[game.currentTaskIdx];
+            if (task.type === "discrimination")
+              handleVisualInput(x, y, task, type);
+            else if (task.type === "quantity")
+              handleMathInput(x, y, task, type);
+            else if (task.type === "pattern")
+              handlePatternInput(x, y, task, type);
+            else if (
+              task.type === "counting" ||
+              task.type === "dice" ||
+              task.type === "missing" ||
+              task.type === "syllables"
+            )
+              handleNumpadInput(x, y, task, type);
+            else if (task.type === "rhyme") handleRhymeInput(x, y, task, type);
+            else if (task.type === "wordlength")
+              handleWordLengthInput(x, y, task, type);
+            else if (task.type === "initial")
+              handleInitialInput(x, y, task, type);
+            else if (task.type === "memory")
+              handleMemoryInput(x, y, task, type);
+            else if (task.type === "trace" || task.type === "trace_path")
+              handleMotorInput(x, y, task, type);
+            else if (task.type === "preposition")
+              handlePrepInput(x, y, task, type);
+          }
+        }
+
+        // --- LOGIC ---
+
+        function startExamSequence() {
+          game.score = {};
+          game.totalKeys = 0;
+          game.modules.forEach((m) => (game.score[m.id] = 0));
+          game.currentModuleIdx = 0;
+          startModule();
+        }
+        function startExtra(key) {
+          game.modules = [EXTRA_MODULES[key]];
+          startExamSequence();
+        }
+        function startModule() {
+          game.currentTaskIdx = 0;
+          game.state = "MODULE_INTRO";
+          speak(game.modules[game.currentModuleIdx].intro);
+        }
+
+        function startTask() {
+          game.state = "TASK";
+          game.drawPath = [];
+          game.memoryInput = [];
+          game.inputLocked = false;
+          game.flashVisible = true;
+          game.particles = [];
+          const task =
+            game.modules[game.currentModuleIdx].tasks[game.currentTaskIdx];
+
+          // Play Instruction with Options
+          playInstruction(task);
+
+          if (task.type === "memory") {
+            game.inputLocked = true;
+            setTimeout(
+              () =>
+                speakNumbers(task.seq, () => {
+                  game.inputLocked = false;
+                }),
+              1500
+            );
+          } else if (task.type === "quantity") game.owlY = -150 * game.scale;
+          else if (task.type === "dice")
+            setTimeout(() => {
+              game.flashVisible = false;
+            }, 2000);
+        }
+
+        // --- NEW INSTRUCTION SYSTEM ---
+        function playInstruction(task) {
+          if (task.type === "rhyme") {
+            // "What rhymes with Mouse? House? Or Car?"
+            speak(
+              `Was reimt sich auf ${
+                ASSETS.labels[task.word] || task.word
+              }? ... ${ASSETS.labels[task.target]}? ... oder ${
+                ASSETS.labels[task.distractors[0]]
+              }?`
+            );
+          } else if (task.type === "wordlength") {
+            speak(
+              `Welches Wort ist länger? ... ${task.words[0].txt}? ... oder ${task.words[1].txt}?`
+            );
+          } else if (task.type === "initial") {
+            speak(
+              `Was beginnt mit ${task.letter}? ... ${
+                ASSETS.labels[task.target]
+              }? ... oder ${ASSETS.labels[task.distractor]}?`
+            );
+          } else if (task.type === "discrimination") {
+            speak(
+              `Wo ist das gleiche Bild wie ... ${ASSETS.labels[task.target]}?`
+            );
+          } else if (task.type === "pattern") speak("Was kommt als nächstes?");
+          else if (task.type === "dice") speak("Merk dir die Zahl!");
+          else if (task.type === "syllables")
+            speak(`Wie viele Silben hat ${task.word}?`);
+          else if (task.type === "preposition") speak(task.audio);
+          else if (task.type === "missing")
+            speak(
+              `Es waren ${task.total} Vögel. Jetzt sind nur ${task.visible} da. Wie viele fehlen?`
+            );
+          else if (task.type === "trace_path")
+            speak("Fahre mit dem Finger die Straße nach.");
+          else if (task.type === "quantity") speak("Wo sind mehr Münzen?");
+          else if (task.type === "counting") speak("Wie viele siehst du?");
+        }
+
+        function evaluateTask(success, cx, cy) {
+          if (game.feedback.active) return;
+          if (success) {
+            playSound("success");
+            spawnParticles(cx || game.width / 2, cy || game.height / 2);
+            game.score[game.modules[game.currentModuleIdx].id]++;
+            game.totalKeys++;
+          } else {
+            playSound("wrong");
+          }
+          game.inputLocked = true;
+          game.feedback.active = true;
+          game.feedback.success = success;
+          setTimeout(() => {
+            game.feedback.active = false;
+            nextTask();
+          }, 1500);
+        }
+
+        function nextTask() {
+          game.currentTaskIdx++;
+          if (
+            game.currentTaskIdx >=
+            game.modules[game.currentModuleIdx].tasks.length
+          ) {
+            game.currentModuleIdx++;
+            if (game.currentModuleIdx >= game.modules.length) {
+              game.state = "RESULTS";
+              game.inputLocked = false;
+              playSound("success");
+              speak("Das war spitze!");
+            } else startModule();
+          } else startTask();
+        }
+
+        // --- RENDER ---
+        function render() {
+          game.time++;
+          updateParticles();
+          ctx.clearRect(0, 0, game.width, game.height);
+          const h = game.height * 0.45;
+          const g = ctx.createLinearGradient(0, 0, 0, h);
+          g.addColorStop(0, C.colors.sky);
+          g.addColorStop(1, "#b5e8f7");
+          ctx.fillStyle = g;
+          ctx.fillRect(0, 0, game.width, h);
+          ctx.fillStyle = C.colors.grass;
+          ctx.fillRect(0, h, game.width, game.height - h);
+
+          if (game.state !== "MENU" && game.state !== "RESULTS") {
+            drawHUD();
+            if (game.state !== "EXTRAS_MENU")
+              drawPoldi(60 * game.scale, 60 * game.scale, 0.7);
+            if (game.state === "TASK")
+              drawMagicWand(
+                game.width - 50 * game.scale,
+                game.height - 50 * game.scale
+              );
+          }
+          if (game.state === "MENU") drawMenu();
+          else if (game.state === "EXTRAS_MENU") drawExtrasMenu();
+          else if (game.state === "MODULE_INTRO") drawModuleIntro();
+          else if (game.state === "TASK") drawTask();
+          else if (game.state === "RESULTS") drawResults();
+          drawParticles();
+          if (game.feedback.active) drawFeedbackOverlay();
+          requestAnimationFrame(render);
+        }
+
+        // Drawers
+        function drawHUD() {
+          const sx = game.width - 50 * game.scale;
+          ctx.fillStyle = "rgba(0,0,0,0.2)";
+          drawRoundedRect(
+            sx - 100 * game.scale,
+            10 * game.scale,
+            140 * game.scale,
+            50 * game.scale,
+            25
+          );
+          ctx.font = `${24 * game.scale}px Arial`;
+          ctx.fillStyle = "#fff";
+          ctx.textAlign = "right";
+          ctx.fillText(`x ${game.totalKeys}`, sx, 48 * game.scale);
+          ctx.fillText("🗝️", sx - 60 * game.scale, 48 * game.scale);
+        }
+        function drawMenu() {
+          drawPoldi(game.width / 2, game.height / 2 - 80 * game.scale, 1.5);
+          drawBubble(
+            game.width / 2,
+            game.height / 2 + 20 * game.scale,
+            "Hallo! Ich bin Poldi."
+          );
+          drawButton(
+            "Screening 2022",
+            game.width / 2,
+            game.height / 2 + 100 * game.scale,
+            "#27ae60"
+          );
+          drawButton(
+            "Extra Übungen",
+            game.width / 2,
+            game.height / 2 + 180 * game.scale,
+            "#2980b9"
+          );
+          drawButton(
+            "Ton testen 🔊",
+            game.width - 80 * game.scale,
+            40 * game.scale,
+            "#f39c12",
+            150,
+            40
+          );
+        }
+        function drawExtrasMenu() {
+          ctx.fillStyle = "rgba(255,255,255,0.95)";
+          ctx.fillRect(20, 20, game.width - 40, game.height - 40);
+          ctx.fillStyle = C.colors.text;
+          ctx.font = `bold ${30 * game.scale}px ${C.font}`;
+          ctx.textAlign = "center";
+          ctx.fillText("Wähle einen Bereich:", game.width / 2, 80 * game.scale);
+          const cx = game.width / 2;
+          const cy = game.height / 2;
+          const bw = 220 * game.scale;
+          const bh = 60 * game.scale;
+          drawButton(
+            "🧠 Logik",
+            cx - bw / 2 - 10,
+            cy - bh / 2 - 10,
+            "#8e44ad",
+            bw,
+            bh
+          );
+          drawButton(
+            "🔢 Mathe+",
+            cx + bw / 2 + 10,
+            cy - bh / 2 - 10,
+            "#e67e22",
+            bw,
+            bh
+          );
+          drawButton(
+            "🗣️ Sprache+",
+            cx - bw / 2 - 10,
+            cy + bh / 2 + 10,
+            "#16a085",
+            bw,
+            bh
+          );
+          drawButton(
+            "📍 Raum",
+            cx + bw / 2 + 10,
+            cy + bh / 2 + 10,
+            "#c0392b",
+            bw,
+            bh
+          );
+          drawButton("Zurück", cx, game.height - 50 * game.scale, "#7f8c8d");
+        }
+        function drawTask() {
+          const task =
+            game.modules[game.currentModuleIdx].tasks[game.currentTaskIdx];
+          ctx.fillStyle = C.colors.text;
+          ctx.font = `${24 * game.scale}px ${C.font}`;
+          ctx.textAlign = "center";
+          if (task.type === "discrimination") drawVisualTask(task);
+          else if (task.type === "quantity") drawMathTask(task);
+          else if (task.type === "pattern") drawPatternTask(task);
+          else if (
+            task.type === "counting" ||
+            task.type === "dice" ||
+            task.type === "missing" ||
+            task.type === "syllables"
+          )
+            handleNumpadDraw(task);
+          else if (task.type === "rhyme") drawRhymeTask(task);
+          else if (task.type === "wordlength") drawWordLengthTask(task);
+          else if (task.type === "initial") drawInitialTask(task);
+          else if (task.type === "memory") drawMemoryTask(task);
+          else if (task.type === "trace" || task.type === "trace_path")
+            drawMotorTask(task);
+          else if (task.type === "preposition") drawPrepTask(task);
+        }
+        function drawPoldi(cx, cy, s) {
+          s *= game.scale;
+          cy += Math.sin(game.time * 0.05) * 5 * s;
+          ctx.beginPath();
+          ctx.arc(cx, cy, 30 * s, 0, Math.PI * 2);
+          ctx.fillStyle = C.colors.poldiSkin;
+          ctx.fill();
+          ctx.strokeStyle = C.colors.poldiDark;
+          ctx.lineWidth = 2;
+          ctx.stroke();
+          ctx.beginPath();
+          ctx.moveTo(cx - 25 * s, cy - 15 * s);
+          ctx.lineTo(cx + 25 * s, cy - 15 * s);
+          ctx.lineTo(cx, cy - 60 * s);
+          ctx.fillStyle = C.colors.red;
+          ctx.fill();
+          if (Math.random() > 0.99) {
+            /* Blink */ ctx.beginPath();
+            ctx.moveTo(cx - 18 * s, cy - 5 * s);
+            ctx.lineTo(cx - 2 * s, cy - 5 * s);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(cx + 2 * s, cy - 5 * s);
+            ctx.lineTo(cx + 18 * s, cy - 5 * s);
+            ctx.stroke();
+          } else {
+            ctx.fillStyle = "white";
+            ctx.beginPath();
+            ctx.arc(cx - 10 * s, cy - 5 * s, 8 * s, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(cx + 10 * s, cy - 5 * s, 8 * s, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.fillStyle = "black";
+            ctx.beginPath();
+            ctx.arc(cx - 10 * s, cy - 5 * s, 3 * s, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(cx + 10 * s, cy - 5 * s, 3 * s, 0, Math.PI * 2);
+            ctx.fill();
+          }
+          ctx.beginPath();
+          if (game.isSpeaking) {
+            ctx.ellipse(
+              cx,
+              cy + 10 * s,
+              8 * s,
+              5 * s + Math.abs(Math.sin(game.time * 0.3)) * 10 * s,
+              0,
+              0,
+              Math.PI * 2
+            );
+            ctx.fillStyle = "#333";
+            ctx.fill();
+          } else {
+            ctx.arc(cx, cy + 10 * s, 10 * s, 0, Math.PI, false);
+            ctx.stroke();
+          }
+        }
+        function drawVisualTask(task) {
+          const sz = 100 * game.scale,
+            gap = 20 * game.scale,
+            sy = game.height * 0.55,
+            sx = (game.width - (sz * 2 + gap)) / 2;
+          ctx.fillStyle = "white";
+          drawRoundedRect(
+            game.width / 2 - 50 * game.scale,
+            80 * game.scale,
+            100 * game.scale,
+            100 * game.scale,
+            10
+          );
+          ctx.strokeStyle = C.colors.red;
+          ctx.lineWidth = 3;
+          ctx.stroke();
+          ctx.textAlign = "center";
+          ctx.textBaseline = "middle";
+          ctx.font = `${60 * game.scale}px Arial`;
+          ctx.fillText(
+            ASSETS.icons[task.target],
+            game.width / 2,
+            130 * game.scale
+          );
+          task.options.forEach((o, i) => {
+            const c = i % 2,
+              r = Math.floor(i / 2);
+            ctx.fillStyle = "white";
+            drawRoundedRect(
+              sx + c * (sz + gap),
+              sy + r * (sz + gap),
+              sz,
+              sz,
+              10
+            );
+            ctx.fillText(
+              ASSETS.icons[o],
+              sx + c * (sz + gap) + sz / 2,
+              sy + r * (sz + gap) + sz / 2
+            );
+          });
+        }
+        function drawRhymeTask(task) {
+          const w = 140 * game.scale,
+            h = 140 * game.scale,
+            py = game.height * 0.5;
+          ctx.font = `${30 * game.scale}px Arial`;
+          ctx.textBaseline = "top";
+          ctx.fillText(
+            `"${ASSETS.labels[task.word] || task.word}"`,
+            game.width / 2,
+            100 * game.scale
+          );
+          [{ i: task.target }, { i: task.distractors[0] }].forEach((o, i) => {
+            const x =
+              i === 0
+                ? game.width / 2 - w - 30 * game.scale
+                : game.width / 2 + 30 * game.scale;
+            ctx.fillStyle = "white";
+            drawRoundedRect(x, py, w, h, 15);
+            ctx.font = `${70 * game.scale}px Arial`;
+            ctx.textBaseline = "middle";
+            ctx.fillText(ASSETS.icons[o.i], x + w / 2, py + h / 2);
+          });
+        }
+        function drawInitialTask(task) {
+          ctx.font = `${80 * game.scale}px Arial`;
+          ctx.fillStyle = C.colors.red;
+          ctx.fillText(task.letter, game.width / 2, 120 * game.scale);
+          const y = game.height * 0.6,
+            sz = 120 * game.scale;
+          [{ i: task.target }, { i: task.distractor }].forEach((o, idx) => {
+            const x =
+              idx === 0
+                ? game.width / 2 - sz - 20 * game.scale
+                : game.width / 2 + 20 * game.scale;
+            ctx.fillStyle = "white";
+            drawRoundedRect(x, y, sz, sz, 15);
+            ctx.fillText(ASSETS.icons[o.i], x + sz / 2, y + sz / 2);
+          });
+        }
+        function drawWordLengthTask(task) {
+          /* Same */
+          const w = 160 * game.scale,
+            h = 160 * game.scale,
+            py = game.height * 0.5;
+          task.words.forEach((wObj, i) => {
+            const x =
+              i === 0
+                ? game.width / 2 - w - 30 * game.scale
+                : game.width / 2 + 30 * game.scale;
+            ctx.fillStyle = "white";
+            drawRoundedRect(x, py, w, h, 15);
+            ctx.font = `${70 * game.scale}px Arial`;
+            ctx.textBaseline = "middle";
+            ctx.fillText(
+              ASSETS.icons[wObj.icon],
+              x + w / 2,
+              py + h / 2 - 20 * game.scale
+            );
+            ctx.fillStyle = "#333";
+            ctx.font = `${20 * game.scale}px Arial`;
+            ctx.fillText(wObj.txt, x + w / 2, py + h - 25 * game.scale);
+          });
+        }
+        function handleNumpadDraw(task) {
+          if (task.type === "counting") {
+            drawRoundedRect(
+              game.width / 2 - 150 * game.scale,
+              80 * game.scale,
+              300 * game.scale,
+              150 * game.scale,
+              20
+            );
+            ctx.font = `${40 * game.scale}px Arial`;
+            for (let i = 0; i < task.count; i++)
+              ctx.fillText(
+                ASSETS.icons[task.icon],
+                game.width / 2 - 100 * game.scale + (i % 3) * 60 * game.scale,
+                120 * game.scale + Math.floor(i / 3) * 50 * game.scale
+              );
+          } else if (task.type === "syllables") {
+            ctx.font = `${100 * game.scale}px Arial`;
+            ctx.textBaseline = "middle";
+            ctx.fillText(
+              ASSETS.icons[task.icon],
+              game.width / 2,
+              150 * game.scale
+            );
+          } else if (task.type === "dice") {
+            const sz = 180 * game.scale,
+              cx = game.width / 2,
+              cy = 150 * game.scale;
+            if (game.flashVisible) {
+              ctx.fillStyle = "white";
+              drawRoundedRect(cx - sz / 2, cy - sz / 2, sz, sz, 20);
+              ctx.fillStyle = "black";
+              const d = (x, y) => {
+                ctx.beginPath();
+                ctx.arc(x, y, 15 * game.scale, 0, Math.PI * 2);
+                ctx.fill();
+              };
+              if (task.count % 2 === 1) d(cx, cy);
+              if (task.count > 1) {
+                d(cx - 50 * game.scale, cy - 50 * game.scale);
+                d(cx + 50 * game.scale, cy + 50 * game.scale);
+              }
+              if (task.count > 3) {
+                d(cx + 50 * game.scale, cy - 50 * game.scale);
+                d(cx - 50 * game.scale, cy + 50 * game.scale);
+              }
+            } else {
+              ctx.font = `${40 * game.scale}px Arial`;
+              ctx.fillText("?", cx, cy);
+            }
+          }
+          const size = 60 * game.scale,
+            gap = 15 * game.scale,
+            sx = (game.width - (3 * size + 2 * gap)) / 2,
+            sy = game.height * 0.55;
+          for (let i = 1; i <= 9; i++) {
+            const c = (i - 1) % 3,
+              r = Math.floor((i - 1) / 3),
+              bx = sx + c * (size + gap),
+              by = sy + r * (size + gap);
+            ctx.fillStyle = "white";
+            drawRoundedRect(bx, by, size, size, 10);
+            ctx.fillStyle = "#333";
+            ctx.font = `${30 * game.scale}px Arial`;
+            ctx.fillText(i, bx + size / 2, by + size / 2);
+          }
+        }
+        function drawPathTask() {
+          const cx = game.width / 2,
+            cy = game.height / 2;
+          ctx.strokeStyle = "#95a5a6";
+          ctx.lineWidth = 60 * game.scale;
+          ctx.lineCap = "round";
+          ctx.beginPath();
+          ctx.moveTo(cx - 200 * game.scale, cy + 100 * game.scale);
+          ctx.bezierCurveTo(
+            cx - 100 * game.scale,
+            cy + 100 * game.scale,
+            cx - 100 * game.scale,
+            cy - 100 * game.scale,
+            cx + 200 * game.scale,
+            cy - 100 * game.scale
+          );
+          ctx.stroke();
+          ctx.strokeStyle = "#fff";
+          ctx.lineWidth = 4 * game.scale;
+          ctx.setLineDash([15, 15]);
+          ctx.stroke();
+          ctx.setLineDash([]);
+          ctx.strokeStyle = C.colors.red;
+          ctx.lineWidth = 10 * game.scale;
+          if (game.drawPath.length > 0) {
+            game.drawPath.forEach((p) => {
+              ctx.beginPath();
+              p.forEach((pt, i) =>
+                i == 0 ? ctx.moveTo(pt.x, pt.y) : ctx.lineTo(pt.x, pt.y)
+              );
+              ctx.stroke();
+            });
+          }
+          drawButton("Fertig", game.width / 2, game.height - 50 * game.scale);
+        }
+        function drawMathTask(task) {
+          if (game.owlY < game.height * 0.4) game.owlY += 0.5 * game.scale;
+          ctx.font = `${60 * game.scale}px Arial`;
+          ctx.fillText("🦉", game.width / 2, game.owlY);
+          const w = 150 * game.scale,
+            h = 120 * game.scale,
+            py = game.height * 0.6,
+            gap = 40 * game.scale;
+          [task.l, task.r].forEach((c, i) => {
+            const x =
+              i === 0 ? game.width / 2 - w - gap / 2 : game.width / 2 + gap / 2;
+            ctx.fillStyle = C.colors.wood;
+            drawRoundedRect(x, py, w, h, 10);
+            ctx.fillStyle = C.colors.gold;
+            for (let j = 0; j < c; j++) {
+              ctx.beginPath();
+              ctx.arc(
+                x + 20 * game.scale + (j % 3) * 30 * game.scale,
+                py + 20 * game.scale + Math.floor(j / 3) * 30 * game.scale,
+                10 * game.scale,
+                0,
+                Math.PI * 2
+              );
+              ctx.fill();
+            }
+          });
+        }
+        function drawPatternTask(task) {
+          const y = game.height * 0.4,
+            size = 60 * game.scale,
+            gap = 10 * game.scale,
+            sx = (game.width - (task.seq.length + 1) * (size + gap)) / 2;
+          ctx.font = `${40 * game.scale}px Arial`;
+          task.seq.forEach((s, i) => {
+            const x = sx + i * (size + gap);
+            ctx.fillStyle = "white";
+            drawRoundedRect(x, y, size, size, 10);
+            ctx.fillText(s, x + size / 2, y + size / 2);
+          });
+          const qx = sx + task.seq.length * (size + gap);
+          ctx.fillStyle = "#ddd";
+          drawRoundedRect(qx, y, size, size, 10);
+          ctx.fillStyle = "#333";
+          ctx.fillText("?", qx + size / 2, y + size / 2);
+          const optY = game.height * 0.7;
+          task.options.forEach((o, i) => {
+            const x = game.width / 2 + (i === 0 ? -100 : 100) * game.scale;
+            ctx.fillStyle = "white";
+            drawRoundedRect(
+              x - 50 * game.scale,
+              optY,
+              100 * game.scale,
+              100 * game.scale,
+              10
+            );
+            ctx.fillText(o, x, optY + 50 * game.scale);
+          });
+        }
+        function drawPrepTask(task) {
+          const tx = game.width / 2,
+            ty = game.height * 0.5;
+          [
+            { id: "on", x: tx - 150 * game.scale, y: ty - 150 * game.scale },
+            { id: "under", x: tx + 50 * game.scale, y: ty - 150 * game.scale },
+            { id: "left", x: tx - 150 * game.scale, y: ty + 50 * game.scale },
+            { id: "right", x: tx + 50 * game.scale, y: ty + 50 * game.scale },
+          ].forEach((c) => {
+            ctx.fillStyle = "white";
+            drawRoundedRect(c.x, c.y, 120 * game.scale, 120 * game.scale, 10);
+            ctx.fillStyle = "brown";
+            ctx.fillRect(
+              c.x + 20 * game.scale,
+              c.y + 60 * game.scale,
+              80 * game.scale,
+              10 * game.scale
+            );
+            ctx.fillRect(
+              c.x + 30 * game.scale,
+              c.y + 70 * game.scale,
+              10 * game.scale,
+              30 * game.scale
+            );
+            ctx.fillRect(
+              c.x + 80 * game.scale,
+              c.y + 70 * game.scale,
+              10 * game.scale,
+              30 * game.scale
+            );
+            ctx.fillStyle = "red";
+            ctx.beginPath();
+            let bx = c.x + 60 * game.scale,
+              by = c.y + 60 * game.scale;
+            if (c.id === "on") by -= 15 * game.scale;
+            if (c.id === "under") by += 45 * game.scale;
+            if (c.id === "left") bx -= 30 * game.scale;
+            if (c.id === "right") bx += 30 * game.scale;
+            ctx.arc(bx, by, 10 * game.scale, 0, Math.PI * 2);
+            ctx.fill();
+          });
+        }
+        function drawMemoryTask(task) {
+          ctx.font = `${40 * game.scale}px Arial`;
+          ctx.fillStyle = C.colors.text;
+          ctx.fillText(
+            game.memoryInput.join(" - ") || "...",
+            game.width / 2,
+            120 * game.scale
+          );
+          handleNumpadDraw({ type: "numpad" });
+        }
+        function drawMotorTask(task) {
+          ctx.strokeStyle = "rgba(255,255,255,0.5)";
+          ctx.setLineDash([10]);
+          ctx.lineWidth = 8 * game.scale;
+          ctx.beginPath();
+          const cx = game.width / 2,
+            cy = game.height / 2 - 30 * game.scale,
+            r = 80 * game.scale;
+          if (task.shape === "circle") ctx.arc(cx, cy, r, 0, Math.PI * 2);
+          else if (task.shape === "cross") {
+            ctx.moveTo(cx, cy - r);
+            ctx.lineTo(cx, cy + r);
+            ctx.moveTo(cx - r, cy);
+            ctx.lineTo(cx + r, cy);
+          } else {
+            ctx.moveTo(cx, cy - r);
+            ctx.lineTo(cx + r, cy + r);
+            ctx.lineTo(cx - r, cy + r);
+            ctx.closePath();
+          }
+          ctx.stroke();
+          ctx.setLineDash([]);
+          ctx.strokeStyle = C.colors.wood;
+          ctx.lineWidth = 6 * game.scale;
+          ctx.lineCap = "round";
+          game.drawPath.forEach((p) => {
+            ctx.beginPath();
+            p.forEach((pt, i) =>
+              i == 0 ? ctx.moveTo(pt.x, pt.y) : ctx.lineTo(pt.x, pt.y)
+            );
+            ctx.stroke();
+          });
+          drawButton("Fertig", game.width / 2, game.height - 50 * game.scale);
+        }
+        function drawModuleIntro() {
+          drawPoldi(game.width / 2, game.height / 2 - 60 * game.scale, 1.2);
+          drawBubble(
+            game.width / 2,
+            game.height / 2 + 30 * game.scale,
+            game.modules[game.currentModuleIdx].title
+          );
+          drawButton(
+            "Weiter",
+            game.width / 2,
+            game.height / 2 + 120 * game.scale
+          );
+        }
+        function drawResults() {
+          ctx.fillStyle = "white";
+          drawRoundedRect(
+            game.width / 2 - 250 * game.scale,
+            50 * game.scale,
+            500 * game.scale,
+            400 * game.scale,
+            20
+          );
+          ctx.fillStyle = "#333";
+          ctx.textAlign = "left";
+          let y = 150 * game.scale;
+          game.modules.forEach((m) => {
+            ctx.fillText(
+              `${m.title}: ${game.score[m.id] || 0}/${m.tasks.length}`,
+              game.width / 2 - 200 * game.scale,
+              y
+            );
+            y += 40 * game.scale;
+          });
+          ctx.textAlign = "center";
+          drawButton("Neustart", game.width / 2, game.height - 80 * game.scale);
+        }
+        function drawFeedbackOverlay() {
+          ctx.fillStyle = "rgba(0,0,0,0.3)";
+          ctx.fillRect(0, 0, game.width, game.height);
+          ctx.font = `${100 * game.scale}px Arial`;
+          ctx.fillText(
+            game.feedback.success ? "⭐" : "🤔",
+            game.width / 2,
+            game.height / 2
+          );
+        }
+        function drawMagicWand(x, y) {
+          ctx.fillStyle = "white";
+          ctx.beginPath();
+          ctx.arc(x, y, 30 * game.scale, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.lineWidth = 3;
+          ctx.strokeStyle = C.colors.gold;
+          ctx.stroke();
+          ctx.font = `${30 * game.scale}px Arial`;
+          ctx.textAlign = "center";
+          ctx.textBaseline = "middle";
+          ctx.fillText("🪄", x, y);
+          if (game.time % 60 < 30) {
+            ctx.globalAlpha = 0.3;
+            ctx.beginPath();
+            ctx.arc(x, y, 35 * game.scale, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.globalAlpha = 1.0;
+          }
+        }
+
+        function drawBubble(x, y, text) {
+          ctx.font = `${18 * game.scale}px Arial`;
+          const w = ctx.measureText(text).width + 40;
+          ctx.fillStyle = "white";
+          drawRoundedRect(x - w / 2, y, w, 50 * game.scale, 15);
+          ctx.fillStyle = "#333";
+          ctx.fillText(text, x, y + 25 * game.scale);
+        }
+        function drawButton(text, cx, cy, color = "#fff", w = 200, h = 50) {
+          w *= game.scale;
+          h *= game.scale;
+          ctx.fillStyle = color;
+          ctx.shadowColor = "rgba(0,0,0,0.3)";
+          ctx.shadowBlur = 10;
+          drawRoundedRect(cx - w / 2, cy, w, h, 20);
+          ctx.shadowBlur = 0;
+          ctx.fillStyle = color === "#fff" ? C.colors.wood : "#fff";
+          ctx.textBaseline = "middle";
+          ctx.textAlign = "center";
+          ctx.font = `bold ${20 * game.scale}px Arial`;
+          ctx.fillText(text, cx, cy + h / 2);
+        }
+        function drawRoundedRect(x, y, w, h, r) {
+          ctx.beginPath();
+          ctx.roundRect(x, y, w, h, r);
+          ctx.fill();
+        }
+        function checkBtn(mx, my, cx, cy, sz = null) {
+          if (sz)
+            return (
+              mx > cx - sz / 2 &&
+              mx < cx + sz / 2 &&
+              my > cy - sz / 2 &&
+              my < cy + sz / 2
+            );
+          const w = 200 * game.scale;
+          return (
+            mx > cx - w / 2 &&
+            mx < cx + w / 2 &&
+            my > cy &&
+            my < cy + 50 * game.scale
+          );
+        }
+        function isInside(mx, my, x, y, w, h) {
+          return mx >= x && mx <= x + w && my >= y && my <= y + h;
+        }
+
+        // --- HANDLERS (Reused) ---
+        function handlePatternInput(x, y, t, k) {
+          if (k !== "start") return;
+          const oy = game.height * 0.7;
+          t.options.forEach((o, i) => {
+            const bx = game.width / 2 + (i === 0 ? -100 : 100) * game.scale;
+            if (
+              isInside(
+                x,
+                y,
+                bx - 50 * game.scale,
+                oy,
+                100 * game.scale,
+                100 * game.scale
+              )
+            )
+              evaluateTask(o === t.correct, bx, oy + 50 * game.scale);
+          });
+        }
+        function handleNumpadInput(x, y, t, k) {
+          if (k !== "start") return;
+          const sz = 60 * game.scale,
+            gp = 15 * game.scale,
+            sx = (game.width - (3 * sz + 2 * gp)) / 2,
+            sy = game.height * 0.55;
+          for (let i = 1; i <= 9; i++) {
+            const c = (i - 1) % 3,
+              r = Math.floor((i - 1) / 3),
+              bx = sx + c * (sz + gp),
+              by = sy + r * (sz + gp);
+            if (isInside(x, y, bx, by, sz, sz)) {
+              if (t.type === "missing")
+                evaluateTask(i === t.hidden, bx + sz / 2, by + sz / 2);
+              else evaluateTask(i === t.count, bx + sz / 2, by + sz / 2);
+            }
+          }
+        }
+        function handleInitialInput(x, y, t, k) {
+          if (k !== "start") return;
+          const yp = game.height * 0.6,
+            sz = 120 * game.scale;
+          if (isInside(x, y, game.width / 2 - sz - 20 * game.scale, yp, sz, sz))
+            evaluateTask(true, game.width / 2 - sz / 2, yp + sz / 2);
+          if (isInside(x, y, game.width / 2 + 20 * game.scale, yp, sz, sz))
+            evaluateTask(false);
+        }
+        function handlePrepInput(x, y, t, k) {
+          if (k !== "start") return;
+          const tx = game.width / 2,
+            ty = game.height * 0.5;
+          if (
+            t.targetPos === "under" &&
+            isInside(
+              x,
+              y,
+              tx + 50 * game.scale,
+              ty - 150 * game.scale,
+              120 * game.scale,
+              120 * game.scale
+            )
+          )
+            evaluateTask(true, tx + 110 * game.scale, ty - 90 * game.scale);
+          else if (
+            t.targetPos === "on" &&
+            isInside(
+              x,
+              y,
+              tx - 150 * game.scale,
+              ty - 150 * game.scale,
+              120 * game.scale,
+              120 * game.scale
+            )
+          )
+            evaluateTask(true, tx - 90 * game.scale, ty - 90 * game.scale);
+          else if (
+            t.targetPos === "right" &&
+            isInside(
+              x,
+              y,
+              tx + 50 * game.scale,
+              ty + 50 * game.scale,
+              120 * game.scale,
+              120 * game.scale
+            )
+          )
+            evaluateTask(true, tx + 110 * game.scale, ty + 110 * game.scale);
+          else evaluateTask(false);
+        }
+        function handleVisualInput(x, y, t, k) {
+          if (k !== "start") return;
+          const sz = 100 * game.scale,
+            gp = 20 * game.scale,
+            sy = game.height * 0.55,
+            sx = (game.width - (sz * 2 + gp)) / 2;
+          t.options.forEach((o, i) => {
+            const c = i % 2,
+              r = Math.floor(i / 2),
+              bx = sx + c * (sz + gp),
+              by = sy + r * (sz + gp);
+            if (isInside(x, y, bx, by, sz, sz))
+              evaluateTask(o === t.target, bx + sz / 2, by + sz / 2);
+          });
+        }
+        function handleMathInput(x, y, t, k) {
+          if (k !== "start") return;
+          const w = 150 * game.scale,
+            h = 120 * game.scale,
+            py = game.height * 0.6,
+            gp = 40 * game.scale;
+          if (isInside(x, y, game.width / 2 - w - gp / 2, py, w, h))
+            evaluateTask(
+              t.l >= t.r,
+              game.width / 2 - w / 2 - gp / 2,
+              py + h / 2
+            );
+          if (isInside(x, y, game.width / 2 + gp / 2, py, w, h))
+            evaluateTask(
+              t.r >= t.l,
+              game.width / 2 + w / 2 + gp / 2,
+              py + h / 2
+            );
+        }
+        function handleRhymeInput(x, y, t, k) {
+          if (k !== "start") return;
+          const w = 140 * game.scale,
+            h = 140 * game.scale,
+            py = game.height * 0.5;
+          if (isInside(x, y, game.width / 2 - w - 30 * game.scale, py, w, h))
+            evaluateTask(
+              true,
+              game.width / 2 - w / 2 - 30 * game.scale,
+              py + h / 2
+            );
+          if (isInside(x, y, game.width / 2 + 30 * game.scale, py, w, h))
+            evaluateTask(false);
+        }
+        function handleWordLengthInput(x, y, t, k) {
+          if (k !== "start") return;
+          const w = 160 * game.scale,
+            h = 160 * game.scale,
+            py = game.height * 0.5;
+          if (isInside(x, y, game.width / 2 - w - 30 * game.scale, py, w, h))
+            evaluateTask(
+              t.correctIndex === 0,
+              game.width / 2 - w / 2 - 30 * game.scale,
+              py + h / 2
+            );
+          if (isInside(x, y, game.width / 2 + 30 * game.scale, py, w, h))
+            evaluateTask(
+              t.correctIndex === 1,
+              game.width / 2 + w / 2 + 30 * game.scale,
+              py + h / 2
+            );
+        }
+        function handleMemoryInput(x, y, t, k) {
+          if (k !== "start") return;
+          const sz = 60 * game.scale,
+            gp = 15 * game.scale,
+            sx = (game.width - (3 * sz + 2 * gp)) / 2,
+            sy = game.height * 0.55;
+          for (let i = 1; i <= 9; i++) {
+            const c = (i - 1) % 3,
+              r = Math.floor((i - 1) / 3),
+              bx = sx + c * (sz + gp),
+              by = sy + r * (sz + gp);
+            if (isInside(x, y, bx, by, sz, sz)) {
+              game.memoryInput.push(i);
+              if (game.memoryInput.length === t.seq.length)
+                evaluateTask(
+                  JSON.stringify(game.memoryInput) === JSON.stringify(t.seq),
+                  bx + sz / 2,
+                  by + sz / 2
+                );
+            }
+          }
+        }
+        function handleMotorInput(x, y, t, k) {
+          if (
+            k === "start" &&
+            checkBtn(x, y, game.width / 2, game.height - 50 * game.scale)
+          ) {
+            evaluateTask(true, game.width / 2, game.height - 50 * game.scale);
+            return;
+          }
+          if (k === "start") game.drawPath.push([{ x, y }]);
+          else if (k === "move" && game.drawPath.length > 0)
+            game.drawPath[game.drawPath.length - 1].push({ x, y });
+        }
+
+        render();
+      })();
+    </script>
+  </body>
+</html>
