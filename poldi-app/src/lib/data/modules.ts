@@ -1273,6 +1273,45 @@ export const flinkiModules: Module[] = [
         maxDuration: 60
       }
     ]
+  },
+
+  // ===== MODULE 11: SILBEN KLATSCHEN (Syllable Counting) - 24 EXERCISES =====
+  {
+    id: 'syllables',
+    title: 'Silben klatschen',
+    intro: 'Klatsche die Silben! Wie viele Silben hat das Wort?',
+    category: 'schriftsprachlich',
+    tasks: [
+      // 2-syllable words (easy)
+      { type: 'syllables', word: 'Sonne', icon: 'sun', count: 2 },
+      { type: 'syllables', word: 'Löwe', icon: 'lion', count: 2 },
+      { type: 'syllables', word: 'Apfel', icon: 'apple', count: 2 },
+      { type: 'syllables', word: 'Auto', icon: 'car', count: 2 },
+      { type: 'syllables', word: 'Blume', icon: 'flower', count: 2 },
+      { type: 'syllables', word: 'Katze', icon: 'cat', count: 2 },
+      { type: 'syllables', word: 'Hase', icon: 'rabbit', count: 2 },
+      { type: 'syllables', word: 'Feder', icon: 'feather', count: 2 },
+
+      // 3-syllable words (medium)
+      { type: 'syllables', word: 'Banane', icon: 'banana', count: 3 },
+      { type: 'syllables', word: 'Rakete', icon: 'rocket', count: 3 },
+      { type: 'syllables', word: 'Elefant', icon: 'elephant', count: 3 },
+      { type: 'syllables', word: 'Ananas', icon: 'pineapple', count: 3 },
+      { type: 'syllables', word: 'Tomate', icon: 'tomato', count: 3 },
+      { type: 'syllables', word: 'Papagei', icon: 'parrot', count: 3 },
+      { type: 'syllables', word: 'Kartoffel', icon: 'potato', count: 3 },
+      { type: 'syllables', word: 'Geburtstag', icon: 'cake', count: 3 },
+
+      // 4-5 syllable words (challenging)
+      { type: 'syllables', word: 'Schokolade', icon: 'chocolate', count: 4 },
+      { type: 'syllables', word: 'Marienkäfer', icon: 'ladybug', count: 4 },
+      { type: 'syllables', word: 'Schmetterling', icon: 'butterfly', count: 3 },
+      { type: 'syllables', word: 'Kindergarten', icon: 'school', count: 4 },
+      { type: 'syllables', word: 'Weihnachtsbaum', icon: 'tree', count: 4 },
+      { type: 'syllables', word: 'Regenbogen', icon: 'rainbow', count: 4 },
+      { type: 'syllables', word: 'Feuerwehr', icon: 'fire', count: 3 },
+      { type: 'syllables', word: 'Wasserhahn', icon: 'milk', count: 3 }
+    ]
   }
 ];
 

@@ -55,7 +55,7 @@
         <h2>✅ Umfassende Übungsbibliothek</h2>
         <ul>
           <li>✅ <strong>18 Übungstypen</strong> - Alle fertig</li>
-          <li>✅ <strong>10 Module</strong> - 336 Übungen gesamt</li>
+          <li>✅ <strong>11 Module</strong> - 360 Übungen gesamt</li>
           <li>✅ <strong>SES Inhalte</strong> - Basierend auf offiziellen Materialien</li>
           <li>✅ <strong>Sprache & Töne</strong> - Deutsche TTS aktiv</li>
         </ul>
@@ -71,7 +71,8 @@
           <li><strong>Nachzeichnen</strong> - 36 Aufgaben (Grafomotorik)</li>
           <li><strong>Wo ist was?</strong> - 36 Aufgaben (Räumliche Orientierung)</li>
           <li><strong>Zeichnen & Schreiben</strong> - 36 Aufgaben</li>
-          <li><strong>Geschichten erzählen</strong> - 12 Aufgaben (Neu!)</li>
+          <li><strong>Geschichten erzählen</strong> - 12 Aufgaben (🎤)</li>
+          <li><strong>Silben klatschen</strong> - 24 Aufgaben (Neu! 👏)</li>
         </ol>
       </div>
 

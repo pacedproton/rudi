@@ -213,11 +213,11 @@ export class StorytellingExercise extends ExercisePlugin {
 
     if (!this.score) return;
 
-    // Draw score card
-    const cardWidth = 320 * scale;
-    const cardHeight = 200 * scale;
+    // Draw score card - larger and positioned in center
+    const cardWidth = 340 * scale;
+    const cardHeight = 280 * scale;
     const cardX = (width - cardWidth) / 2;
-    const cardY = height - 280 * scale;
+    const cardY = (height - cardHeight) / 2;
 
     ctx.ctx.fillStyle = 'white';
     ctx.ctx.shadowColor = 'rgba(0,0,0,0.2)';
@@ -227,6 +227,12 @@ export class StorytellingExercise extends ExercisePlugin {
     ctx.ctx.fill();
     ctx.ctx.shadowBlur = 0;
 
+    // Draw title
+    ctx.ctx.font = `bold ${18 * scale}px Arial`;
+    ctx.ctx.fillStyle = '#667eea';
+    ctx.ctx.textAlign = 'center';
+    ctx.ctx.fillText('Auswertung', width / 2, cardY + 30 * scale);
+
     // Draw scores
     const categories = [
       { label: 'Zusammenhang', value: this.score.coherence },
@@ -235,7 +241,7 @@ export class StorytellingExercise extends ExercisePlugin {
       { label: 'Kreativität', value: this.score.creativity },
     ];
 
-    let y = cardY + 30 * scale;
+    let y = cardY + 60 * scale;
     ctx.ctx.font = `${14 * scale}px Arial`;
     categories.forEach(cat => {
       ctx.ctx.fillStyle = '#666';
@@ -246,19 +252,46 @@ export class StorytellingExercise extends ExercisePlugin {
       ctx.ctx.textAlign = 'right';
       const stars = '⭐'.repeat(cat.value) + '☆'.repeat(3 - cat.value);
       ctx.ctx.fillText(stars, cardX + cardWidth - 20 * scale, y);
-      y += 25 * scale;
+      y += 28 * scale;
     });
 
     // Draw total
     ctx.ctx.font = `bold ${20 * scale}px Arial`;
     ctx.ctx.fillStyle = '#667eea';
     ctx.ctx.textAlign = 'center';
-    ctx.ctx.fillText(`Gesamt: ${this.score.total}/12`, width / 2, y + 10 * scale);
+    ctx.ctx.fillText(`Gesamt: ${this.score.total}/12`, width / 2, y + 15 * scale);
 
-    // Draw feedback
-    ctx.ctx.font = `${16 * scale}px Arial`;
+    // Draw feedback - wrap text if needed
+    ctx.ctx.font = `${14 * scale}px Arial`;
     ctx.ctx.fillStyle = '#333';
-    ctx.ctx.fillText(this.score.feedback, width / 2, y + 40 * scale);
+    const feedback = this.score.feedback || '';
+    const maxWidth = cardWidth - 40 * scale;
+
+    // Simple text wrapping
+    if (ctx.ctx.measureText(feedback).width > maxWidth) {
+      const words = feedback.split(' ');
+      let line = '';
+      let lineY = y + 50 * scale;
+
+      for (const word of words) {
+        const testLine = line + word + ' ';
+        if (ctx.ctx.measureText(testLine).width > maxWidth) {
+          ctx.ctx.fillText(line.trim(), width / 2, lineY);
+          line = word + ' ';
+          lineY += 18 * scale;
+        } else {
+          line = testLine;
+        }
+      }
+      ctx.ctx.fillText(line.trim(), width / 2, lineY);
+    } else {
+      ctx.ctx.fillText(feedback, width / 2, y + 50 * scale);
+    }
+
+    // Draw "tap to continue" hint
+    ctx.ctx.font = `${12 * scale}px Arial`;
+    ctx.ctx.fillStyle = '#999';
+    ctx.ctx.fillText('Tippen zum Fortfahren', width / 2, cardY + cardHeight - 15 * scale);
   }
 
   handleInput(event: InputEvent): ExerciseResult | null {
@@ -301,14 +334,25 @@ export class StorytellingExercise extends ExercisePlugin {
 
   private async startRecording(): Promise<void> {
     try {
+      // Check if mediaDevices API is available (requires HTTPS on iOS Safari)
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        console.error('MediaDevices API not available. HTTPS required on iOS.');
+        speechEngine.speak('Aufnahme benötigt eine sichere Verbindung. Bitte HTTPS verwenden.');
+        return;
+      }
+
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
 
-      // Safari doesn't support webm - try mp4/m4a fallback
-      const mimeType = MediaRecorder.isTypeSupported('audio/webm')
-        ? 'audio/webm'
-        : MediaRecorder.isTypeSupported('audio/mp4')
-          ? 'audio/mp4'
-          : '';
+      // Safari doesn't support webm - check available formats
+      let mimeType = '';
+      const formats = ['audio/webm', 'audio/mp4', 'audio/wav', 'audio/ogg'];
+      for (const format of formats) {
+        if (MediaRecorder.isTypeSupported(format)) {
+          mimeType = format;
+          break;
+        }
+      }
+      console.log('Using audio format:', mimeType || 'default');
 
       this.mediaRecorder = mimeType
         ? new MediaRecorder(stream, { mimeType })
@@ -340,11 +384,24 @@ export class StorytellingExercise extends ExercisePlugin {
       }, config.maxDuration * 1000);
 
     } catch (error) {
-      console.error('Failed to start recording:', error);
-      // More helpful error for Safari/iOS users
-      const errorMessage = (error as Error).name === 'NotAllowedError'
-        ? 'Mikrofon-Zugriff verweigert. Bitte in Safari-Einstellungen erlauben.'
-        : 'Mikrofon nicht verfügbar. Bitte Zugriff erlauben und erneut versuchen.';
+      console.error('Failed to start recording:', error, (error as Error).name);
+
+      // Detailed error messages for different failure modes
+      let errorMessage: string;
+      const errName = (error as Error).name;
+
+      if (errName === 'NotAllowedError') {
+        errorMessage = 'Mikrofon-Zugriff verweigert. Bitte in Safari-Einstellungen erlauben.';
+      } else if (errName === 'NotFoundError') {
+        errorMessage = 'Kein Mikrofon gefunden.';
+      } else if (errName === 'NotReadableError' || errName === 'AbortError') {
+        errorMessage = 'Mikrofon wird von anderer App verwendet.';
+      } else if (errName === 'SecurityError') {
+        errorMessage = 'Sichere Verbindung (HTTPS) erforderlich.';
+      } else {
+        errorMessage = 'Mikrofon-Fehler. Bitte Browser-Einstellungen prüfen.';
+      }
+
       speechEngine.speak(errorMessage);
     }
   }
