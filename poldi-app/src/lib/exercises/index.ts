@@ -2,7 +2,7 @@
  * Exercise library - Main exports
  *
  * Import all exercises to register them with the ExerciseRegistry.
- * This file automatically registers all 17 exercise types when imported.
+ * This file automatically registers all exercise types when imported.
  */
 
 // Base system
@@ -16,6 +16,7 @@ import './visual';     // discrimination, pattern
 import './motor';      // trace, trace_path
 import './spatial';    // preposition
 import './drawing';    // drawing, connect_dots, handwriting (tablet/stylus)
+import './storytelling'; // storytelling (OpenAI)
 
 // Re-export all exercises for direct use
 export * from './phonology';
@@ -25,3 +26,5 @@ export * from './visual';
 export * from './motor';
 export * from './spatial';
 export * from './drawing';
+export * from './storytelling';
+

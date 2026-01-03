@@ -40,8 +40,8 @@
       <div class="info-panel">
         <h2>✅ Comprehensive Exercise Library</h2>
         <ul>
-          <li>✅ <strong>17 Exercise Types</strong> - All implemented</li>
-          <li>✅ <strong>9 Modules</strong> - 324 exercises total</li>
+          <li>✅ <strong>18 Exercise Types</strong> - All implemented</li>
+          <li>✅ <strong>10 Modules</strong> - 336 exercises total</li>
           <li>✅ <strong>Authentic SES Content</strong> - Based on official materials</li>
           <li>✅ <strong>Speech & Audio</strong> - German TTS working</li>
         </ul>

@@ -37,7 +37,9 @@ export type ExerciseType =
   // Tablet/Stylus (Drawing)
   | 'drawing'
   | 'connect_dots'
-  | 'handwriting';
+  | 'handwriting'
+  // Language / Storytelling
+  | 'storytelling';
 
 // ===== EXERCISE CONFIG =====
 

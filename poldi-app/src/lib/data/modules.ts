@@ -1167,6 +1167,112 @@ export const flinkiModules: Module[] = [
         instruction: 'Verbinde die Punkte zum Rad!'
       }
     ]
+  },
+
+  // ===== MODULE 10: STORYTELLING (Geschichten erzählen) =====
+  {
+    id: 'storytelling',
+    title: 'Geschichten erzählen',
+    intro: 'Erzähl mir eine Geschichte! Benutze die Hinwörter.',
+    category: 'schriftsprachlich',
+    tasks: [
+      {
+        type: 'storytelling',
+        prompt: 'Ein Kind geht in den Zoo',
+        image: '🦁',
+        cues: ['Erst', 'Dann', 'Und dann', 'Am Ende'],
+        minDuration: 10,
+        maxDuration: 60
+      },
+      {
+        type: 'storytelling',
+        prompt: 'Ein Hund findet einen Schatz',
+        image: '🐕',
+        cues: ['Zuerst', 'Plötzlich', 'Danach', 'Schließlich'],
+        minDuration: 10,
+        maxDuration: 60
+      },
+      {
+        type: 'storytelling',
+        prompt: 'Eine Katze klettert auf einen Baum',
+        image: '🐱',
+        cues: ['Am Anfang', 'Dann', 'Aber', 'Zum Schluss'],
+        minDuration: 10,
+        maxDuration: 60
+      },
+      {
+        type: 'storytelling',
+        prompt: 'Ein Geburtstagsfest',
+        image: '🎂',
+        cues: ['Erst', 'Dann', 'Und dann', 'Am Ende'],
+        minDuration: 10,
+        maxDuration: 60
+      },
+      {
+        type: 'storytelling',
+        prompt: 'Ein Tag am Strand',
+        image: '🏖️',
+        cues: ['Morgens', 'Dann', 'Nachmittags', 'Abends'],
+        minDuration: 10,
+        maxDuration: 60
+      },
+      {
+        type: 'storytelling',
+        prompt: 'Ein Ausflug in die Berge',
+        image: '⛰️',
+        cues: ['Zuerst', 'Unterwegs', 'Oben', 'Auf dem Rückweg'],
+        minDuration: 10,
+        maxDuration: 60
+      },
+      {
+        type: 'storytelling',
+        prompt: 'Ein Besuch bei der Oma',
+        image: '👵',
+        cues: ['Als wir ankamen', 'Dann', 'Später', 'Bevor wir gingen'],
+        minDuration: 10,
+        maxDuration: 60
+      },
+      {
+        type: 'storytelling',
+        prompt: 'Ein Regentag',
+        image: '🌧️',
+        cues: ['Am Morgen', 'Dann', 'Inzwischen', 'Am Abend'],
+        minDuration: 10,
+        maxDuration: 60
+      },
+      {
+        type: 'storytelling',
+        prompt: 'Ein Besuch beim Arzt',
+        image: '👨‍⚕️',
+        cues: ['Zuerst', 'Dann', 'Der Arzt', 'Danach'],
+        minDuration: 10,
+        maxDuration: 60
+      },
+      {
+        type: 'storytelling',
+        prompt: 'Ein Schneemann',
+        image: '⛄',
+        cues: ['Erst', 'Als nächstes', 'Dann', 'Zum Schluss'],
+        minDuration: 10,
+        maxDuration: 60
+      },
+      {
+        type: 'storytelling',
+        prompt: 'Die erste Schultag',
+        image: '🎒',
+        cues: ['Morgens', 'In der Schule', 'In der Pause', 'Nach der Schule'],
+        minDuration: 10,
+        maxDuration: 60
+      },
+      {
+        type: 'storytelling',
+        prompt: 'Ein Zauberer macht Tricks',
+        image: '🪄',
+        cues: ['Der Zauberer', 'Dann', 'Alle staunten', 'Am Ende'],
+        minDuration: 10,
+        maxDuration: 60
+      }
+    ]
   }
 ];
 
