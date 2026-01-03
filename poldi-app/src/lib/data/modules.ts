@@ -1,5 +1,5 @@
 /**
- * Official Poldi SES (Schuleingangsscreening) Modules - COMPREHENSIVE VERSION
+ * Official Flinki SES (Schuleingangsscreening) Modules - COMPREHENSIVE VERSION
  *
  * Based on authentic Austrian school readiness assessment research from:
  * - University of Vienna & University of Graz SES project
@@ -18,12 +18,13 @@
 
 import type { Module } from '$lib/core/StateManager';
 
-export const poldiModules: Module[] = [
+export const flinkiModules: Module[] = [
   // ===== MODULE 1: PHONOLOGY (Phonologische Bewusstheit) - 36 EXERCISES =====
   {
     id: 'phonology',
     title: 'Reime und Laute',
     intro: 'Wir spielen mit Wörtern und Reimen! Hör gut zu.',
+    category: 'schriftsprachlich',
     tasks: [
       // RHYMES (12 exercises)
       { type: 'rhyme', word: 'Maus', target: 'house', distractors: ['car'] },
@@ -77,6 +78,7 @@ export const poldiModules: Module[] = [
     id: 'lettersounds',
     title: 'Anfangslaute',
     intro: 'Welche Wörter beginnen gleich? Pass gut auf!',
+    category: 'schriftsprachlich',
     tasks: [
       // M-sound (Maus, Mond, Mund, Milch, Marienkäfer, Motor)
       { type: 'initial', target: 'mouse', match: 'moon', distractor: 'cat' },
@@ -143,6 +145,7 @@ export const poldiModules: Module[] = [
     id: 'quantities',
     title: 'Mengen vergleichen',
     intro: 'Wo sind MEHR? Schnell, bevor die Eule kommt!',
+    category: 'mathematisch',
     tasks: [
       // QUANTITY COMPARISON (18 exercises) - Up to 6
       { type: 'quantity', l: 1, r: 2 },
@@ -191,6 +194,7 @@ export const poldiModules: Module[] = [
     id: 'counting',
     title: 'Zählen und Zahlen',
     intro: 'Wie viele Dinge siehst du? Tippe auf die Zahl.',
+    category: 'mathematisch',
     tasks: [
       // COUNTING (24 exercises)
       { type: 'counting', count: 1, icon: 'sun' },
@@ -239,6 +243,7 @@ export const poldiModules: Module[] = [
     id: 'memory',
     title: 'Zahlen merken',
     intro: 'Ich sage dir Zahlen. Merke sie dir gut!',
+    category: 'exekutiv',
     tasks: [
       // 2-digit sequences (12 exercises)
       { type: 'memory', seq: [3, 7] },
@@ -291,6 +296,7 @@ export const poldiModules: Module[] = [
     id: 'visual',
     title: 'Genau hinschauen',
     intro: 'Finde die richtige Form! Schau genau hin.',
+    category: 'exekutiv',
     tasks: [
       // DISCRIMINATION - MATCH (12 exercises)
       {
@@ -641,6 +647,7 @@ export const poldiModules: Module[] = [
     id: 'motor',
     title: 'Nachzeichnen',
     intro: 'Zeichne die Formen und Wege nach. Du schaffst das!',
+    category: 'grafomotorik',
     tasks: [
       // BASIC SHAPES - Circles (2 exercises)
       { type: 'trace', shape: 'circle' },
@@ -685,6 +692,7 @@ export const poldiModules: Module[] = [
     id: 'spatial',
     title: 'Wo ist was?',
     intro: 'Finde die richtige Position! Auf, unter, neben, in...',
+    category: 'exekutiv',
     tasks: [
       // AUF (on/on top of) - 9 exercises
       {
@@ -953,6 +961,7 @@ export const poldiModules: Module[] = [
     id: 'drawing',
     title: 'Zeichnen und Schreiben',
     intro: 'Zeichne mit deinem Finger oder Stift! Viel Spaß!',
+    category: 'grafomotorik',
     tasks: [
       // DRAWING EXERCISES (12 exercises - different shapes)
       { type: 'drawing', shape: 'circle', instruction: 'Zeichne einen Kreis' },
@@ -1166,7 +1175,7 @@ export const poldiModules: Module[] = [
  */
 export const demoModule: Module = {
   id: 'demo',
-  title: 'Poldi Demo',
+  title: 'Flinki Demo',
   intro: 'Willkommen! Lass uns ein paar Übungen machen.',
   tasks: [
     {
@@ -1249,7 +1258,7 @@ export const shortTestModule: Module = {
  * Get shuffled version of modules (shuffle tasks within each module)
  */
 export function getShuffledModules(): Module[] {
-  return poldiModules.map(module => ({
+  return flinkiModules.map(module => ({
     ...module,
     tasks: shuffleArray([...module.tasks])
   }));

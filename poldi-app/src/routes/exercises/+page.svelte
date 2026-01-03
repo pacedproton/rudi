@@ -11,7 +11,7 @@
     updateCanvasSize
   } from '$lib/core/StateManager';
   import type { Module } from '$lib/core/StateManager';
-  import { poldiModules } from '$lib/data/modules';
+  import { flinkiModules } from '$lib/data/modules';
   import '$lib/exercises'; // Register all exercises
 
   let initialized = false;
@@ -23,24 +23,24 @@
     let modulesToRun: Module[] = [];
 
     if (moduleParam) {
-      const m = poldiModules.find(x => x.id === moduleParam);
+      const m = flinkiModules.find(x => x.id === moduleParam);
       if (m) {
         modulesToRun = [m];
       }
     } else if (modeParam === 'full') {
-        modulesToRun = poldiModules;
+        modulesToRun = flinkiModules;
     } else if (modeParam === 'demo') {
         // Construct demo module
         const demoModule = {
              id: 'demo',
              title: 'Demo',
              intro: 'Demo Version',
-             tasks: poldiModules[0].tasks.slice(0, 3)
+             tasks: flinkiModules[0].tasks.slice(0, 3)
         };
         modulesToRun = [demoModule];
     } else if (modeParam === 'short') {
          // Short test: first module only for now
-         modulesToRun = [poldiModules[0]]; 
+         modulesToRun = [flinkiModules[0]]; 
     }
 
     if (modulesToRun.length > 0) {

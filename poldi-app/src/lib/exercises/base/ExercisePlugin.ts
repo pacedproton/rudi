@@ -96,9 +96,9 @@ export abstract class ExercisePlugin implements IExercisePlugin {
     const buttonSize = 50 * scale;
     const margin = 20 * scale;
 
-    // Position button in top-right corner
+    // Position button in top-right corner, well away from exit button (exit is ~40px wide at right:20px)
     this.repeatButtonRect = {
-      x: width - buttonSize - margin,
+      x: width - buttonSize - margin - 100 * scale,
       y: margin,
       w: buttonSize,
       h: buttonSize
@@ -146,9 +146,9 @@ export abstract class ExercisePlugin implements IExercisePlugin {
    */
   protected isInside(x: number, y: number, rect: Rect): boolean {
     return x >= rect.x &&
-           x <= rect.x + rect.w &&
-           y >= rect.y &&
-           y <= rect.y + rect.h;
+      x <= rect.x + rect.w &&
+      y >= rect.y &&
+      y <= rect.y + rect.h;
   }
 
   /**

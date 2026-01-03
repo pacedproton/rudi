@@ -1,5 +1,5 @@
 /**
- * ParticleSystem - Visual feedback effects for Poldi
+ * ParticleSystem - Visual feedback effects for Flinki
  *
  * Creates celebratory particles when correct answers are given
  * Ported from prototype.html lines 281-314

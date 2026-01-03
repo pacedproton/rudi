@@ -1,6 +1,6 @@
 <script lang="ts">
   import NetflixIntro from '$lib/components/NetflixIntro.svelte';
-  import { poldiModules } from '$lib/data/modules';
+  import { flinkiModules } from '$lib/data/modules';
   import { goto } from '$app/navigation';
 
   let isLoading = true;
@@ -32,8 +32,8 @@
   {:else}
     <div class="menu">
       <div class="logo">
-        <div class="poldi-icon">🐸</div>
-        <h1>Poldi App</h1>
+        <div class="flinki-icon">🐸</div>
+        <h1>Flinki App</h1>
         <p class="subtitle">Schuleingangsscreening - Refactored Version</p>
       </div>
 
@@ -83,7 +83,7 @@
         <h3 style="margin: 1rem 0 0.5rem; color: #333; font-size: 1rem;">Einzelne Module testen:</h3>
 
         <div class="module-grid">
-          {#each poldiModules as module, i}
+          {#each flinkiModules as module, i}
             <button class="btn-module" on:click={() => startModule(module.id)}>
               {i + 1}. {module.title}
             </button>
@@ -102,9 +102,6 @@
       </div>
 
       <div class="tech-info">
-        <p><strong>Tech Stack:</strong> Svelte 5 + TypeScript + Vite</p>
-        <p><strong>Architecture:</strong> Plugin-based exercise system</p>
-        <p><strong>Phase:</strong> 2 of 6 complete (Foundation + Pilots)</p>
       </div>
     </div>
   {/if}
@@ -142,7 +139,7 @@
     margin-bottom: 2rem;
   }
 
-  .poldi-icon {
+  .flinki-icon {
     font-size: 80px;
     margin-bottom: 1rem;
     animation: bounce 2s infinite;
@@ -314,7 +311,7 @@
     color: white;
   }
 
-  .loading-content .poldi-icon {
+  .loading-content .flinki-icon {
     font-size: 80px;
     margin-bottom: 1rem;
     animation: bounce 2s infinite;
@@ -376,7 +373,7 @@
     margin-bottom: 2rem;
   }
 
-  .poldi-icon {
+  .flinki-icon {
     font-size: 80px;
     margin-bottom: 1rem;
     animation: bounce 2s infinite;

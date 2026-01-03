@@ -154,7 +154,12 @@
     if (!currentExercise || $inputLocked) return;
 
     const inputEvent = convertToInputEvent(event, 'end');
-    currentExercise.handleInput(inputEvent);
+    const result = currentExercise.handleInput(inputEvent);
+
+    // Process result from exercises that complete on pointer up (e.g., Fertig button)
+    if (result !== null) {
+      handleExerciseResult(result);
+    }
   }
 
   /**

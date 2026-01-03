@@ -1,5 +1,5 @@
 /**
- * Error reporting utility for Poldi App
+ * Error reporting utility for Flinki App
  * Handles logging and reporting of errors for debugging and monitoring
  */
 
@@ -45,7 +45,7 @@ class ErrorReporter {
     }
 
     // Log to console
-    console.error('Poldi App Error:', report);
+    console.error('Flinki App Error:', report);
 
     // In production, you would send to external service
     this.sendToExternalService(report);
@@ -123,12 +123,12 @@ class ErrorReporter {
 
     // Store in localStorage for persistence
     try {
-      const existingReports = JSON.parse(localStorage.getItem('poldi_error_reports') || '[]');
+      const existingReports = JSON.parse(localStorage.getItem('flinki_error_reports') || '[]');
       existingReports.unshift(report);
       if (existingReports.length > 20) {
         existingReports.splice(20);
       }
-      localStorage.setItem('poldi_error_reports', JSON.stringify(existingReports));
+      localStorage.setItem('flinki_error_reports', JSON.stringify(existingReports));
     } catch (e) {
       // localStorage might not be available
       console.warn('Could not store error report in localStorage');
@@ -140,7 +140,7 @@ class ErrorReporter {
    */
   getStoredReports(): ErrorReport[] {
     try {
-      return JSON.parse(localStorage.getItem('poldi_error_reports') || '[]');
+      return JSON.parse(localStorage.getItem('flinki_error_reports') || '[]');
     } catch (e) {
       return [];
     }

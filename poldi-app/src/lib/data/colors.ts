@@ -1,5 +1,5 @@
 /**
- * Color palette for Poldi
+ * Color palette for Flinki
  * Ported from prototype.html lines 47-62
  */
 
@@ -8,9 +8,9 @@ export const colors = {
   sky: '#87CEEB',
   grass: '#7CFC00',
 
-  // Poldi character
-  poldiSkin: '#76c043',
-  poldiDark: '#4a8e22',
+  // Flinki character
+  flinkiSkin: '#76c043',
+  flinkiDark: '#4a8e22',
   red: '#e74c3c',
 
   // UI elements

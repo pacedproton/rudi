@@ -1,5 +1,5 @@
 /**
- * Rendering utilities for Poldi
+ * Rendering utilities for Flinki
  *
  * Common rendering functions used across the app
  */

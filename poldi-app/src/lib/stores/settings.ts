@@ -1,5 +1,5 @@
 /**
- * Settings Store - Persistent configuration for Poldi App
+ * Settings Store - Persistent configuration for Flinki App
  *
  * Manages user preferences with localStorage persistence
  */
@@ -67,7 +67,7 @@ const DEFAULT_SETTINGS: Settings = {
   reducedMotion: false
 };
 
-const STORAGE_KEY = 'poldi-settings';
+const STORAGE_KEY = 'flinki-settings';
 
 /**
  * Load settings from localStorage

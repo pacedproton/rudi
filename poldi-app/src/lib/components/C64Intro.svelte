@@ -26,9 +26,9 @@
       addLine("READY.");
       await delay(1000);
       
-      await typeLine('LOAD "POLDI",8,1');
+      await typeLine('LOAD "FLINKI",8,1');
       await delay(500);
-      addLine("SEARCHING FOR POLDI");
+      addLine("SEARCHING FOR FLINKI");
       await delay(800);
       addLine("LOADING");
       await delay(500);
@@ -92,8 +92,8 @@
       {#if showLogo}
         <div class="logo-container">
            <div class="bouncing-logo">
-             <span class="poldi-text">POLDI</span>
-             <span class="poldi-sub">APP</span>
+             <span class="flinki-text">FLINKI</span>
+             <span class="flinki-sub">APP</span>
            </div>
            <p class="press-start">PRESS SPACE OR CLICK TO START</p>
         </div>
@@ -251,7 +251,7 @@
       margin-bottom: 2rem;
   }
 
-  .poldi-text {
+  .flinki-text {
       font-size: 80px;
       color: #FFFF00; /* Yellow */
       text-shadow: 4px 4px 0 #000;
@@ -261,7 +261,7 @@
       /* -webkit-text-fill-color: transparent; Text fill breaks shadow sometimes */
   }
 
-  .poldi-sub {
+  .flinki-sub {
       font-size: 40px;
       color: #00FF00;
       margin-top: 10px;

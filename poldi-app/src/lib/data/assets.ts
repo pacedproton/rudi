@@ -1,5 +1,5 @@
 /**
- * Asset definitions for Poldi
+ * Asset definitions for Flinki
  * Icons (emojis) and German labels for exercises
  * Ported from prototype.html lines 92-184
  */
