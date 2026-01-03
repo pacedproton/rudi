@@ -16,12 +16,18 @@
   import { audioEngine } from '$lib/core/AudioEngine';
   import { particleSystem } from '$lib/core/ParticleSystem';
   import { renderBackground, renderHUD } from '$lib/utils/rendering';
+  import { FeedbackOverlay, ConfettiEffect } from '$lib/components/animations';
 
   let canvas: HTMLCanvasElement;
   let manager: CanvasManager | null = null;
   let currentExercise: IExercisePlugin | null = null;
   let feedbackMetadata: Record<string, any> | null = null;
   let showMetadataOverlay = false;
+  
+  // Animation state
+  let showFeedbackAnim = false;
+  let feedbackType: 'correct' | 'wrong' = 'correct';
+  let showConfetti = false;
 
   onMount(() => {
     console.log('CanvasRenderer mounted');
@@ -166,6 +172,16 @@
    * Handle exercise completion
    */
   function handleExerciseResult(result: ExerciseResult) {
+    // Show animated feedback
+    feedbackType = result.correct ? 'correct' : 'wrong';
+    showFeedbackAnim = true;
+    
+    // Show confetti for correct answers
+    if (result.correct) {
+      showConfetti = true;
+      setTimeout(() => showConfetti = false, 3000);
+    }
+
     // Play audio
     if (result.correct) {
       audioEngine.playSound('success');
@@ -212,6 +228,16 @@
   on:pointerup={handlePointerUp}
   style="touch-action: none; cursor: pointer;"
 ></canvas>
+
+<!-- Animated feedback overlay -->
+<FeedbackOverlay 
+  type={feedbackType} 
+  show={showFeedbackAnim} 
+  onComplete={() => showFeedbackAnim = false}
+/>
+
+<!-- Confetti celebration -->
+<ConfettiEffect show={showConfetti} />
 
 {#if showMetadataOverlay && feedbackMetadata}
   <div class="metadata-overlay">

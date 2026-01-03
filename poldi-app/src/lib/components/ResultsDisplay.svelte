@@ -123,12 +123,6 @@
     </div>
 
     <div class="actions">
-      <button class="btn-export" on:click={exportResults}>
-        📄 JSON Export
-      </button>
-      <button class="btn-export" on:click={exportCSV}>
-        📊 CSV Export
-      </button>
       <button class="btn-primary" on:click={restart}>
         🔄 Neuer Test
       </button>

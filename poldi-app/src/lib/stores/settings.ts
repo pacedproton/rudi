@@ -180,6 +180,13 @@ function createSettingsStore() {
         saveSettings(updated);
         return updated;
       });
+    },
+    toggleAnimations: () => {
+      update((s) => {
+        const updated = { ...s, animations: !s.animations };
+        saveSettings(updated);
+        return updated;
+      });
     }
   };
 }
@@ -190,3 +197,5 @@ export const settings = createSettingsStore();
 export const speechEnabled = derived(settings, ($settings) => $settings.speechEnabled);
 export const soundEnabled = derived(settings, ($settings) => $settings.soundEnabled);
 export const shuffleEnabled = derived(settings, ($settings) => $settings.shuffleExercises);
+export const animationsEnabled = derived(settings, ($settings) => $settings.animations && !$settings.reducedMotion);
+

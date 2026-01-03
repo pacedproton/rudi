@@ -4,6 +4,7 @@
   import { goto } from '$app/navigation';
   import { speechEngine } from '$lib/core/SpeechEngine';
   import { audioEngine } from '$lib/core/AudioEngine';
+  import { settings } from '$lib/stores/settings';
 
   let isLoading = true;
   let showSettings = false;
@@ -81,7 +82,40 @@
 
         {#if showSettings}
           <div class="settings-panel">
-            <p>📝 Einstellungen werden bald verfügbar sein!</p>
+            <h4>⚙️ Einstellungen</h4>
+            
+            <label class="toggle-row">
+              <span>🔊 Töne</span>
+              <button 
+                class="toggle-btn" 
+                class:active={$settings.soundEnabled}
+                on:click={() => settings.toggleSound()}
+              >
+                {$settings.soundEnabled ? 'Ein' : 'Aus'}
+              </button>
+            </label>
+            
+            <label class="toggle-row">
+              <span>🗣️ Sprache</span>
+              <button 
+                class="toggle-btn" 
+                class:active={$settings.speechEnabled}
+                on:click={() => settings.toggleSpeech()}
+              >
+                {$settings.speechEnabled ? 'Ein' : 'Aus'}
+              </button>
+            </label>
+            
+            <label class="toggle-row">
+              <span>✨ Animationen</span>
+              <button 
+                class="toggle-btn" 
+                class:active={$settings.animations}
+                on:click={() => settings.toggleAnimations()}
+              >
+                {$settings.animations ? 'Ein' : 'Aus'}
+              </button>
+            </label>
           </div>
         {/if}
 
@@ -313,18 +347,57 @@
   }
 
   .settings-panel {
-    background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+    background: linear-gradient(135deg, #f8f9ff 0%, #e8ecff 100%);
     border-radius: 12px;
-    padding: 1rem;
+    padding: 1.25rem;
     margin: 0.5rem 0;
-    text-align: center;
-    border: 2px dashed #ffb74d;
+    text-align: left;
+    border: 1px solid #667eea;
   }
 
-  .settings-panel p {
-    margin: 0;
-    color: #e65100;
+  .settings-panel h4 {
+    margin: 0 0 1rem 0;
+    color: #333;
+    text-align: center;
+  }
+
+  .toggle-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #e0e0e0;
+  }
+
+  .toggle-row:last-child {
+    border-bottom: none;
+  }
+
+  .toggle-row span {
     font-weight: 600;
+    color: #333;
+  }
+
+  .toggle-btn {
+    padding: 0.4rem 1rem;
+    border-radius: 20px;
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background: #ccc;
+    color: #666;
+    min-width: 60px;
+  }
+
+  .toggle-btn.active {
+    background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);
+    color: white;
+    box-shadow: 0 2px 8px rgba(76, 175, 80, 0.4);
+  }
+
+  .toggle-btn:hover {
+    transform: scale(1.05);
   }
 
   .btn-settings {

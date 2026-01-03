@@ -78,7 +78,7 @@ export class MemoryExercise extends ExercisePlugin {
     ctx.ctx.textBaseline = 'middle';
 
     const displayText = this.userInput.length > 0
-      ? this.userInput.join(' - ')
+      ? this.userInput.join('  ')
       : '...';
 
     ctx.ctx.fillText(displayText, width / 2, 120 * scale);

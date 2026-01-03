@@ -302,7 +302,17 @@ export class StorytellingExercise extends ExercisePlugin {
   private async startRecording(): Promise<void> {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      this.mediaRecorder = new MediaRecorder(stream, { mimeType: 'audio/webm' });
+
+      // Safari doesn't support webm - try mp4/m4a fallback
+      const mimeType = MediaRecorder.isTypeSupported('audio/webm')
+        ? 'audio/webm'
+        : MediaRecorder.isTypeSupported('audio/mp4')
+          ? 'audio/mp4'
+          : '';
+
+      this.mediaRecorder = mimeType
+        ? new MediaRecorder(stream, { mimeType })
+        : new MediaRecorder(stream);
       this.audioChunks = [];
 
       this.mediaRecorder.ondataavailable = (event) => {
@@ -331,7 +341,11 @@ export class StorytellingExercise extends ExercisePlugin {
 
     } catch (error) {
       console.error('Failed to start recording:', error);
-      speechEngine.speak('Mikrofon nicht gefunden. Bitte erlaube den Zugriff.');
+      // More helpful error for Safari/iOS users
+      const errorMessage = (error as Error).name === 'NotAllowedError'
+        ? 'Mikrofon-Zugriff verweigert. Bitte in Safari-Einstellungen erlauben.'
+        : 'Mikrofon nicht verfügbar. Bitte Zugriff erlauben und erneut versuchen.';
+      speechEngine.speak(errorMessage);
     }
   }
 
