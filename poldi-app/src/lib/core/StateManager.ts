@@ -6,6 +6,7 @@
 
 import { writable, derived, get, type Readable, type Writable } from 'svelte/store';
 import type { ExerciseType } from '$lib/exercises/base/types';
+import { errorReporter } from '$lib/utils/errorReporting';
 
 // ===== TYPES =====
 
@@ -17,6 +18,7 @@ export interface Module {
   intro: string;
   tasks: ExerciseConfig[];
   icon?: string;
+  category?: 'schriftsprachlich' | 'mathematisch' | 'exekutiv' | 'grafomotorik';
 }
 
 export interface ExerciseConfig {
@@ -35,6 +37,26 @@ export interface CanvasSize {
   scale: number;
 }
 
+export interface ModuleStats {
+  moduleId: string;
+  moduleTitle: string;
+  correct: number;
+  incorrect: number;
+  total: number;
+  accuracy: number;
+  exerciseTypeStats: Record<string, { correct: number; incorrect: number; total: number; accuracy: number }>;
+}
+
+export interface OverallStats {
+  totalCorrect: number;
+  totalIncorrect: number;
+  totalTasks: number;
+  overallAccuracy: number;
+  modulesCompleted: number;
+  timeSpent?: number; // in seconds
+  exerciseTypeBreakdown: Record<string, { correct: number; incorrect: number; total: number; accuracy: number }>;
+}
+
 // ===== CORE STATE =====
 
 /** Current game state (menu, task, results, etc.) */
@@ -49,11 +71,32 @@ export const currentModuleIndex: Writable<number> = writable(0);
 /** Current task index within module */
 export const currentTaskIndex: Writable<number> = writable(0);
 
-/** Scores per module (module id => score) */
-export const scores: Writable<Record<string, number>> = writable({});
+/** Detailed stats per module */
+export const moduleStats: Writable<Record<string, ModuleStats>> = writable({});
 
-/** Total keys collected across all modules */
-export const totalKeys: Writable<number> = writable(0);
+/** Overall session statistics */
+export const overallStats: Writable<OverallStats> = writable({
+  totalCorrect: 0,
+  totalIncorrect: 0,
+  totalTasks: 0,
+  overallAccuracy: 0,
+  modulesCompleted: 0,
+  exerciseTypeBreakdown: {}
+});
+
+/** Legacy scores store for backwards compatibility */
+export const scores: Readable<Record<string, number>> = derived(
+  moduleStats,
+  ($moduleStats) => Object.fromEntries(
+    Object.entries($moduleStats).map(([id, stats]) => [id, stats.correct])
+  )
+);
+
+/** Legacy totalKeys for backwards compatibility */
+export const totalKeys: Readable<number> = derived(
+  overallStats,
+  ($overallStats) => $overallStats.totalCorrect
+);
 
 // ===== UI STATE =====
 
@@ -114,17 +157,53 @@ export const moduleProgress: Readable<string> = derived(
  */
 export function startExamSequence(newModules: Module[]): void {
   modules.set(newModules);
-  scores.set({});
-  totalKeys.set(0);
   currentModuleIndex.set(0);
   currentTaskIndex.set(0);
 
-  // Initialize scores for all modules
-  const initialScores: Record<string, number> = {};
-  newModules.forEach(m => {
-    initialScores[m.id] = 0;
+  // Initialize detailed stats for all modules
+  const initialModuleStats: Record<string, ModuleStats> = {};
+  const exerciseTypes: Set<string> = new Set();
+
+  newModules.forEach(module => {
+    initialModuleStats[module.id] = {
+      moduleId: module.id,
+      moduleTitle: module.title,
+      correct: 0,
+      incorrect: 0,
+      total: 0,
+      accuracy: 0,
+      exerciseTypeStats: {}
+    };
+
+    // Collect all exercise types for overall stats
+    module.tasks.forEach(task => {
+      exerciseTypes.add(task.type);
+    });
   });
-  scores.set(initialScores);
+
+  moduleStats.set(initialModuleStats);
+
+  // Initialize overall stats
+  const initialOverallStats: OverallStats = {
+    totalCorrect: 0,
+    totalIncorrect: 0,
+    totalTasks: newModules.reduce((sum, module) => sum + module.tasks.length, 0),
+    overallAccuracy: 0,
+    modulesCompleted: 0,
+    exerciseTypeBreakdown: {}
+  };
+
+  // Initialize exercise type breakdown
+  exerciseTypes.forEach(type => {
+    initialOverallStats.exerciseTypeBreakdown[type] = {
+      correct: 0,
+      incorrect: 0,
+      total: 0,
+      accuracy: 0
+    };
+  });
+
+  overallStats.set(initialOverallStats);
 
   // Start first module
   startModule(0);
@@ -158,6 +237,7 @@ export function nextTask(): void {
   const taskIndex = get(currentTaskIndex);
 
   if (!module) {
+    errorReporter.reportExerciseError('nextTask called without current module', undefined, undefined);
     console.error('No current module');
     return;
   }
@@ -174,28 +254,103 @@ export function nextTask(): void {
   const allModules = get(modules);
 
   if (moduleIndex + 1 < allModules.length) {
+    // Mark current module as completed
+    overallStats.update(stats => ({
+      ...stats,
+      modulesCompleted: stats.modulesCompleted + 1
+    }));
     startModule(moduleIndex + 1);
   } else {
-    // All modules complete
+    // All modules complete - mark final module as completed
+    overallStats.update(stats => ({
+      ...stats,
+      modulesCompleted: stats.modulesCompleted + 1
+    }));
     gameState.set('RESULTS');
     inputLocked.set(false);
   }
 }
 
 /**
- * Record a score for the current module
+ * Record a score for the current module and update overall statistics
  */
 export function recordScore(correct: boolean): void {
   const module = get(currentModule);
-  if (!module) return;
-
-  if (correct) {
-    scores.update(s => ({
-      ...s,
-      [module.id]: (s[module.id] || 0) + 1
-    }));
-    totalKeys.update(k => k + 1);
+  const task = get(currentTask);
+  if (!module || !task) {
+    errorReporter.reportExerciseError('recordScore called without valid module or task', module?.id, task?.type);
+    return;
   }
+
+  // Update module stats
+  moduleStats.update(stats => {
+    const moduleStat = stats[module.id];
+    if (!moduleStat) return stats;
+
+    // Update basic counts
+    if (correct) {
+      moduleStat.correct += 1;
+    } else {
+      moduleStat.incorrect += 1;
+    }
+    moduleStat.total += 1;
+    moduleStat.accuracy = moduleStat.total > 0 ? (moduleStat.correct / moduleStat.total) * 100 : 0;
+
+    // Update exercise type stats within module
+    if (!moduleStat.exerciseTypeStats[task.type]) {
+      moduleStat.exerciseTypeStats[task.type] = {
+        correct: 0,
+        incorrect: 0,
+        total: 0,
+        accuracy: 0
+      };
+    }
+
+    const exerciseStats = moduleStat.exerciseTypeStats[task.type];
+    if (correct) {
+      exerciseStats.correct += 1;
+    } else {
+      exerciseStats.incorrect += 1;
+    }
+    exerciseStats.total += 1;
+    exerciseStats.accuracy = exerciseStats.total > 0 ? (exerciseStats.correct / exerciseStats.total) * 100 : 0;
+
+    return { ...stats, [module.id]: moduleStat };
+  });
+
+  // Update overall stats
+  overallStats.update(stats => {
+    if (correct) {
+      stats.totalCorrect += 1;
+    } else {
+      stats.totalIncorrect += 1;
+    }
+
+    stats.overallAccuracy = (stats.totalCorrect + stats.totalIncorrect) > 0
+      ? (stats.totalCorrect / (stats.totalCorrect + stats.totalIncorrect)) * 100
+      : 0;
+
+    // Update exercise type breakdown
+    if (!stats.exerciseTypeBreakdown[task.type]) {
+      stats.exerciseTypeBreakdown[task.type] = {
+        correct: 0,
+        incorrect: 0,
+        total: 0,
+        accuracy: 0
+      };
+    }
+
+    const exerciseStats = stats.exerciseTypeBreakdown[task.type];
+    if (correct) {
+      exerciseStats.correct += 1;
+    } else {
+      exerciseStats.incorrect += 1;
+    }
+    exerciseStats.total += 1;
+    exerciseStats.accuracy = exerciseStats.total > 0 ? (exerciseStats.correct / exerciseStats.total) * 100 : 0;
+
+    return stats;
+  });
 }
 
 /**
@@ -219,8 +374,15 @@ export function resetToMenu(): void {
   currentModuleIndex.set(0);
   currentTaskIndex.set(0);
   modules.set([]);
-  scores.set({});
-  totalKeys.set(0);
+  moduleStats.set({});
+  overallStats.set({
+    totalCorrect: 0,
+    totalIncorrect: 0,
+    totalTasks: 0,
+    overallAccuracy: 0,
+    modulesCompleted: 0,
+    exerciseTypeBreakdown: {}
+  });
   exerciseState.set({});
   inputLocked.set(false);
   feedback.set({ active: false, success: false });

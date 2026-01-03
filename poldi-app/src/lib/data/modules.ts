@@ -78,65 +78,63 @@ export const poldiModules: Module[] = [
     title: 'Anfangslaute',
     intro: 'Welche Wörter beginnen gleich? Pass gut auf!',
     tasks: [
-      // M-sound
+      // M-sound (Maus, Mond, Mund, Milch, Marienkäfer, Motor)
       { type: 'initial', target: 'mouse', match: 'moon', distractor: 'cat' },
-      { type: 'initial', target: 'mushroom', match: 'milk', distractor: 'apple' },
-      { type: 'initial', target: 'monkey', match: 'mountain', distractor: 'dog' },
+      { type: 'initial', target: 'mouth', match: 'milk', distractor: 'apple' },
+      { type: 'initial', target: 'engine', match: 'ladybug', distractor: 'dog' },
 
-      // L-sound
-      { type: 'initial', target: 'lion', match: 'lemon', distractor: 'apple' },
-      { type: 'initial', target: 'leaf', match: 'ladder', distractor: 'tree' },
-      { type: 'initial', target: 'lamp', match: 'lizard', distractor: 'sun' },
+      // L-sound (Löwe, Löffel, Leiter, Lokomotive[bus])
+      { type: 'initial', target: 'lion', match: 'spoon', distractor: 'apple' },
+      { type: 'initial', target: 'bus', match: 'ladder', distractor: 'tree' },
+      { type: 'initial', target: 'lion', match: 'ladder', distractor: 'sun' }, // Reuse for 3rd
 
-      // E-sound
+      // E-sound (Elefant, Eis, Esel, Engel, Ei, Elf, Eidechse)
       { type: 'initial', target: 'elephant', match: 'ice', distractor: 'banana' },
       { type: 'initial', target: 'egg', match: 'elf', distractor: 'fish' },
-      { type: 'initial', target: 'eagle', match: 'engine', distractor: 'bird' },
+      { type: 'initial', target: 'donkey', match: 'lizard', distractor: 'bird' },
 
-      // T-sound
+      // T-sound (Tasche, Tisch, Tiger, Tomate, Tür)
       { type: 'initial', target: 'bag', match: 'table', distractor: 'shoe' },
       { type: 'initial', target: 'tiger', match: 'tomato', distractor: 'lion' },
-      { type: 'initial', target: 'tree', match: 'train', distractor: 'car' },
+      { type: 'initial', target: 'door', match: 'bag', distractor: 'car' },
 
-      // F-sound
+      // F-sound (Fisch, Fuchs, Feuer, Feder, Frosch)
       { type: 'initial', target: 'fish', match: 'fox', distractor: 'dog' },
-      { type: 'initial', target: 'flower', match: 'fire', distractor: 'tree' },
-      { type: 'initial', target: 'frog', match: 'feather', distractor: 'bird' },
+      { type: 'initial', target: 'feather', match: 'fire', distractor: 'tree' },
+      { type: 'initial', target: 'frog', match: 'fish', distractor: 'bird' },
 
-      // P-sound
+      // P-sound (Pinguin, Pizza, Panda, Papagei, Pilz, Pfeil, Pferd)
       { type: 'initial', target: 'penguin', match: 'pizza', distractor: 'star' },
-      { type: 'initial', target: 'pig', match: 'panda', distractor: 'cow' },
-      { type: 'initial', target: 'piano', match: 'pencil', distractor: 'book' },
+      { type: 'initial', target: 'panda', match: 'parrot', distractor: 'cow' },
+      { type: 'initial', target: 'mushroom', match: 'arrow', distractor: 'book' },
 
-      // H-sound
+      // H-sound (Haus, Hund, Hut, Hand, Herz, Hammer, Hase, Hai)
       { type: 'initial', target: 'house', match: 'dog', distractor: 'cat' },
-      { type: 'initial', target: 'hat', match: 'horse', distractor: 'shoe' },
+      { type: 'initial', target: 'hat', match: 'hand', distractor: 'shoe' },
       { type: 'initial', target: 'heart', match: 'hammer', distractor: 'star' },
 
-      // S-sound
-      { type: 'initial', target: 'sun', match: 'star', distractor: 'moon' },
+      // S/Sch-sound (Schlange, Schnecke, Spinne, Schere, Schlüssel, Schuh, Schiff, Schaf)
       { type: 'initial', target: 'snake', match: 'snail', distractor: 'worm' },
-      { type: 'initial', target: 'spider', match: 'spoon', distractor: 'fork' },
-
-      // B-sound
-      { type: 'initial', target: 'ball', match: 'banana', distractor: 'apple' },
-      { type: 'initial', target: 'bear', match: 'bird', distractor: 'cat' },
-      { type: 'initial', target: 'book', match: 'boat', distractor: 'ship' },
-
-      // A-sound
-      { type: 'initial', target: 'car', match: 'apple', distractor: 'bus' },
-      { type: 'initial', target: 'ant', match: 'anchor', distractor: 'bee' },
-      { type: 'initial', target: 'arrow', match: 'angel', distractor: 'star' },
-
-      // K-sound
-      { type: 'initial', target: 'cat', match: 'king', distractor: 'dog' },
-      { type: 'initial', target: 'key', match: 'kite', distractor: 'door' },
-      { type: 'initial', target: 'kangaroo', match: 'koala', distractor: 'rabbit' },
-
-      // Sch-sound
+      { type: 'initial', target: 'spider', match: 'scissors', distractor: 'fork' },
       { type: 'initial', target: 'key', match: 'shoe', distractor: 'hat' },
-      { type: 'initial', target: 'ship', match: 'sheep', distractor: 'cow' },
-      { type: 'initial', target: 'shell', match: 'shark', distractor: 'fish' }
+
+      // B-sound (Ball, Banane, Bär, Baum, Buch, Boot, Blatt, Blume, Bett, Biene, Bleistift)
+      { type: 'initial', target: 'ball', match: 'banana', distractor: 'apple' },
+      { type: 'initial', target: 'bear', match: 'tree', distractor: 'cat' },
+      { type: 'initial', target: 'book', match: 'boat', distractor: 'ship' },
+      { type: 'initial', target: 'leaf', match: 'flower', distractor: 'sun' },
+      { type: 'initial', target: 'bed', match: 'bee', distractor: 'car' },
+      { type: 'initial', target: 'pencil', match: 'book', distractor: 'table' },
+
+      // A-sound (Auto, Apfel, Ameise, Anker, Ananas, Adler, Affe)
+      { type: 'initial', target: 'car', match: 'apple', distractor: 'train' },
+      { type: 'initial', target: 'ant', match: 'anchor', distractor: 'bee' },
+      { type: 'initial', target: 'monkey', match: 'eagle', distractor: 'star' },
+
+      // K-sound (Katze, König, Krone, Kuchen, Känguru, Koala, Kirsche, Klee, Kuh, Kiste, Klavier)
+      { type: 'initial', target: 'cat', match: 'king', distractor: 'dog' },
+      { type: 'initial', target: 'crown', match: 'cake', distractor: 'door' },
+      { type: 'initial', target: 'kangaroo', match: 'koala', distractor: 'rabbit' }
     ]
   },
 
@@ -644,27 +642,15 @@ export const poldiModules: Module[] = [
     title: 'Nachzeichnen',
     intro: 'Zeichne die Formen und Wege nach. Du schaffst das!',
     tasks: [
-      // BASIC SHAPES - Circles (6 exercises)
-      { type: 'trace', shape: 'circle' },
-      { type: 'trace', shape: 'circle' },
-      { type: 'trace', shape: 'circle' },
-      { type: 'trace', shape: 'circle' },
+      // BASIC SHAPES - Circles (2 exercises)
       { type: 'trace', shape: 'circle' },
       { type: 'trace', shape: 'circle' },
 
-      // BASIC SHAPES - Crosses (6 exercises)
-      { type: 'trace', shape: 'cross' },
-      { type: 'trace', shape: 'cross' },
-      { type: 'trace', shape: 'cross' },
-      { type: 'trace', shape: 'cross' },
+      // BASIC SHAPES - Crosses (2 exercises)
       { type: 'trace', shape: 'cross' },
       { type: 'trace', shape: 'cross' },
 
-      // BASIC SHAPES - Triangles (6 exercises)
-      { type: 'trace', shape: 'triangle' },
-      { type: 'trace', shape: 'triangle' },
-      { type: 'trace', shape: 'triangle' },
-      { type: 'trace', shape: 'triangle' },
+      // BASIC SHAPES - Triangles (2 exercises)
       { type: 'trace', shape: 'triangle' },
       { type: 'trace', shape: 'triangle' },
 

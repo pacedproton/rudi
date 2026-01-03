@@ -185,7 +185,8 @@ export class TracePathExercise extends ExercisePlugin {
 
     if (event.type === 'start') {
       // Check if clicking Done button
-      if (this.isInside(event.x, event.y, this.doneButton) && this.tracePoints.length > 10) {
+      if (this.isInside(event.x, event.y, this.doneButton)) {
+        console.log('TracePath Button Clicked', { tracePoints: this.tracePoints.length });
         // Calculate coverage score
         const coverage = this.calculateCoverage();
         const correct = coverage > 0.6;  // 60% coverage threshold

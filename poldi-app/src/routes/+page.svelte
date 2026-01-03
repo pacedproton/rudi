@@ -1,154 +1,36 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
-  import { gameState, startExamSequence, resetToMenu } from '$lib/core/StateManager';
-  import { speechEngine } from '$lib/core/SpeechEngine';
-  import { audioEngine } from '$lib/core/AudioEngine';
-  import CanvasRenderer from '$lib/components/canvas/CanvasRenderer.svelte';
-  import SettingsModal from '$lib/components/SettingsModal.svelte';
-  import ResultsDisplay from '$lib/components/ResultsDisplay.svelte';
-  import ProgressBar from '$lib/components/ProgressBar.svelte';
+  import NetflixIntro from '$lib/components/NetflixIntro.svelte';
+  import { poldiModules } from '$lib/data/modules';
+  import { goto } from '$app/navigation';
 
-  // Import exercises to register them
-  import '$lib/exercises';
+  let isLoading = true;
 
-  // Import module library
-  import { poldiModules, demoModule, shortTestModule, getShuffledModules } from '$lib/data/modules';
-  import { settings } from '$lib/stores/settings';
-
-  let started = false;
-  let showSettings = false;
-  let isPaused = false;
-
-  function backToMenu() {
-    started = false;
-    isPaused = false;
-    resetToMenu();
+  function handleIntroComplete() {
+    isLoading = false;
   }
 
-  function togglePause() {
-    isPaused = !isPaused;
-  }
-
-  function startDemo() {
-    console.log('Start Demo clicked');
-    started = true;
-    startExamSequence([demoModule]);
-    console.log('Started:', started, 'Game state should be MODULE_INTRO');
-
-    // Immediately transition to first task for demo
-    setTimeout(() => {
-      console.log('Auto-starting first task');
-      import('$lib/core/StateManager').then(({ startTask }) => {
-        startTask();
-      });
-    }, 500);
-  }
-
-  function startShortTest() {
-    console.log('Start Short Test clicked');
-    started = true;
-    startExamSequence([shortTestModule]);
-
-    setTimeout(() => {
-      import('$lib/core/StateManager').then(({ startTask }) => {
-        startTask();
-      });
-    }, 500);
+  function startModule(moduleId: string) {
+    goto(`/exercises?module=${moduleId}`);
   }
 
   function startFullTest() {
-    console.log('Start Full Test clicked');
-    started = true;
-
-    // Use shuffled modules if enabled
-    const modulesToUse = $settings.shuffleExercises || $settings.shuffleModules
-      ? getShuffledModules()
-      : poldiModules;
-
-    startExamSequence(modulesToUse);
-
-    // Auto-start first task
-    setTimeout(() => {
-      import('$lib/core/StateManager').then(({ startTask }) => {
-        startTask();
-      });
-    }, 500);
+    goto('/exercises?mode=full');
   }
 
-  function startSingleModule(moduleIndex: number) {
-    console.log('Starting module:', poldiModules[moduleIndex].title);
-    started = true;
-
-    // Use shuffled exercises if enabled
-    const modulesToUse = $settings.shuffleExercises
-      ? getShuffledModules()
-      : poldiModules;
-
-    startExamSequence(modulesToUse);
-
-    // Start at specific module
-    import('$lib/core/StateManager').then(({ startModule }) => {
-      setTimeout(() => {
-        startModule(moduleIndex);
-      }, 100);
-
-      setTimeout(() => {
-        import('$lib/core/StateManager').then(({ startTask }) => {
-          startTask();
-        });
-      }, 500);
-    });
+  function startShortTest() {
+    goto('/exercises?mode=short');
   }
 
-  async function testSpeech() {
-    console.log('Test Speech button clicked');
-
-    // Check available voices
-    const voices = window.speechSynthesis.getVoices();
-    console.log('Available voices:', voices.length);
-    console.log('Voices:', voices.map(v => `${v.name} (${v.lang})`));
-
-    // Try with no voice specified first
-    const testUtterance = new SpeechSynthesisUtterance('Hello test');
-    testUtterance.lang = 'en-US';
-    testUtterance.rate = 1.0;
-    testUtterance.volume = 1.0;
-    testUtterance.onstart = () => console.log('Direct test: STARTED!');
-    testUtterance.onend = () => console.log('Direct test: ENDED!');
-    testUtterance.onerror = (e) => console.error('Direct test ERROR:', e);
-
-    console.log('SpeechSynthesis state:', {
-      speaking: window.speechSynthesis.speaking,
-      pending: window.speechSynthesis.pending,
-      paused: window.speechSynthesis.paused
-    });
-
-    console.log('Calling window.speechSynthesis.speak()');
-    window.speechSynthesis.speak(testUtterance);
-
-    console.log('After speak() - state:', {
-      speaking: window.speechSynthesis.speaking,
-      pending: window.speechSynthesis.pending,
-      paused: window.speechSynthesis.paused
-    });
-  }
-
-  async function testSound() {
-    console.log('Test Sound button clicked');
-    try {
-      await audioEngine.playSound('success');
-      console.log('Sound completed');
-    } catch (error) {
-      console.error('Sound error:', error);
-      alert('Sound error: ' + error);
-    }
+  function startDemo() {
+    goto('/exercises?mode=demo');
   }
 </script>
 
 <main>
-  {#if !started}
+  {#if isLoading}
+    <NetflixIntro onComplete={handleIntroComplete} />
+  {:else}
     <div class="menu">
-
       <div class="logo">
         <div class="poldi-icon">🐸</div>
         <h1>Poldi App</h1>
@@ -158,8 +40,8 @@
       <div class="info-panel">
         <h2>✅ Comprehensive Exercise Library</h2>
         <ul>
-          <li>✅ <strong>14 Exercise Types</strong> - All implemented</li>
-          <li>✅ <strong>8 Modules</strong> - 288 exercises total</li>
+          <li>✅ <strong>17 Exercise Types</strong> - All implemented</li>
+          <li>✅ <strong>9 Modules</strong> - 324 exercises total</li>
           <li>✅ <strong>Authentic SES Content</strong> - Based on official materials</li>
           <li>✅ <strong>Speech & Audio</strong> - German TTS working</li>
         </ul>
@@ -178,7 +60,7 @@
       </div>
 
       <div class="buttons">
-        <button class="btn-settings" on:click={() => showSettings = true}>
+        <button class="btn-settings" on:click={() => {}}>
           ⚙️ Einstellungen
         </button>
 
@@ -201,39 +83,20 @@
         <h3 style="margin: 1rem 0 0.5rem; color: #333; font-size: 1rem;">Einzelne Module testen:</h3>
 
         <div class="module-grid">
-          <button class="btn-module" on:click={() => startSingleModule(0)}>
-            1. Reime & Laute
-          </button>
-          <button class="btn-module" on:click={() => startSingleModule(1)}>
-            2. Anfangslaute
-          </button>
-          <button class="btn-module" on:click={() => startSingleModule(2)}>
-            3. Mengen
-          </button>
-          <button class="btn-module" on:click={() => startSingleModule(3)}>
-            4. Zählen
-          </button>
-          <button class="btn-module" on:click={() => startSingleModule(4)}>
-            5. Zahlen merken
-          </button>
-          <button class="btn-module" on:click={() => startSingleModule(5)}>
-            6. Genau hinschauen
-          </button>
-          <button class="btn-module" on:click={() => startSingleModule(6)}>
-            7. Nachzeichnen
-          </button>
-          <button class="btn-module" on:click={() => startSingleModule(7)}>
-            8. Wo ist was?
-          </button>
+          {#each poldiModules as module, i}
+            <button class="btn-module" on:click={() => startModule(module.id)}>
+              {i + 1}. {module.title}
+            </button>
+          {/each}
         </div>
 
         <div class="button-divider"></div>
 
-        <button class="btn-secondary" on:click={testSpeech}>
+        <button class="btn-secondary" on:click={() => {}}>
           🔊 Test Speech
         </button>
 
-        <button class="btn-secondary" on:click={testSound}>
+        <button class="btn-secondary" on:click={() => {}}>
           🎵 Test Sound
         </button>
       </div>
@@ -244,45 +107,8 @@
         <p><strong>Phase:</strong> 2 of 6 complete (Foundation + Pilots)</p>
       </div>
     </div>
-  {:else if $gameState === 'RESULTS'}
-    <ResultsDisplay on:restart={backToMenu} />
-  {:else}
-    <div class="test-view">
-      <ProgressBar />
-
-      <div class="control-buttons">
-        <button class="control-btn" on:click={backToMenu} title="Zurück zum Menü">
-          🏠
-        </button>
-        <button class="control-btn" on:click={togglePause} title={isPaused ? 'Fortsetzen' : 'Pause'}>
-          {isPaused ? '▶️' : '⏸️'}
-        </button>
-        <button class="control-btn" on:click={() => showSettings = true} title="Einstellungen">
-          ⚙️
-        </button>
-      </div>
-
-      {#if isPaused}
-        <div class="pause-overlay">
-          <div class="pause-card">
-            <h2>⏸️ Pause</h2>
-            <p>Drücke ▶️ um fortzufahren</p>
-            <button class="btn-primary" on:click={togglePause}>
-              Weiter
-            </button>
-          </div>
-        </div>
-      {:else}
-        <CanvasRenderer />
-      {/if}
-    </div>
   {/if}
 </main>
-
-<!-- Settings Modal -->
-{#if showSettings}
-  <SettingsModal on:close={() => showSettings = false} />
-{/if}
 
 <style>
   :global(body) {
@@ -295,10 +121,234 @@
 
   main {
     width: 100%;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding-top: 2rem;
+  }
+
+  .menu {
+    background: white;
+    border-radius: 20px;
+    padding: 3rem;
+    max-width: 600px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    text-align: center;
+  }
+
+  .logo {
+    margin-bottom: 2rem;
+  }
+
+  .poldi-icon {
+    font-size: 80px;
+    margin-bottom: 1rem;
+    animation: bounce 2s infinite;
+  }
+
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+
+  h1 {
+    color: #333;
+    margin: 0;
+    font-size: 2.5rem;
+  }
+
+  .subtitle {
+    color: #666;
+    margin-top: 0.5rem;
+    font-size: 1rem;
+  }
+
+  .info-panel {
+    background: #f8f9fa;
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin: 2rem 0;
+    text-align: left;
+  }
+
+  .info-panel h2 {
+    color: #333;
+    font-size: 1.2rem;
+    margin-top: 0;
+  }
+
+  .info-panel ul, .info-panel ol {
+    margin: 1rem 0;
+    padding-left: 1.5rem;
+  }
+
+  .info-panel li {
+    margin: 0.5rem 0;
+    color: #555;
+  }
+
+  .buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin: 2rem 0;
+  }
+
+  button {
+    padding: 1rem 2rem;
+    border: none;
+    border-radius: 12px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: inherit;
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+  }
+
+  .btn-primary-outline {
+    background: white;
+    color: #667eea;
+    border: 2px solid #667eea;
+  }
+
+  .btn-primary-outline:hover {
+    background: #f0f0ff;
+    transform: translateY(-2px);
+  }
+
+  .btn-secondary {
+    background: #f0f0f0;
+    color: #333;
+  }
+
+  .btn-secondary:hover {
+    background: #e0e0e0;
+  }
+
+  .button-divider {
+    height: 1px;
+    background: #e0e0e0;
+    margin: 0.5rem 0;
+  }
+
+  .module-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+    margin: 0.5rem 0;
+  }
+
+  .btn-module {
+    background: #f8f9fa;
+    color: #667eea;
+    border: 1px solid #e0e0e0;
+    padding: 0.75rem 1rem;
+    font-size: 0.9rem;
+  }
+
+  .btn-module:hover {
+    background: #667eea;
+    color: white;
+    border-color: #667eea;
+    transform: translateY(-1px);
+  }
+
+  .tech-info {
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid #e0e0e0;
+  }
+
+  .tech-info p {
+    color: #666;
+    margin: 0.5rem 0;
+    font-size: 0.9rem;
+  }
+
+  .btn-settings {
+    background: #f0f0f0;
+    color: #333;
+    border: 1px solid #ddd;
+    width: 100%;
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: all 0.2s;
+  }
+
+  .btn-settings:hover {
+    background: #e0e0e0;
+    transform: translateY(-1px);
+  }
+
+  .loading-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
     height: 100vh;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     display: flex;
     align-items: center;
     justify-content: center;
+    z-index: 1000;
+  }
+
+  .loading-content {
+    text-align: center;
+    color: white;
+  }
+
+  .loading-content .poldi-icon {
+    font-size: 80px;
+    margin-bottom: 1rem;
+    animation: bounce 2s infinite;
+  }
+
+  .loading-content h1 {
+    font-size: 3rem;
+    margin: 0 0 1rem 0;
+  }
+
+  .loading-content p {
+    font-size: 1.2rem;
+    margin: 0 0 2rem 0;
+  }
+
+  .loading-bar {
+    width: 300px;
+    height: 8px;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 4px;
+    overflow: hidden;
+    margin: 0 auto;
+  }
+
+  .loading-progress {
+    height: 100%;
+    background: white;
+    border-radius: 4px;
+    animation: progress 2s ease-out forwards;
+  }
+
+  @keyframes progress {
+    0% { width: 0%; }
+    100% { width: 100%; }
   }
 
   .test-view {
