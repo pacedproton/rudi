@@ -2,8 +2,11 @@
   import NetflixIntro from '$lib/components/NetflixIntro.svelte';
   import { flinkiModules } from '$lib/data/modules';
   import { goto } from '$app/navigation';
+  import { speechEngine } from '$lib/core/SpeechEngine';
+  import { audioEngine } from '$lib/core/AudioEngine';
 
   let isLoading = true;
+  let showSettings = false;
 
   function handleIntroComplete() {
     isLoading = false;
@@ -24,6 +27,16 @@
   function startDemo() {
     goto('/exercises?mode=demo');
   }
+
+  function testSpeech() {
+    speechEngine.speak('Hallo! Ich bin Flinki der Frosch. Lass uns zusammen lernen!');
+  }
+
+  function testSound() {
+    audioEngine.playSound('success');
+    setTimeout(() => audioEngine.playSound('wrong'), 1000);
+    setTimeout(() => audioEngine.playSound('pop'), 2000);
+  }
 </script>
 
 <main>
@@ -38,31 +51,39 @@
       </div>
 
       <div class="info-panel">
-        <h2>✅ Comprehensive Exercise Library</h2>
+        <h2>✅ Umfassende Übungsbibliothek</h2>
         <ul>
-          <li>✅ <strong>18 Exercise Types</strong> - All implemented</li>
-          <li>✅ <strong>10 Modules</strong> - 336 exercises total</li>
-          <li>✅ <strong>Authentic SES Content</strong> - Based on official materials</li>
-          <li>✅ <strong>Speech & Audio</strong> - German TTS working</li>
+          <li>✅ <strong>18 Übungstypen</strong> - Alle fertig</li>
+          <li>✅ <strong>10 Module</strong> - 336 Übungen gesamt</li>
+          <li>✅ <strong>SES Inhalte</strong> - Basierend auf offiziellen Materialien</li>
+          <li>✅ <strong>Sprache & Töne</strong> - Deutsche TTS aktiv</li>
         </ul>
 
-        <h2>📚 Available Modules</h2>
+        <h2>📚 Verfügbare Module</h2>
         <ol>
           <li><strong>Reime & Laute</strong> - 36 Aufgaben (Phonologie)</li>
-          <li><strong>Anfangslaute</strong> - 36 Aufgaben (Letter Sounds)</li>
-          <li><strong>Mengen</strong> - 36 Aufgaben (Quantities)</li>
-          <li><strong>Zählen</strong> - 36 Aufgaben (Counting)</li>
-          <li><strong>Zahlen merken</strong> - 36 Aufgaben (Working Memory)</li>
-          <li><strong>Genau hinschauen</strong> - 36 Aufgaben (Visual)</li>
-          <li><strong>Nachzeichnen</strong> - 36 Aufgaben (Graphomotor)</li>
-          <li><strong>Wo ist was?</strong> - 36 Aufgaben (Spatial)</li>
+          <li><strong>Anfangslaute</strong> - 36 Aufgaben (Buchstaben-Laute)</li>
+          <li><strong>Mengen</strong> - 36 Aufgaben (Mengenerfassung)</li>
+          <li><strong>Zählen</strong> - 36 Aufgaben (Zählkompetenz)</li>
+          <li><strong>Zahlen merken</strong> - 36 Aufgaben (Arbeitsgedächtnis)</li>
+          <li><strong>Genau hinschauen</strong> - 36 Aufgaben (Visuelle Wahrnehmung)</li>
+          <li><strong>Nachzeichnen</strong> - 36 Aufgaben (Grafomotorik)</li>
+          <li><strong>Wo ist was?</strong> - 36 Aufgaben (Räumliche Orientierung)</li>
+          <li><strong>Zeichnen & Schreiben</strong> - 36 Aufgaben</li>
+          <li><strong>Geschichten erzählen</strong> - 12 Aufgaben (Neu!)</li>
         </ol>
       </div>
 
       <div class="buttons">
-        <button class="btn-settings" on:click={() => {}}>
+        <button class="btn-settings" on:click={() => showSettings = !showSettings}>
           ⚙️ Einstellungen
         </button>
+
+        {#if showSettings}
+          <div class="settings-panel">
+            <p>📝 Einstellungen werden bald verfügbar sein!</p>
+          </div>
+        {/if}
 
         <div class="button-divider"></div>
 
@@ -92,12 +113,12 @@
 
         <div class="button-divider"></div>
 
-        <button class="btn-secondary" on:click={() => {}}>
-          🔊 Test Speech
+        <button class="btn-secondary" on:click={testSpeech}>
+          🔊 Sprache testen
         </button>
 
-        <button class="btn-secondary" on:click={() => {}}>
-          🎵 Test Sound
+        <button class="btn-secondary" on:click={testSound}>
+          🎵 Töne testen
         </button>
       </div>
 
@@ -111,9 +132,10 @@
   :global(body) {
     margin: 0;
     padding: 0;
-    font-family: 'Arial Rounded MT Bold', Arial, sans-serif;
+    font-family: 'Nunito', 'Arial Rounded MT Bold', Arial, sans-serif;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     min-height: 100vh;
+    overflow-y: auto;
   }
 
   main {
@@ -123,7 +145,8 @@
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
-    padding-top: 2rem;
+    padding: 2rem 0 4rem 0;
+    overflow-y: auto;
   }
 
   .menu {
@@ -229,10 +252,17 @@
   .btn-secondary {
     background: #f0f0f0;
     color: #333;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   }
 
   .btn-secondary:hover {
     background: #e0e0e0;
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  .btn-secondary:active {
+    transform: translateY(0) scale(0.98);
   }
 
   .button-divider {
@@ -254,13 +284,20 @@
     border: 1px solid #e0e0e0;
     padding: 0.75rem 1rem;
     font-size: 0.9rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    transition: all 0.2s ease;
   }
 
   .btn-module:hover {
     background: #667eea;
     color: white;
     border-color: #667eea;
-    transform: translateY(-1px);
+    transform: translateY(-2px) scale(1.03);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+  }
+
+  .btn-module:active {
+    transform: translateY(0) scale(0.97);
   }
 
   .tech-info {
@@ -275,8 +312,23 @@
     font-size: 0.9rem;
   }
 
+  .settings-panel {
+    background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+    border-radius: 12px;
+    padding: 1rem;
+    margin: 0.5rem 0;
+    text-align: center;
+    border: 2px dashed #ffb74d;
+  }
+
+  .settings-panel p {
+    margin: 0;
+    color: #e65100;
+    font-weight: 600;
+  }
+
   .btn-settings {
-    background: #f0f0f0;
+    background: linear-gradient(135deg, #f5f5f5 0%, #e0e0e0 100%);
     color: #333;
     border: 1px solid #ddd;
     width: 100%;
@@ -284,8 +336,9 @@
     font-size: 1rem;
     font-weight: bold;
     cursor: pointer;
-    border-radius: 8px;
-    transition: all 0.2s;
+    border-radius: 12px;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
   }
 
   .btn-settings:hover {

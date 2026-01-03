@@ -17,6 +17,9 @@
   let initialized = false;
 
   onMount(() => {
+    // Lock body scrolling for full-screen exercise
+    document.body.style.overflow = 'hidden';
+    
     const moduleParam = $page.url.searchParams.get('module');
     const modeParam = $page.url.searchParams.get('mode');
 
@@ -57,6 +60,10 @@
   });
 
   onDestroy(() => {
+    // Restore body scrolling when leaving exercises
+    if (typeof document !== 'undefined') {
+      document.body.style.overflow = 'auto';
+    }
     if (typeof window !== 'undefined') {
       window.removeEventListener('resize', handleResize);
     }

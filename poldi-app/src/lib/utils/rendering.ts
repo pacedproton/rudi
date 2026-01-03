@@ -31,24 +31,28 @@ export function renderBackground(ctx: RenderContext): void {
 
 /**
  * Render HUD (score display with keys)
- * Ported from prototype.html lines 802-817
+ * Shows compact score badge in top-left corner
  */
 export function renderHUD(ctx: RenderContext): void {
-  const { width, scale } = ctx;
+  const { scale } = ctx;
   const keys = get(totalKeys);
-  const sx = width - 50 * scale;
+  const padding = 15 * scale;
 
-  // Background box
-  ctx.ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
-  drawRoundedRect(ctx.ctx, sx - 100 * scale, 10 * scale, 140 * scale, 50 * scale, 25 * scale);
+  // Compact pill-shaped score badge in top-left
+  const badgeWidth = 80 * scale;
+  const badgeHeight = 36 * scale;
 
-  // Text
-  ctx.ctx.font = `${24 * scale}px Arial`;
+  // Background pill
+  ctx.ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
+  drawRoundedRect(ctx.ctx, padding, padding, badgeWidth, badgeHeight, badgeHeight / 2);
+
+  // Key icon and count
+  ctx.ctx.font = `bold ${18 * scale}px Arial`;
   ctx.ctx.fillStyle = '#fff';
-  ctx.ctx.textAlign = 'right';
+  ctx.ctx.textAlign = 'left';
   ctx.ctx.textBaseline = 'middle';
-  ctx.ctx.fillText(`x ${keys}`, sx, 35 * scale);
-  ctx.ctx.fillText('🗝️', sx - 60 * scale, 35 * scale);
+  ctx.ctx.fillText('🗝️', padding + 10 * scale, padding + badgeHeight / 2);
+  ctx.ctx.fillText(`${keys}`, padding + 40 * scale, padding + badgeHeight / 2);
 }
 
 /**
