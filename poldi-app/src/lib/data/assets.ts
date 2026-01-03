@@ -1,5 +1,5 @@
 /**
- * Asset definitions for Flinki
+ * Asset definitions for Lern-Rudi
  * Icons (emojis) and German labels for exercises
  * Ported from prototype.html lines 92-184
  */

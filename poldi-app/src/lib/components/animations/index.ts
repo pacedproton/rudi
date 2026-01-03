@@ -1,5 +1,5 @@
 /**
- * Animation components - Netflix-style animations for Flinki App
+ * Animation components - Netflix-style animations for Lern-Rudi App
  */
 
 export { default as ScreenTransition } from './ScreenTransition.svelte';

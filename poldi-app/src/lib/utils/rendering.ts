@@ -1,5 +1,5 @@
 /**
- * Rendering utilities for Flinki
+ * Rendering utilities for Lern-Rudi
  *
  * Common rendering functions used across the app
  */

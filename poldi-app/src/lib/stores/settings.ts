@@ -1,5 +1,5 @@
 /**
- * Settings Store - Persistent configuration for Flinki App
+ * Settings Store - Persistent configuration for Lern-Rudi App
  *
  * Manages user preferences with localStorage persistence
  */

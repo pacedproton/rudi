@@ -1,5 +1,5 @@
 /**
- * ParticleSystem - Visual feedback effects for Flinki
+ * ParticleSystem - Visual feedback effects for Lern-Rudi
  *
  * Creates celebratory particles when correct answers are given
  * Ported from prototype.html lines 281-314

@@ -1,6 +1,6 @@
 /**
  * OpenAI Service - Handles Whisper transcription and GPT story scoring
- * for the storytelling feature in Flinki App
+ * for the storytelling feature in Lern-Rudi App
  */
 
 export interface StoryScore {

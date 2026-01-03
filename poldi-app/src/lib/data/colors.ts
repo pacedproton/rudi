@@ -1,5 +1,5 @@
 /**
- * Color palette for Flinki
+ * Color palette for Lern-Rudi
  * Ported from prototype.html lines 47-62
  */
 
@@ -8,7 +8,7 @@ export const colors = {
   sky: '#87CEEB',
   grass: '#7CFC00',
 
-  // Flinki character
+  // Rudi character
   flinkiSkin: '#76c043',
   flinkiDark: '#4a8e22',
   red: '#e74c3c',

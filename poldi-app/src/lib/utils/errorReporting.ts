@@ -1,5 +1,5 @@
 /**
- * Error reporting utility for Flinki App
+ * Error reporting utility for Lern-Rudi App
  * Handles logging and reporting of errors for debugging and monitoring
  */
 
@@ -45,7 +45,7 @@ class ErrorReporter {
     }
 
     // Log to console
-    console.error('Flinki App Error:', report);
+    console.error('Lern-Rudi App Error:', report);
 
     // In production, you would send to external service
     this.sendToExternalService(report);

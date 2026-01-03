@@ -1,5 +1,5 @@
 /**
- * Official Flinki SES (Schuleingangsscreening) Modules - COMPREHENSIVE VERSION
+ * Official Lern-Rudi SES (Schuleingangsscreening) Modules - COMPREHENSIVE VERSION
  *
  * Based on authentic Austrian school readiness assessment research from:
  * - University of Vienna & University of Graz SES project
@@ -1306,11 +1306,11 @@ export const flinkiModules: Module[] = [
       { type: 'syllables', word: 'Schokolade', icon: 'chocolate', count: 4 },
       { type: 'syllables', word: 'Marienkäfer', icon: 'ladybug', count: 4 },
       { type: 'syllables', word: 'Schmetterling', icon: 'butterfly', count: 3 },
-      { type: 'syllables', word: 'Kindergarten', icon: 'school', count: 4 },
+      { type: 'syllables', word: 'Kindergarten', icon: 'house', count: 4 },
       { type: 'syllables', word: 'Weihnachtsbaum', icon: 'tree', count: 4 },
-      { type: 'syllables', word: 'Regenbogen', icon: 'rainbow', count: 4 },
+      { type: 'syllables', word: 'Regenbogen', icon: 'star', count: 4 },
       { type: 'syllables', word: 'Feuerwehr', icon: 'fire', count: 3 },
-      { type: 'syllables', word: 'Wasserhahn', icon: 'milk', count: 3 }
+      { type: 'syllables', word: 'Wasserhahn', icon: 'icecream', count: 3 }
     ]
   }
 ];
@@ -1320,7 +1320,7 @@ export const flinkiModules: Module[] = [
  */
 export const demoModule: Module = {
   id: 'demo',
-  title: 'Flinki Demo',
+  title: 'Lern-Rudi Demo',
   intro: 'Willkommen! Lass uns ein paar Übungen machen.',
   tasks: [
     {

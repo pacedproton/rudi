@@ -30,7 +30,7 @@
   }
 
   function testSpeech() {
-    speechEngine.speak('Hallo! Ich bin Flinki der Frosch. Lass uns zusammen lernen!');
+    speechEngine.speak('Hallo! Ich bin Rudi. Lass uns zusammen lernen!');
   }
 
   function testSound() {
@@ -47,7 +47,7 @@
     <div class="menu">
       <div class="logo">
         <div class="flinki-icon">🐸</div>
-        <h1>Flinki App</h1>
+        <h1>Lern-Rudi</h1>
         <p class="subtitle">Schuleingangsscreening - Refactored Version</p>
       </div>
 
