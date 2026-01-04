@@ -1,0 +1,157 @@
+# Bonus Module: Was gibt es in echt? (Real World Facts)
+# True/False questions about real animals and nature in Austria
+
+id: bonus-realworld
+title:
+  de: "Was gibt es in echt?"
+  en: "What Really Exists?"
+intro:
+  de: "Weißt du, welche Tiere es wirklich in Österreich gibt?"
+  en: "Do you know which animals really exist in Austria?"
+category: bonus
+icon: "🌍"
+
+tasks:
+  # Vienna Parrots (True - there are wild parakeets!)
+  - type: truefalse
+    config:
+      question:
+        de: "Gibt es in Wien im Freien Papageien?"
+        en: "Are there parrots outdoors in Vienna?"
+      answer: true
+      explanation:
+        de: "Ja! In Wien leben wilde Halsbandsittiche. Sie sind grün und laut!"
+        en: "Yes! Wild ring-necked parakeets live in Vienna. They are green and loud!"
+      image: "parrot"
+
+  # Vienna Wolves (False)
+  - type: truefalse
+    config:
+      question:
+        de: "Gibt es in Wien im Freien Wölfe?"
+        en: "Are there wolves outdoors in Vienna?"
+      answer: false
+      explanation:
+        de: "Nein, in Wien gibt es keine wilden Wölfe. Wölfe leben im Wald weit weg."
+        en: "No, there are no wild wolves in Vienna. Wolves live far away in forests."
+      image: "wolf"
+
+  # Danube Fish (True)
+  - type: truefalse
+    config:
+      question:
+        de: "Schwimmen in der Donau Fische?"
+        en: "Do fish swim in the Danube?"
+      answer: true
+      explanation:
+        de: "Ja! Viele Fische leben in der Donau, zum Beispiel Karpfen und Welse."
+        en: "Yes! Many fish live in the Danube, like carp and catfish."
+      image: "fish"
+
+  # Penguins in Austria (False)
+  - type: truefalse
+    config:
+      question:
+        de: "Leben in Österreich wilde Pinguine?"
+        en: "Do wild penguins live in Austria?"
+      answer: false
+      explanation:
+        de: "Nein, Pinguine leben nur am Südpol und in kälteren Ländern."
+        en: "No, penguins only live at the South Pole and in colder countries."
+      image: "penguin"
+
+  # Deer in forests (True)
+  - type: truefalse
+    config:
+      question:
+        de: "Gibt es in österreichischen Wäldern Rehe?"
+        en: "Are there deer in Austrian forests?"
+      answer: true
+      explanation:
+        de: "Ja! Rehe leben in vielen Wäldern in Österreich."
+        en: "Yes! Deer live in many forests in Austria."
+      image: "deer"
+
+  # Lions in Austria (False)
+  - type: truefalse
+    config:
+      question:
+        de: "Leben in Österreich wilde Löwen?"
+        en: "Do wild lions live in Austria?"
+      answer: false
+      explanation:
+        de: "Nein, Löwen leben in Afrika. In Österreich kann man sie nur im Zoo sehen."
+        en: "No, lions live in Africa. In Austria you can only see them at the zoo."
+      image: "lion"
+
+  # Squirrels (True)
+  - type: truefalse
+    config:
+      question:
+        de: "Klettern in Parks Eichhörnchen auf Bäume?"
+        en: "Do squirrels climb trees in parks?"
+      answer: true
+      explanation:
+        de: "Ja! Eichhörnchen leben in vielen Parks und sammeln Nüsse."
+        en: "Yes! Squirrels live in many parks and collect nuts."
+      image: "squirrel"
+
+  # Crocodiles in Danube (False)
+  - type: truefalse
+    config:
+      question:
+        de: "Schwimmen in der Donau Krokodile?"
+        en: "Do crocodiles swim in the Danube?"
+      answer: false
+      explanation:
+        de: "Nein! Krokodile brauchen warmes Wasser. Die Donau ist viel zu kalt."
+        en: "No! Crocodiles need warm water. The Danube is much too cold."
+      image: "crocodile"
+
+  # Storks (True)
+  - type: truefalse
+    config:
+      question:
+        de: "Bauen Störche ihre Nester auf Dächern in Österreich?"
+        en: "Do storks build their nests on roofs in Austria?"
+      answer: true
+      explanation:
+        de: "Ja! Besonders im Burgenland gibt es viele Störche auf Dächern."
+        en: "Yes! Especially in Burgenland there are many storks on roofs."
+      image: "stork"
+
+  # Kangaroos (False)
+  - type: truefalse
+    config:
+      question:
+        de: "Hüpfen in Österreich Kängurus herum?"
+        en: "Do kangaroos hop around in Austria?"
+      answer: false
+      explanation:
+        de: "Nein, Kängurus leben nur in Australien!"
+        en: "No, kangaroos only live in Australia!"
+      image: "kangaroo"
+
+  # Hedgehogs (True)
+  - type: truefalse
+    config:
+      question:
+        de: "Gibt es in Gärten manchmal Igel?"
+        en: "Are there sometimes hedgehogs in gardens?"
+      answer: true
+      explanation:
+        de: "Ja! Igel leben in Gärten und fressen Schnecken und Käfer."
+        en: "Yes! Hedgehogs live in gardens and eat snails and beetles."
+      image: "hedgehog"
+
+  # Elephants (False)
+  - type: truefalse
+    config:
+      question:
+        de: "Laufen in Österreich wilde Elefanten herum?"
+        en: "Do wild elephants walk around in Austria?"
+      answer: false
+      explanation:
+        de: "Nein, Elefanten leben in Afrika und Asien. Bei uns nur im Zoo!"
+        en: "No, elephants live in Africa and Asia. Here only in the zoo!"
+      image: "elephant"

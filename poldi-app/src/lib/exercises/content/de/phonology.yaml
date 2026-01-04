@@ -1,0 +1,263 @@
+# Phonology Module - Reime und Laute
+# German phonological awareness exercises
+
+id: phonology
+title:
+  de: "Reime und Laute"
+  en: "Rhymes and Sounds"
+intro:
+  de: "Wir spielen mit Wörtern und Reimen! Hör gut zu."
+  en: "We play with words and rhymes! Listen carefully."
+category: schriftsprachlich
+icon: 🔤
+
+tasks:
+  # RHYMES (11 exercises)
+  - type: rhyme
+    word:
+      de: "Maus"
+      en: "Mouse"
+    target: house
+    distractors: [car]
+
+  - type: rhyme
+    word:
+      de: "Krone"
+      en: "Crown"
+    target: lemon
+    distractors: [shoe]
+
+  - type: rhyme
+    word:
+      de: "Hund"
+      en: "Dog"
+    target: mouth
+    distractors: [cat]
+
+  - type: rhyme
+    word:
+      de: "Haus"
+      en: "House"
+    target: mouse
+    distractors: [dog]
+
+  - type: rhyme
+    word:
+      de: "Katze"
+      en: "Cat"
+    target: ball
+    distractors: [dog]
+
+  - type: rhyme
+    word:
+      de: "Fisch"
+      en: "Fish"
+    target: table
+    distractors: [bird]
+
+  - type: rhyme
+    word:
+      de: "Stern"
+      en: "Star"
+    target: mountain
+    distractors: [sun]
+
+  - type: rhyme
+    word:
+      de: "Baum"
+      en: "Tree"
+    target: tree
+    distractors: [flower]
+
+  - type: rhyme
+    word:
+      de: "Ball"
+      en: "Ball"
+    target: banana
+    distractors: [apple]
+
+  - type: rhyme
+    word:
+      de: "Boot"
+      en: "Boat"
+    target: cake
+    distractors: [ship]
+
+  - type: rhyme
+    word:
+      de: "Schuh"
+      en: "Shoe"
+    target: banana
+    distractors: [apple]
+
+  # SYLLABLES (24 exercises)
+  # 2-syllable words
+  - type: syllables
+    word:
+      de: "Sonne"
+      en: "Sun"
+    icon: sun
+    count: 2
+
+  - type: syllables
+    word:
+      de: "Löwe"
+      en: "Lion"
+    icon: lion
+    count: 2
+
+  - type: syllables
+    word:
+      de: "Apfel"
+      en: "Apple"
+    icon: apple
+    count: 2
+
+  - type: syllables
+    word:
+      de: "Auto"
+      en: "Car"
+    icon: car
+    count: 2
+
+  - type: syllables
+    word:
+      de: "Blume"
+      en: "Flower"
+    icon: flower
+    count: 2
+
+  - type: syllables
+    word:
+      de: "Katze"
+      en: "Cat"
+    icon: cat
+    count: 2
+
+  - type: syllables
+    word:
+      de: "Hase"
+      en: "Rabbit"
+    icon: rabbit
+    count: 2
+
+  - type: syllables
+    word:
+      de: "Feder"
+      en: "Feather"
+    icon: feather
+    count: 2
+
+  # 3-syllable words
+  - type: syllables
+    word:
+      de: "Banane"
+      en: "Banana"
+    icon: banana
+    count: 3
+
+  - type: syllables
+    word:
+      de: "Rakete"
+      en: "Rocket"
+    icon: rocket
+    count: 3
+
+  - type: syllables
+    word:
+      de: "Elefant"
+      en: "Elephant"
+    icon: elephant
+    count: 3
+
+  - type: syllables
+    word:
+      de: "Ananas"
+      en: "Pineapple"
+    icon: pineapple
+    count: 3
+
+  - type: syllables
+    word:
+      de: "Tomate"
+      en: "Tomato"
+    icon: tomato
+    count: 3
+
+  - type: syllables
+    word:
+      de: "Schokolade"
+      en: "Chocolate"
+    icon: chocolate
+    count: 4
+
+  - type: syllables
+    word:
+      de: "Papagei"
+      en: "Parrot"
+    icon: parrot
+    count: 3
+
+  - type: syllables
+    word:
+      de: "Kartoffel"
+      en: "Potato"
+    icon: potato
+    count: 3
+
+  # 4-5 syllable words
+  - type: syllables
+    word:
+      de: "Marienkäfer"
+      en: "Ladybug"
+    icon: ladybug
+    count: 4
+
+  - type: syllables
+    word:
+      de: "Schmetterling"
+      en: "Butterfly"
+    icon: butterfly
+    count: 3
+
+  - type: syllables
+    word:
+      de: "Feuerwehrauto"
+      en: "Fire truck"
+    icon: firetruck
+    count: 5
+
+  - type: syllables
+    word:
+      de: "Polizeiauto"
+      en: "Police car"
+    icon: police
+    count: 5
+
+  - type: syllables
+    word:
+      de: "Kindergarten"
+      en: "Kindergarten"
+    icon: school
+    count: 4
+
+  - type: syllables
+    word:
+      de: "Weihnachtsbaum"
+      en: "Christmas tree"
+    icon: tree
+    count: 4
+
+  - type: syllables
+    word:
+      de: "Geburtstag"
+      en: "Birthday"
+    icon: cake
+    count: 3
+
+  - type: syllables
+    word:
+      de: "Regenbogen"
+      en: "Rainbow"
+    icon: rainbow
+    count: 4

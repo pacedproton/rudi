@@ -1,0 +1,145 @@
+# Storytelling Module - Geschichten erzählen
+# Narrative skills with AI scoring
+
+id: storytelling
+title:
+  de: "Geschichten erzählen"
+  en: "Storytelling"
+intro:
+  de: "Erzähl mir eine Geschichte! Benutze die Hinwörter."
+  en: "Tell me a story! Use the cue words."
+category: schriftsprachlich
+icon: 📖
+
+tasks:
+  - type: storytelling
+    prompt:
+      de: "Ein Kind geht in den Zoo"
+      en: "A child goes to the zoo"
+    image: "🦁"
+    cues:
+      de: ["Erst", "Dann", "Und dann", "Am Ende"]
+      en: ["First", "Then", "And then", "Finally"]
+    minDuration: 10
+    maxDuration: 60
+
+  - type: storytelling
+    prompt:
+      de: "Ein Hund findet einen Schatz"
+      en: "A dog finds a treasure"
+    image: "🐕"
+    cues:
+      de: ["Zuerst", "Plötzlich", "Danach", "Schließlich"]
+      en: ["First", "Suddenly", "After that", "Finally"]
+    minDuration: 10
+    maxDuration: 60
+
+  - type: storytelling
+    prompt:
+      de: "Eine Katze klettert auf einen Baum"
+      en: "A cat climbs a tree"
+    image: "🐱"
+    cues:
+      de: ["Am Anfang", "Dann", "Aber", "Zum Schluss"]
+      en: ["At first", "Then", "But", "In the end"]
+    minDuration: 10
+    maxDuration: 60
+
+  - type: storytelling
+    prompt:
+      de: "Ein Geburtstagsfest"
+      en: "A birthday party"
+    image: "🎂"
+    cues:
+      de: ["Erst", "Dann", "Und dann", "Am Ende"]
+      en: ["First", "Then", "And then", "Finally"]
+    minDuration: 10
+    maxDuration: 60
+
+  - type: storytelling
+    prompt:
+      de: "Ein Tag am Strand"
+      en: "A day at the beach"
+    image: "🏖️"
+    cues:
+      de: ["Morgens", "Dann", "Nachmittags", "Abends"]
+      en: ["In the morning", "Then", "In the afternoon", "In the evening"]
+    minDuration: 10
+    maxDuration: 60
+
+  - type: storytelling
+    prompt:
+      de: "Ein Ausflug in die Berge"
+      en: "A trip to the mountains"
+    image: "⛰️"
+    cues:
+      de: ["Zuerst", "Unterwegs", "Oben", "Auf dem Rückweg"]
+      en: ["First", "On the way", "At the top", "On the way back"]
+    minDuration: 10
+    maxDuration: 60
+
+  - type: storytelling
+    prompt:
+      de: "Ein Besuch bei der Oma"
+      en: "A visit to grandma"
+    image: "👵"
+    cues:
+      de: ["Als wir ankamen", "Dann", "Später", "Bevor wir gingen"]
+      en: ["When we arrived", "Then", "Later", "Before we left"]
+    minDuration: 10
+    maxDuration: 60
+
+  - type: storytelling
+    prompt:
+      de: "Ein Regentag"
+      en: "A rainy day"
+    image: "🌧️"
+    cues:
+      de: ["Am Morgen", "Dann", "Inzwischen", "Am Abend"]
+      en: ["In the morning", "Then", "Meanwhile", "In the evening"]
+    minDuration: 10
+    maxDuration: 60
+
+  - type: storytelling
+    prompt:
+      de: "Ein Besuch beim Arzt"
+      en: "A visit to the doctor"
+    image: "👨‍⚕️"
+    cues:
+      de: ["Zuerst", "Dann", "Der Arzt", "Danach"]
+      en: ["First", "Then", "The doctor", "After that"]
+    minDuration: 10
+    maxDuration: 60
+
+  - type: storytelling
+    prompt:
+      de: "Ein Schneemann"
+      en: "A snowman"
+    image: "⛄"
+    cues:
+      de: ["Erst", "Als nächstes", "Dann", "Zum Schluss"]
+      en: ["First", "Next", "Then", "Finally"]
+    minDuration: 10
+    maxDuration: 60
+
+  - type: storytelling
+    prompt:
+      de: "Die erste Schultag"
+      en: "The first day of school"
+    image: "🎒"
+    cues:
+      de: ["Morgens", "In der Schule", "In der Pause", "Nach der Schule"]
+      en: ["In the morning", "At school", "During break", "After school"]
+    minDuration: 10
+    maxDuration: 60
+
+  - type: storytelling
+    prompt:
+      de: "Ein Zauberer macht Tricks"
+      en: "A magician does tricks"
+    image: "🪄"
+    cues:
+      de: ["Der Zauberer", "Dann", "Alle staunten", "Am Ende"]
+      en: ["The magician", "Then", "Everyone was amazed", "In the end"]
+    minDuration: 10
+    maxDuration: 60

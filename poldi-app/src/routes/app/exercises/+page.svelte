@@ -11,7 +11,7 @@
     updateCanvasSize
   } from '$lib/core/StateManager';
   import type { Module } from '$lib/core/StateManager';
-  import { flinkiModules } from '$lib/data/modules';
+  import { flinkiModules, bonusRealworldModule } from '$lib/data/modules';
   import '$lib/exercises'; // Register all exercises
 
   let initialized = false;
@@ -22,10 +22,16 @@
     
     const moduleParam = $page.url.searchParams.get('module');
     const modeParam = $page.url.searchParams.get('mode');
+    const bonusParam = $page.url.searchParams.get('bonus');
 
     let modulesToRun: Module[] = [];
 
-    if (moduleParam) {
+    if (bonusParam) {
+      // Handle bonus modules
+      if (bonusParam === 'bonus-realworld') {
+        modulesToRun = [bonusRealworldModule];
+      }
+    } else if (moduleParam) {
       const m = flinkiModules.find(x => x.id === moduleParam);
       if (m) {
         modulesToRun = [m];

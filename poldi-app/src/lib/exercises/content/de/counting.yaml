@@ -1,0 +1,136 @@
+# Counting Module - Zählen und Zahlen
+
+id: counting
+title:
+  de: "Zählen und Zahlen"
+  en: "Counting and Numbers"
+intro:
+  de: "Wie viele Dinge siehst du? Tippe auf die Zahl."
+  en: "How many things do you see? Tap the number."
+category: mathematisch
+icon: 🔢
+
+tasks:
+  # COUNTING (24 exercises)
+  - type: counting
+    count: 1
+    icon: sun
+  - type: counting
+    count: 2
+    icon: apple
+  - type: counting
+    count: 3
+    icon: ladybug
+  - type: counting
+    count: 4
+    icon: car
+  - type: counting
+    count: 5
+    icon: star
+  - type: counting
+    count: 6
+    icon: butterfly
+  - type: counting
+    count: 7
+    icon: flower
+  - type: counting
+    count: 8
+    icon: balloon
+  - type: counting
+    count: 9
+    icon: mushroom
+  - type: counting
+    count: 2
+    icon: cat
+  - type: counting
+    count: 3
+    icon: bird
+  - type: counting
+    count: 4
+    icon: fish
+  - type: counting
+    count: 5
+    icon: tree
+  - type: counting
+    count: 6
+    icon: leaf
+  - type: counting
+    count: 7
+    icon: heart
+  - type: counting
+    count: 8
+    icon: cloud
+  - type: counting
+    count: 9
+    icon: rainbow
+  - type: counting
+    count: 3
+    icon: shoe
+  - type: counting
+    count: 4
+    icon: book
+  - type: counting
+    count: 5
+    icon: pencil
+  - type: counting
+    count: 6
+    icon: hat
+  - type: counting
+    count: 7
+    icon: key
+  - type: counting
+    count: 8
+    icon: ball
+  - type: counting
+    count: 9
+    icon: drum
+
+  # MISSING NUMBERS (12 exercises)
+  - type: missing
+    start: 1
+    length: 5
+    missingIndex: 0
+  - type: missing
+    start: 1
+    length: 5
+    missingIndex: 1
+  - type: missing
+    start: 1
+    length: 5
+    missingIndex: 2
+  - type: missing
+    start: 1
+    length: 5
+    missingIndex: 3
+  - type: missing
+    start: 2
+    length: 5
+    missingIndex: 1
+  - type: missing
+    start: 3
+    length: 5
+    missingIndex: 2
+  - type: missing
+    start: 3
+    length: 5
+    missingIndex: 3
+  - type: missing
+    start: 4
+    length: 5
+    missingIndex: 0
+  - type: missing
+    start: 4
+    length: 5
+    missingIndex: 2
+  - type: missing
+    start: 5
+    length: 5
+    missingIndex: 1
+  - type: missing
+    start: 2
+    length: 5
+    missingIndex: 3
+  - type: missing
+    start: 1
+    length: 5
+    missingIndex: 4

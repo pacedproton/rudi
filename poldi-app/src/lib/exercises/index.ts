@@ -17,6 +17,7 @@ import './motor';      // trace, trace_path
 import './spatial';    // preposition
 import './drawing';    // drawing, connect_dots, handwriting (tablet/stylus)
 import './storytelling'; // storytelling (OpenAI)
+import './truefalse';   // truefalse (bonus)
 
 // Re-export all exercises for direct use
 export * from './phonology';
@@ -27,4 +28,4 @@ export * from './motor';
 export * from './spatial';
 export * from './drawing';
 export * from './storytelling';
-
+export * from './truefalse';

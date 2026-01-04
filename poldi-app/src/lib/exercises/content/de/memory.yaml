@@ -1,0 +1,93 @@
+# Memory Module - Zahlen merken
+# Working memory exercises
+
+id: memory
+title:
+  de: "Zahlen merken"
+  en: "Remember Numbers"
+intro:
+  de: "Ich sage dir Zahlen. Merke sie dir gut!"
+  en: "I'll tell you numbers. Remember them well!"
+category: exekutiv
+icon: 🧠
+
+tasks:
+  # 2-digit sequences (12 exercises)
+  - type: memory
+    seq: [3, 7]
+  - type: memory
+    seq: [2, 9]
+  - type: memory
+    seq: [5, 1]
+  - type: memory
+    seq: [8, 4]
+  - type: memory
+    seq: [6, 3]
+  - type: memory
+    seq: [1, 8]
+  - type: memory
+    seq: [4, 6]
+  - type: memory
+    seq: [7, 2]
+  - type: memory
+    seq: [9, 5]
+  - type: memory
+    seq: [2, 6]
+  - type: memory
+    seq: [5, 9]
+  - type: memory
+    seq: [3, 1]
+
+  # 3-digit sequences (12 exercises)
+  - type: memory
+    seq: [4, 2, 8]
+  - type: memory
+    seq: [1, 9, 5]
+  - type: memory
+    seq: [7, 3, 6]
+  - type: memory
+    seq: [5, 8, 2]
+  - type: memory
+    seq: [9, 1, 4]
+  - type: memory
+    seq: [3, 6, 7]
+  - type: memory
+    seq: [2, 5, 9]
+  - type: memory
+    seq: [8, 4, 1]
+  - type: memory
+    seq: [6, 9, 3]
+  - type: memory
+    seq: [1, 7, 5]
+  - type: memory
+    seq: [4, 8, 6]
+  - type: memory
+    seq: [9, 2, 7]
+
+  # 4-digit sequences (8 exercises)
+  - type: memory
+    seq: [6, 3, 1, 4]
+  - type: memory
+    seq: [2, 7, 9, 3]
+  - type: memory
+    seq: [8, 4, 2, 6]
+  - type: memory
+    seq: [5, 9, 1, 7]
+  - type: memory
+    seq: [3, 6, 8, 2]
+  - type: memory
+    seq: [7, 1, 5, 9]
+  - type: memory
+    seq: [4, 8, 3, 6]
+  - type: memory
+    seq: [9, 2, 4, 5]
+
+  # 5-digit sequences (4 exercises - challenging)
+  - type: memory
+    seq: [5, 1, 8, 3, 7]
+  - type: memory
+    seq: [9, 2, 6, 4, 1]
+  - type: memory
+    seq: [3, 7, 5, 9, 2]
+  - type: memory
+    seq: [6, 4, 1, 8, 5]

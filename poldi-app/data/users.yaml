@@ -1,0 +1,9 @@
+data:
+  - id: 5e234b97-4738-42da-a509-4eb7dd34a6ec
+    email: admin@lern-rudi.at
+    passwordHash: $2b$12$I/Wfha8ehRBFa9NZxCGYNOGPxKGifxzvU0itGth2ukWuFWgPvyLeO
+    displayName: Rudi
+    subscription: free
+    createdAt: 2026-01-04T12:35:41.527Z
+    updatedAt: 2026-01-04T12:35:41.527Z
+updatedAt: '2026-01-04T12:35:41.528Z'

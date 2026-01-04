@@ -1,0 +1,73 @@
+# Motor Skills Module - Nachzeichnen
+# Graphomotor exercises
+
+id: motor
+title:
+  de: "Nachzeichnen"
+  en: "Tracing"
+intro:
+  de: "Zeichne die Formen und Wege nach. Du schaffst das!"
+  en: "Trace the shapes and paths. You can do it!"
+category: grafomotorik
+icon: ✏️
+
+tasks:
+  # BASIC SHAPES - Circles (2 exercises)
+  - type: trace
+    shape: circle
+  - type: trace
+    shape: circle
+
+  # BASIC SHAPES - Crosses (2 exercises)
+  - type: trace
+    shape: cross
+  - type: trace
+    shape: cross
+
+  # BASIC SHAPES - Triangles (2 exercises)
+  - type: trace
+    shape: triangle
+  - type: trace
+    shape: triangle
+
+  # PATH TRACING - Easy (6 exercises)
+  - type: trace_path
+    difficulty: easy
+  - type: trace_path
+    difficulty: easy
+  - type: trace_path
+    difficulty: easy
+  - type: trace_path
+    difficulty: easy
+  - type: trace_path
+    difficulty: easy
+  - type: trace_path
+    difficulty: easy
+
+  # PATH TRACING - Medium (6 exercises)
+  - type: trace_path
+    difficulty: medium
+  - type: trace_path
+    difficulty: medium
+  - type: trace_path
+    difficulty: medium
+  - type: trace_path
+    difficulty: medium
+  - type: trace_path
+    difficulty: medium
+  - type: trace_path
+    difficulty: medium
+
+  # PATH TRACING - Hard (6 exercises)
+  - type: trace_path
+    difficulty: hard
+  - type: trace_path
+    difficulty: hard
+  - type: trace_path
+    difficulty: hard
+  - type: trace_path
+    difficulty: hard
+  - type: trace_path
+    difficulty: hard
+  - type: trace_path
+    difficulty: hard

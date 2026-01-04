@@ -1,0 +1,358 @@
+# Drawing Module - Zeichnen und Schreiben
+# Tablet/stylus drawing and handwriting exercises
+
+id: drawing
+title:
+  de: "Zeichnen und Schreiben"
+  en: "Drawing and Writing"
+intro:
+  de: "Zeichne mit deinem Finger oder Stift! Viel Spaß!"
+  en: "Draw with your finger or stylus! Have fun!"
+category: grafomotorik
+icon: 🎨
+
+tasks:
+  # DRAWING EXERCISES (12 exercises - different shapes)
+  - type: drawing
+    shape: circle
+    instruction:
+      de: "Zeichne einen Kreis"
+      en: "Draw a circle"
+
+  - type: drawing
+    shape: square
+    instruction:
+      de: "Zeichne ein Quadrat"
+      en: "Draw a square"
+
+  - type: drawing
+    shape: triangle
+    instruction:
+      de: "Zeichne ein Dreieck"
+      en: "Draw a triangle"
+
+  - type: drawing
+    shape: circle
+    instruction:
+      de: "Zeichne einen Kreis"
+      en: "Draw a circle"
+
+  - type: drawing
+    shape: star
+    instruction:
+      de: "Zeichne einen Stern"
+      en: "Draw a star"
+
+  - type: drawing
+    shape: heart
+    instruction:
+      de: "Zeichne ein Herz"
+      en: "Draw a heart"
+
+  - type: drawing
+    shape: square
+    instruction:
+      de: "Zeichne ein Quadrat"
+      en: "Draw a square"
+
+  - type: drawing
+    shape: triangle
+    instruction:
+      de: "Zeichne ein Dreieck"
+      en: "Draw a triangle"
+
+  - type: drawing
+    shape: star
+    instruction:
+      de: "Zeichne einen Stern"
+      en: "Draw a star"
+
+  - type: drawing
+    shape: heart
+    instruction:
+      de: "Zeichne ein Herz"
+      en: "Draw a heart"
+
+  - type: drawing
+    shape: circle
+    instruction:
+      de: "Zeichne einen Kreis"
+      en: "Draw a circle"
+
+  - type: drawing
+    shape: square
+    instruction:
+      de: "Zeichne ein Quadrat"
+      en: "Draw a square"
+
+  # HANDWRITING EXERCISES (12 exercises - letters and numbers)
+  - type: handwriting
+    character: "A"
+    instruction:
+      de: "Schreibe ein A"
+      en: "Write an A"
+
+  - type: handwriting
+    character: "B"
+    instruction:
+      de: "Schreibe ein B"
+      en: "Write a B"
+
+  - type: handwriting
+    character: "C"
+    instruction:
+      de: "Schreibe ein C"
+      en: "Write a C"
+
+  - type: handwriting
+    character: "1"
+    instruction:
+      de: "Schreibe eine 1"
+      en: "Write a 1"
+
+  - type: handwriting
+    character: "2"
+    instruction:
+      de: "Schreibe eine 2"
+      en: "Write a 2"
+
+  - type: handwriting
+    character: "3"
+    instruction:
+      de: "Schreibe eine 3"
+      en: "Write a 3"
+
+  - type: handwriting
+    character: "O"
+    instruction:
+      de: "Schreibe ein O"
+      en: "Write an O"
+
+  - type: handwriting
+    character: "L"
+    instruction:
+      de: "Schreibe ein L"
+      en: "Write an L"
+
+  - type: handwriting
+    character: "M"
+    instruction:
+      de: "Schreibe ein M"
+      en: "Write an M"
+
+  - type: handwriting
+    character: "5"
+    instruction:
+      de: "Schreibe eine 5"
+      en: "Write a 5"
+
+  - type: handwriting
+    character: "S"
+    instruction:
+      de: "Schreibe ein S"
+      en: "Write an S"
+
+  - type: handwriting
+    character: "T"
+    instruction:
+      de: "Schreibe ein T"
+      en: "Write a T"
+
+  # CONNECT DOTS EXERCISES (12 exercises - different patterns)
+  - type: connect_dots
+    dots:
+      - { x: 300, y: 150, number: 1 }
+      - { x: 450, y: 200, number: 2 }
+      - { x: 500, y: 350, number: 3 }
+      - { x: 350, y: 450, number: 4 }
+      - { x: 200, y: 350, number: 5 }
+      - { x: 250, y: 200, number: 6 }
+    shape:
+      de: "Stern"
+      en: "Star"
+    instruction:
+      de: "Verbinde die Punkte!"
+      en: "Connect the dots!"
+
+  - type: connect_dots
+    dots:
+      - { x: 250, y: 300, number: 1 }
+      - { x: 250, y: 200, number: 2 }
+      - { x: 350, y: 150, number: 3 }
+      - { x: 450, y: 200, number: 4 }
+      - { x: 450, y: 300, number: 5 }
+      - { x: 450, y: 450, number: 6 }
+      - { x: 250, y: 450, number: 7 }
+      - { x: 250, y: 300, number: 8 }
+    shape:
+      de: "Haus"
+      en: "House"
+    instruction:
+      de: "Verbinde die Punkte zum Haus!"
+      en: "Connect the dots to make a house!"
+
+  - type: connect_dots
+    dots:
+      - { x: 200, y: 200, number: 1 }
+      - { x: 300, y: 200, number: 2 }
+      - { x: 300, y: 300, number: 3 }
+      - { x: 400, y: 300, number: 4 }
+      - { x: 400, y: 400, number: 5 }
+      - { x: 300, y: 400, number: 6 }
+      - { x: 300, y: 500, number: 7 }
+      - { x: 200, y: 500, number: 8 }
+      - { x: 200, y: 400, number: 9 }
+      - { x: 100, y: 400, number: 10 }
+      - { x: 100, y: 300, number: 11 }
+      - { x: 200, y: 300, number: 12 }
+      - { x: 200, y: 200, number: 13 }
+    shape:
+      de: "Treppe"
+      en: "Stairs"
+    instruction:
+      de: "Verbinde die Punkte!"
+      en: "Connect the dots!"
+
+  - type: connect_dots
+    dots:
+      - { x: 350, y: 150, number: 1 }
+      - { x: 450, y: 250, number: 2 }
+      - { x: 400, y: 400, number: 3 }
+      - { x: 300, y: 400, number: 4 }
+      - { x: 250, y: 250, number: 5 }
+      - { x: 350, y: 150, number: 6 }
+    shape:
+      de: "Krone"
+      en: "Crown"
+    instruction:
+      de: "Verbinde die Punkte zur Krone!"
+      en: "Connect the dots to make a crown!"
+
+  - type: connect_dots
+    dots:
+      - { x: 200, y: 300, number: 1 }
+      - { x: 300, y: 200, number: 2 }
+      - { x: 400, y: 200, number: 3 }
+      - { x: 500, y: 300, number: 4 }
+      - { x: 350, y: 500, number: 5 }
+      - { x: 200, y: 300, number: 6 }
+    shape:
+      de: "Drachen"
+      en: "Kite"
+    instruction:
+      de: "Verbinde die Punkte!"
+      en: "Connect the dots!"
+
+  - type: connect_dots
+    dots:
+      - { x: 300, y: 200, number: 1 }
+      - { x: 350, y: 250, number: 2 }
+      - { x: 400, y: 200, number: 3 }
+      - { x: 450, y: 250, number: 4 }
+      - { x: 500, y: 300, number: 5 }
+      - { x: 450, y: 350, number: 6 }
+      - { x: 350, y: 450, number: 7 }
+      - { x: 250, y: 350, number: 8 }
+      - { x: 200, y: 300, number: 9 }
+      - { x: 250, y: 250, number: 10 }
+      - { x: 300, y: 200, number: 11 }
+    shape:
+      de: "Blume"
+      en: "Flower"
+    instruction:
+      de: "Verbinde die Punkte zur Blume!"
+      en: "Connect the dots to make a flower!"
+
+  - type: connect_dots
+    dots:
+      - { x: 250, y: 250, number: 1 }
+      - { x: 450, y: 250, number: 2 }
+      - { x: 450, y: 450, number: 3 }
+      - { x: 250, y: 450, number: 4 }
+      - { x: 250, y: 250, number: 5 }
+    shape:
+      de: "Quadrat"
+      en: "Square"
+    instruction:
+      de: "Verbinde die Punkte zum Quadrat!"
+      en: "Connect the dots to make a square!"
+
+  - type: connect_dots
+    dots:
+      - { x: 350, y: 200, number: 1 }
+      - { x: 500, y: 400, number: 2 }
+      - { x: 200, y: 400, number: 3 }
+      - { x: 350, y: 200, number: 4 }
+    shape:
+      de: "Dreieck"
+      en: "Triangle"
+    instruction:
+      de: "Verbinde die Punkte zum Dreieck!"
+      en: "Connect the dots to make a triangle!"
+
+  - type: connect_dots
+    dots:
+      - { x: 350, y: 200, number: 1 }
+      - { x: 400, y: 250, number: 2 }
+      - { x: 450, y: 350, number: 3 }
+      - { x: 400, y: 450, number: 4 }
+      - { x: 300, y: 450, number: 5 }
+      - { x: 250, y: 350, number: 6 }
+      - { x: 300, y: 250, number: 7 }
+      - { x: 350, y: 200, number: 8 }
+    shape:
+      de: "Achteck"
+      en: "Octagon"
+    instruction:
+      de: "Verbinde die Punkte!"
+      en: "Connect the dots!"
+
+  - type: connect_dots
+    dots:
+      - { x: 250, y: 300, number: 1 }
+      - { x: 300, y: 200, number: 2 }
+      - { x: 400, y: 200, number: 3 }
+      - { x: 450, y: 300, number: 4 }
+      - { x: 450, y: 400, number: 5 }
+      - { x: 350, y: 450, number: 6 }
+      - { x: 250, y: 400, number: 7 }
+      - { x: 250, y: 300, number: 8 }
+    shape:
+      de: "Schild"
+      en: "Shield"
+    instruction:
+      de: "Verbinde die Punkte zum Schild!"
+      en: "Connect the dots to make a shield!"
+
+  - type: connect_dots
+    dots:
+      - { x: 200, y: 250, number: 1 }
+      - { x: 350, y: 200, number: 2 }
+      - { x: 500, y: 250, number: 3 }
+      - { x: 450, y: 400, number: 4 }
+      - { x: 250, y: 400, number: 5 }
+      - { x: 200, y: 250, number: 6 }
+    shape:
+      de: "Diamant"
+      en: "Diamond"
+    instruction:
+      de: "Verbinde die Punkte zum Diamant!"
+      en: "Connect the dots to make a diamond!"
+
+  - type: connect_dots
+    dots:
+      - { x: 300, y: 250, number: 1 }
+      - { x: 350, y: 200, number: 2 }
+      - { x: 400, y: 250, number: 3 }
+      - { x: 450, y: 300, number: 4 }
+      - { x: 400, y: 350, number: 5 }
+      - { x: 350, y: 400, number: 6 }
+      - { x: 300, y: 350, number: 7 }
+      - { x: 250, y: 300, number: 8 }
+      - { x: 300, y: 250, number: 9 }
+    shape:
+      de: "Rad"
+      en: "Wheel"
+    instruction:
+      de: "Verbinde die Punkte zum Rad!"
+      en: "Connect the dots to make a wheel!"

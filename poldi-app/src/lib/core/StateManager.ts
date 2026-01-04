@@ -18,7 +18,7 @@ export interface Module {
   intro: string;
   tasks: ExerciseConfig[];
   icon?: string;
-  category?: 'schriftsprachlich' | 'mathematisch' | 'exekutiv' | 'grafomotorik';
+  category?: 'schriftsprachlich' | 'mathematisch' | 'exekutiv' | 'grafomotorik' | 'bonus';
 }
 
 export interface ExerciseConfig {

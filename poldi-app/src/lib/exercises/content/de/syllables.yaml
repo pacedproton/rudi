@@ -1,0 +1,183 @@
+# Syllables Module - Silben klatschen
+
+id: syllables
+title:
+  de: "Silben klatschen"
+  en: "Clapping Syllables"
+intro:
+  de: "Klatsche die Silben! Wie viele Silben hat das Wort?"
+  en: "Clap the syllables! How many syllables does the word have?"
+category: schriftsprachlich
+icon: 👏
+
+tasks:
+  # 2-syllable words (easy)
+  - type: syllables
+    word:
+      de: "Sonne"
+      en: "Sun"
+    icon: sun
+    count: 2
+
+  - type: syllables
+    word:
+      de: "Löwe"
+      en: "Lion"
+    icon: lion
+    count: 2
+
+  - type: syllables
+    word:
+      de: "Apfel"
+      en: "Apple"
+    icon: apple
+    count: 2
+
+  - type: syllables
+    word:
+      de: "Auto"
+      en: "Car"
+    icon: car
+    count: 2
+
+  - type: syllables
+    word:
+      de: "Blume"
+      en: "Flower"
+    icon: flower
+    count: 2
+
+  - type: syllables
+    word:
+      de: "Katze"
+      en: "Cat"
+    icon: cat
+    count: 2
+
+  - type: syllables
+    word:
+      de: "Hase"
+      en: "Rabbit"
+    icon: rabbit
+    count: 2
+
+  - type: syllables
+    word:
+      de: "Feder"
+      en: "Feather"
+    icon: feather
+    count: 2
+
+  # 3-syllable words (medium)
+  - type: syllables
+    word:
+      de: "Banane"
+      en: "Banana"
+    icon: banana
+    count: 3
+
+  - type: syllables
+    word:
+      de: "Rakete"
+      en: "Rocket"
+    icon: rocket
+    count: 3
+
+  - type: syllables
+    word:
+      de: "Elefant"
+      en: "Elephant"
+    icon: elephant
+    count: 3
+
+  - type: syllables
+    word:
+      de: "Ananas"
+      en: "Pineapple"
+    icon: pineapple
+    count: 3
+
+  - type: syllables
+    word:
+      de: "Tomate"
+      en: "Tomato"
+    icon: tomato
+    count: 3
+
+  - type: syllables
+    word:
+      de: "Papagei"
+      en: "Parrot"
+    icon: parrot
+    count: 3
+
+  - type: syllables
+    word:
+      de: "Kartoffel"
+      en: "Potato"
+    icon: potato
+    count: 3
+
+  - type: syllables
+    word:
+      de: "Geburtstag"
+      en: "Birthday"
+    icon: cake
+    count: 3
+
+  # 4-5 syllable words (challenging)
+  - type: syllables
+    word:
+      de: "Schokolade"
+      en: "Chocolate"
+    icon: chocolate
+    count: 4
+
+  - type: syllables
+    word:
+      de: "Marienkäfer"
+      en: "Ladybug"
+    icon: ladybug
+    count: 4
+
+  - type: syllables
+    word:
+      de: "Schmetterling"
+      en: "Butterfly"
+    icon: butterfly
+    count: 3
+
+  - type: syllables
+    word:
+      de: "Kindergarten"
+      en: "Kindergarten"
+    icon: house
+    count: 4
+
+  - type: syllables
+    word:
+      de: "Weihnachtsbaum"
+      en: "Christmas tree"
+    icon: tree
+    count: 4
+
+  - type: syllables
+    word:
+      de: "Regenbogen"
+      en: "Rainbow"
+    icon: star
+    count: 4
+
+  - type: syllables
+    word:
+      de: "Feuerwehr"
+      en: "Fire department"
+    icon: fire
+    count: 3
+
+  - type: syllables
+    word:
+      de: "Wasserhahn"
+      en: "Water tap"
+    icon: icecream
+    count: 3

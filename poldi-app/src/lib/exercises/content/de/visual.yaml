@@ -1,0 +1,412 @@
+# Visual Module - Genau hinschauen
+# Visual perception and pattern recognition
+
+id: visual
+title:
+  de: "Genau hinschauen"
+  en: "Look Carefully"
+intro:
+  de: "Finde die richtige Form! Schau genau hin."
+  en: "Find the correct shape! Look carefully."
+category: exekutiv
+icon: 👁️
+
+tasks:
+  # DISCRIMINATION - MATCH (12 exercises)
+  - type: discrimination
+    task: match
+    target:
+      shape: circle
+      color: red
+    options:
+      - shape: circle
+        color: red
+      - shape: circle
+        color: blue
+      - shape: square
+        color: red
+    correctIndex: 0
+
+  - type: discrimination
+    task: match
+    target:
+      shape: triangle
+      color: green
+    options:
+      - shape: square
+        color: green
+      - shape: triangle
+        color: blue
+      - shape: triangle
+        color: green
+    correctIndex: 2
+
+  - type: discrimination
+    task: match
+    target:
+      shape: square
+      color: yellow
+    options:
+      - shape: circle
+        color: yellow
+      - shape: square
+        color: yellow
+      - shape: square
+        color: red
+    correctIndex: 1
+
+  - type: discrimination
+    task: match
+    target:
+      shape: circle
+      color: blue
+    options:
+      - shape: triangle
+        color: blue
+      - shape: circle
+        color: green
+      - shape: circle
+        color: blue
+    correctIndex: 2
+
+  - type: discrimination
+    task: match
+    target:
+      shape: triangle
+      color: red
+    options:
+      - shape: triangle
+        color: red
+      - shape: square
+        color: red
+      - shape: triangle
+        color: yellow
+    correctIndex: 0
+
+  - type: discrimination
+    task: match
+    target:
+      shape: square
+      color: green
+    options:
+      - shape: circle
+        color: green
+      - shape: square
+        color: blue
+      - shape: square
+        color: green
+    correctIndex: 2
+
+  - type: discrimination
+    task: match
+    target:
+      shape: circle
+      color: yellow
+    options:
+      - shape: square
+        color: yellow
+      - shape: circle
+        color: yellow
+      - shape: circle
+        color: red
+    correctIndex: 1
+
+  - type: discrimination
+    task: match
+    target:
+      shape: triangle
+      color: blue
+    options:
+      - shape: triangle
+        color: green
+      - shape: square
+        color: blue
+      - shape: triangle
+        color: blue
+    correctIndex: 2
+
+  - type: discrimination
+    task: match
+    target:
+      shape: square
+      color: red
+    options:
+      - shape: square
+        color: red
+      - shape: circle
+        color: red
+      - shape: square
+        color: yellow
+    correctIndex: 0
+
+  - type: discrimination
+    task: match
+    target:
+      shape: circle
+      color: green
+    options:
+      - shape: triangle
+        color: green
+      - shape: circle
+        color: blue
+      - shape: circle
+        color: green
+    correctIndex: 2
+
+  - type: discrimination
+    task: match
+    target:
+      shape: triangle
+      color: yellow
+    options:
+      - shape: square
+        color: yellow
+      - shape: triangle
+        color: yellow
+      - shape: triangle
+        color: red
+    correctIndex: 1
+
+  - type: discrimination
+    task: match
+    target:
+      shape: square
+      color: blue
+    options:
+      - shape: circle
+        color: blue
+      - shape: square
+        color: green
+      - shape: square
+        color: blue
+    correctIndex: 2
+
+  # DISCRIMINATION - FIND DIFFERENT (12 exercises)
+  - type: discrimination
+    task: different
+    target:
+      shape: square
+      color: blue
+    options:
+      - shape: square
+        color: blue
+      - shape: square
+        color: blue
+      - shape: circle
+        color: blue
+    correctIndex: 2
+
+  - type: discrimination
+    task: different
+    target:
+      shape: circle
+      color: red
+    options:
+      - shape: circle
+        color: red
+      - shape: circle
+        color: green
+      - shape: circle
+        color: red
+    correctIndex: 1
+
+  - type: discrimination
+    task: different
+    target:
+      shape: triangle
+      color: yellow
+    options:
+      - shape: triangle
+        color: yellow
+      - shape: triangle
+        color: yellow
+      - shape: square
+        color: yellow
+    correctIndex: 2
+
+  - type: discrimination
+    task: different
+    target:
+      shape: square
+      color: green
+    options:
+      - shape: square
+        color: green
+      - shape: circle
+        color: green
+      - shape: square
+        color: green
+    correctIndex: 1
+
+  - type: discrimination
+    task: different
+    target:
+      shape: circle
+      color: blue
+    options:
+      - shape: circle
+        color: blue
+      - shape: circle
+        color: blue
+      - shape: circle
+        color: red
+    correctIndex: 2
+
+  - type: discrimination
+    task: different
+    target:
+      shape: triangle
+      color: green
+    options:
+      - shape: triangle
+        color: green
+      - shape: square
+        color: green
+      - shape: triangle
+        color: green
+    correctIndex: 1
+
+  - type: discrimination
+    task: different
+    target:
+      shape: square
+      color: red
+    options:
+      - shape: square
+        color: red
+      - shape: square
+        color: yellow
+      - shape: square
+        color: red
+    correctIndex: 1
+
+  - type: discrimination
+    task: different
+    target:
+      shape: circle
+      color: yellow
+    options:
+      - shape: circle
+        color: yellow
+      - shape: triangle
+        color: yellow
+      - shape: circle
+        color: yellow
+    correctIndex: 1
+
+  - type: discrimination
+    task: different
+    target:
+      shape: triangle
+      color: blue
+    options:
+      - shape: triangle
+        color: blue
+      - shape: triangle
+        color: blue
+      - shape: triangle
+        color: green
+    correctIndex: 2
+
+  - type: discrimination
+    task: different
+    target:
+      shape: square
+      color: yellow
+    options:
+      - shape: circle
+        color: yellow
+      - shape: square
+        color: yellow
+      - shape: square
+        color: yellow
+    correctIndex: 0
+
+  - type: discrimination
+    task: different
+    target:
+      shape: circle
+      color: green
+    options:
+      - shape: circle
+        color: green
+      - shape: circle
+        color: blue
+      - shape: circle
+        color: green
+    correctIndex: 1
+
+  - type: discrimination
+    task: different
+    target:
+      shape: triangle
+      color: red
+    options:
+      - shape: triangle
+        color: red
+      - shape: square
+        color: red
+      - shape: triangle
+        color: red
+    correctIndex: 1
+
+  # PATTERNS (12 exercises)
+  - type: pattern
+    sequence: [apple, banana, apple, banana, null]
+    options: [apple, banana, lemon]
+    correctIndex: 0
+
+  - type: pattern
+    sequence: [circle, square, circle, square, null]
+    options: [circle, square, triangle]
+    correctIndex: 0
+
+  - type: pattern
+    sequence: [star, star, moon, star, star, null]
+    options: [star, moon, sun]
+    correctIndex: 1
+
+  - type: pattern
+    sequence: [red, blue, red, blue, null]
+    options: [red, blue, green]
+    correctIndex: 0
+
+  - type: pattern
+    sequence: [cat, dog, cat, dog, null]
+    options: [cat, dog, bird]
+    correctIndex: 0
+
+  - type: pattern
+    sequence: [triangle, circle, square, triangle, circle, null]
+    options: [square, triangle, circle]
+    correctIndex: 0
+
+  - type: pattern
+    sequence: [sun, moon, sun, moon, null]
+    options: [sun, moon, star]
+    correctIndex: 0
+
+  - type: pattern
+    sequence: [flower, tree, flower, tree, null]
+    options: [flower, tree, leaf]
+    correctIndex: 0
+
+  - type: pattern
+    sequence: [heart, heart, star, heart, heart, null]
+    options: [heart, star, moon]
+    correctIndex: 1
+
+  - type: pattern
+    sequence: [fish, bird, fish, bird, null]
+    options: [fish, bird, cat]
+    correctIndex: 0
+
+  - type: pattern
+    sequence: [green, yellow, green, yellow, null]
+    options: [green, yellow, blue]
+    correctIndex: 0
+
+  - type: pattern
+    sequence: [car, bus, car, bus, null]
+    options: [car, bus, train]
+    correctIndex: 0

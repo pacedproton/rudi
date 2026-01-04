@@ -5,28 +5,44 @@
   import { speechEngine } from '$lib/core/SpeechEngine';
   import { audioEngine } from '$lib/core/AudioEngine';
   import { settings } from '$lib/stores/settings';
+  import { auth, currentUser, isAuthenticated } from '$lib/stores/auth';
+  import { onMount } from 'svelte';
 
   let isLoading = true;
   let showSettings = false;
+  let showAccountMenu = false;
+
+  // Check if user is admin
+  const ADMIN_EMAILS = ['admin@lern-rudi.at', 'mike@example.com'];
+  $: isAdmin = $currentUser?.email && ADMIN_EMAILS.includes($currentUser.email.toLowerCase());
+
+  onMount(async () => {
+    // Try to validate existing session
+    await auth.validateSession();
+  });
 
   function handleIntroComplete() {
     isLoading = false;
   }
 
   function startModule(moduleId: string) {
-    goto(`/exercises?module=${moduleId}`);
+    goto(`/app/exercises?module=${moduleId}`);
   }
 
   function startFullTest() {
-    goto('/exercises?mode=full');
+    goto('/app/exercises?mode=full');
   }
 
   function startShortTest() {
-    goto('/exercises?mode=short');
+    goto('/app/exercises?mode=short');
   }
 
   function startDemo() {
-    goto('/exercises?mode=demo');
+    goto('/app/exercises?mode=demo');
+  }
+
+  function startBonusModule(moduleId: string) {
+    goto(`/app/exercises?bonus=${moduleId}`);
   }
 
   function testSpeech() {
@@ -38,18 +54,60 @@
     setTimeout(() => audioEngine.playSound('wrong'), 1000);
     setTimeout(() => audioEngine.playSound('pop'), 2000);
   }
+
+  async function handleLogout() {
+    await auth.logout();
+    showAccountMenu = false;
+    goto('/');
+  }
 </script>
 
 <main>
   {#if isLoading}
     <NetflixIntro onComplete={handleIntroComplete} />
   {:else}
+    <!-- Account Menu (Top Right) -->
+    <div class="account-corner">
+      {#if $isAuthenticated && $currentUser}
+        <button class="account-btn" on:click={() => showAccountMenu = !showAccountMenu}>
+          <span class="avatar-icon">👤</span>
+          <span class="user-name">{$currentUser.displayName || $currentUser.email.split('@')[0]}</span>
+          <span class="dropdown-arrow">{showAccountMenu ? '▲' : '▼'}</span>
+        </button>
+        
+        {#if showAccountMenu}
+          <div class="account-dropdown">
+            <div class="dropdown-header">
+              <span class="dropdown-email">{$currentUser.email}</span>
+              <span class="dropdown-plan">{$currentUser.subscription === 'paid' ? '⭐ Premium' : '🆓 Free'}</span>
+            </div>
+            <div class="dropdown-divider"></div>
+            <a href="/app/account" class="dropdown-item" on:click={() => showAccountMenu = false}>
+              👤 Mein Konto
+            </a>
+            {#if isAdmin}
+              <a href="/app/admin" class="dropdown-item admin-link" on:click={() => showAccountMenu = false}>
+                📊 Admin Dashboard
+              </a>
+            {/if}
+            <div class="dropdown-divider"></div>
+            <button class="dropdown-item logout" on:click={handleLogout}>
+              🚪 Abmelden
+            </button>
+          </div>
+        {/if}
+      {:else}
+        <a href="/login" class="login-btn">Anmelden</a>
+      {/if}
+    </div>
+
     <div class="menu">
       <div class="logo">
         <div class="flinki-icon">🐸</div>
         <h1>Lern-Rudi</h1>
         <p class="subtitle">Schuleingangsscreening Vorbereitung</p>
       </div>
+
 
       <div class="info-panel">
         <h2>✅ Umfassende Übungsbibliothek</h2>
@@ -148,6 +206,17 @@
 
         <div class="button-divider"></div>
 
+        <!-- Bonus Exercises Section -->
+        <div class="bonus-section">
+          <h3>🌟 Bonus Übungen</h3>
+          <button class="btn-bonus" on:click={() => startBonusModule('bonus-realworld')}>
+            🌍 Was gibt es in echt?
+            <span class="bonus-desc">12 Fragen über echte Tiere</span>
+          </button>
+        </div>
+
+        <div class="button-divider"></div>
+
         <button class="btn-secondary" on:click={testSpeech}>
           🔊 Sprache testen
         </button>
@@ -172,6 +241,133 @@
     min-height: 100vh;
     overflow-y: auto;
   }
+
+  /* Account Corner Menu */
+  .account-corner {
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    z-index: 1000;
+  }
+
+  .account-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: white;
+    border: none;
+    border-radius: 25px;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+    transition: all 0.2s;
+    font-family: inherit;
+  }
+
+  .account-btn:hover {
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    transform: translateY(-1px);
+  }
+
+  .avatar-icon {
+    font-size: 1.2rem;
+  }
+
+  .user-name {
+    font-weight: 600;
+    color: #333;
+    max-width: 120px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .dropdown-arrow {
+    font-size: 0.7rem;
+    color: #888;
+  }
+
+  .account-dropdown {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    margin-top: 0.5rem;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.2);
+    min-width: 220px;
+    overflow: hidden;
+  }
+
+  .dropdown-header {
+    padding: 1rem;
+    background: #f8f9fa;
+    border-bottom: 1px solid #e0e0e0;
+  }
+
+  .dropdown-email {
+    display: block;
+    font-size: 0.85rem;
+    color: #666;
+    margin-bottom: 0.25rem;
+  }
+
+  .dropdown-plan {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #667eea;
+  }
+
+  .dropdown-divider {
+    height: 1px;
+    background: #e0e0e0;
+  }
+
+  .dropdown-item {
+    display: block;
+    padding: 0.75rem 1rem;
+    text-decoration: none;
+    color: #333;
+    font-size: 0.95rem;
+    transition: background 0.2s;
+    border: none;
+    background: none;
+    width: 100%;
+    text-align: left;
+    cursor: pointer;
+    font-family: inherit;
+  }
+
+  .dropdown-item:hover {
+    background: #f5f5f5;
+  }
+
+  .dropdown-item.admin-link {
+    color: #667eea;
+    font-weight: 600;
+  }
+
+  .dropdown-item.logout {
+    color: #dc3545;
+  }
+
+  .login-btn {
+    display: inline-block;
+    background: white;
+    color: #667eea;
+    padding: 0.5rem 1.5rem;
+    border-radius: 25px;
+    text-decoration: none;
+    font-weight: 600;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+    transition: all 0.2s;
+  }
+
+  .login-btn:hover {
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    transform: translateY(-1px);
+  }
+
 
   main {
     width: 100%;
@@ -298,6 +494,50 @@
 
   .btn-secondary:active {
     transform: translateY(0) scale(0.98);
+  }
+
+  /* Bonus Section */
+  .bonus-section {
+    background: linear-gradient(135deg, #fff8e1 0%, #ffe082 100%);
+    border-radius: 12px;
+    padding: 1rem;
+    margin: 0.5rem 0;
+    border: 2px solid #ffc107;
+  }
+
+  .bonus-section h3 {
+    margin: 0 0 0.75rem;
+    color: #f57c00;
+    font-size: 1rem;
+  }
+
+  .btn-bonus {
+    width: 100%;
+    background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%);
+    color: white;
+    border: none;
+    padding: 1rem;
+    border-radius: 10px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+    box-shadow: 0 4px 15px rgba(255, 152, 0, 0.4);
+    transition: all 0.3s;
+  }
+
+  .btn-bonus:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 152, 0, 0.6);
+  }
+
+  .bonus-desc {
+    font-size: 0.8rem;
+    font-weight: normal;
+    opacity: 0.9;
   }
 
   .button-divider {

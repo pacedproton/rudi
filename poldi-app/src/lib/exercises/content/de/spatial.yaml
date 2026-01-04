@@ -1,0 +1,233 @@
+# Spatial Module - Wo ist was?
+# Spatial relationships and prepositions
+
+id: spatial
+title:
+  de: "Wo ist was?"
+  en: "Where is what?"
+intro:
+  de: "Finde die richtige Position! Auf, unter, neben, in..."
+  en: "Find the correct position! On, under, beside, in..."
+category: exekutiv
+icon: 📍
+
+tasks:
+  # AUF (on/on top of) - 9 exercises
+  - type: preposition
+    targetRelation: auf
+    object: cat
+    container: car
+    distractors: [unter, neben]
+
+  - type: preposition
+    targetRelation: auf
+    object: butterfly
+    container: flower
+    distractors: [unter, in]
+
+  - type: preposition
+    targetRelation: auf
+    object: bird
+    container: tree
+    distractors: [unter, in]
+
+  - type: preposition
+    targetRelation: auf
+    object: book
+    container: table
+    distractors: [unter, neben]
+
+  - type: preposition
+    targetRelation: auf
+    object: apple
+    container: tree
+    distractors: [unter, neben]
+
+  - type: preposition
+    targetRelation: auf
+    object: hat
+    container: head
+    distractors: [unter, neben]
+
+  - type: preposition
+    targetRelation: auf
+    object: cup
+    container: table
+    distractors: [unter, in]
+
+  - type: preposition
+    targetRelation: auf
+    object: cloud
+    container: sky
+    distractors: [unter, in]
+
+  - type: preposition
+    targetRelation: auf
+    object: star
+    container: flag
+    distractors: [unter, neben]
+
+  # UNTER (under) - 9 exercises
+  - type: preposition
+    targetRelation: unter
+    object: ball
+    container: car
+    distractors: [auf, neben]
+
+  - type: preposition
+    targetRelation: unter
+    object: cat
+    container: table
+    distractors: [auf, neben]
+
+  - type: preposition
+    targetRelation: unter
+    object: shoe
+    container: bed
+    distractors: [auf, neben]
+
+  - type: preposition
+    targetRelation: unter
+    object: dog
+    container: tree
+    distractors: [auf, neben]
+
+  - type: preposition
+    targetRelation: unter
+    object: fish
+    container: bridge
+    distractors: [auf, neben]
+
+  - type: preposition
+    targetRelation: unter
+    object: flower
+    container: umbrella
+    distractors: [auf, in]
+
+  - type: preposition
+    targetRelation: unter
+    object: mouse
+    container: chair
+    distractors: [auf, neben]
+
+  - type: preposition
+    targetRelation: unter
+    object: book
+    container: shelf
+    distractors: [auf, neben]
+
+  - type: preposition
+    targetRelation: unter
+    object: toy
+    container: couch
+    distractors: [auf, neben]
+
+  # NEBEN (next to/beside) - 9 exercises
+  - type: preposition
+    targetRelation: neben
+    object: dog
+    container: house
+    distractors: [auf, unter]
+
+  - type: preposition
+    targetRelation: neben
+    object: ball
+    container: dog
+    distractors: [auf, unter]
+
+  - type: preposition
+    targetRelation: neben
+    object: house
+    container: tree
+    distractors: [auf, unter]
+
+  - type: preposition
+    targetRelation: neben
+    object: car
+    container: house
+    distractors: [auf, unter]
+
+  - type: preposition
+    targetRelation: neben
+    object: flower
+    container: tree
+    distractors: [auf, unter]
+
+  - type: preposition
+    targetRelation: neben
+    object: chair
+    container: table
+    distractors: [auf, unter]
+
+  - type: preposition
+    targetRelation: neben
+    object: cat
+    container: dog
+    distractors: [auf, unter]
+
+  - type: preposition
+    targetRelation: neben
+    object: cup
+    container: plate
+    distractors: [auf, in]
+
+  - type: preposition
+    targetRelation: neben
+    object: tree
+    container: fence
+    distractors: [auf, unter]
+
+  # IN (in/inside) - 9 exercises
+  - type: preposition
+    targetRelation: in
+    object: apple
+    container: car
+    distractors: [auf, neben]
+
+  - type: preposition
+    targetRelation: in
+    object: fish
+    container: water
+    distractors: [auf, neben]
+
+  - type: preposition
+    targetRelation: in
+    object: book
+    container: bag
+    distractors: [auf, neben]
+
+  - type: preposition
+    targetRelation: in
+    object: toy
+    container: box
+    distractors: [auf, neben]
+
+  - type: preposition
+    targetRelation: in
+    object: bird
+    container: cage
+    distractors: [auf, neben]
+
+  - type: preposition
+    targetRelation: in
+    object: flower
+    container: vase
+    distractors: [auf, neben]
+
+  - type: preposition
+    targetRelation: in
+    object: pencil
+    container: cup
+    distractors: [auf, neben]
+
+  - type: preposition
+    targetRelation: in
+    object: cookie
+    container: jar
+    distractors: [auf, neben]
+
+  - type: preposition
+    targetRelation: in
+    object: key
+    container: lock
+    distractors: [auf, neben]

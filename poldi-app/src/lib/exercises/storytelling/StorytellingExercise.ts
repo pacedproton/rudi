@@ -213,11 +213,11 @@ export class StorytellingExercise extends ExercisePlugin {
 
     if (!this.score) return;
 
-    // Draw score card - larger and positioned in center
+    // Draw score card - larger and positioned higher to accommodate feedback
     const cardWidth = 340 * scale;
-    const cardHeight = 280 * scale;
+    const cardHeight = 340 * scale; // Increased from 280 to 340
     const cardX = (width - cardWidth) / 2;
-    const cardY = (height - cardHeight) / 2;
+    const cardY = Math.max(60 * scale, (height - cardHeight) / 2 - 30 * scale); // Position higher
 
     ctx.ctx.fillStyle = 'white';
     ctx.ctx.shadowColor = 'rgba(0,0,0,0.2)';
@@ -261,8 +261,8 @@ export class StorytellingExercise extends ExercisePlugin {
     ctx.ctx.textAlign = 'center';
     ctx.ctx.fillText(`Gesamt: ${this.score.total}/12`, width / 2, y + 15 * scale);
 
-    // Draw feedback - wrap text if needed
-    ctx.ctx.font = `${14 * scale}px Arial`;
+    // Draw feedback - wrap text with better spacing
+    ctx.ctx.font = `${13 * scale}px Arial`; // Slightly smaller font
     ctx.ctx.fillStyle = '#333';
     const feedback = this.score.feedback || '';
     const maxWidth = cardWidth - 40 * scale;
@@ -271,21 +271,33 @@ export class StorytellingExercise extends ExercisePlugin {
     if (ctx.ctx.measureText(feedback).width > maxWidth) {
       const words = feedback.split(' ');
       let line = '';
-      let lineY = y + 50 * scale;
+      let lineY = y + 45 * scale;
+      const lineHeight = 18 * scale;
+      const maxLines = 6; // Limit to prevent overflow
+      let lineCount = 0;
 
       for (const word of words) {
         const testLine = line + word + ' ';
-        if (ctx.ctx.measureText(testLine).width > maxWidth) {
-          ctx.ctx.fillText(line.trim(), width / 2, lineY);
-          line = word + ' ';
-          lineY += 18 * scale;
+        if (ctx.ctx.measureText(testLine).width > maxWidth && line.length > 0) {
+          if (lineCount < maxLines) {
+            ctx.ctx.fillText(line.trim(), width / 2, lineY);
+            line = word + ' ';
+            lineY += lineHeight;
+            lineCount++;
+          } else {
+            // Truncate with ellipsis if too long
+            ctx.ctx.fillText(line.trim() + '...', width / 2, lineY);
+            break;
+          }
         } else {
           line = testLine;
         }
       }
-      ctx.ctx.fillText(line.trim(), width / 2, lineY);
+      if (lineCount < maxLines && line.trim()) {
+        ctx.ctx.fillText(line.trim(), width / 2, lineY);
+      }
     } else {
-      ctx.ctx.fillText(feedback, width / 2, y + 50 * scale);
+      ctx.ctx.fillText(feedback, width / 2, y + 45 * scale);
     }
 
     // Draw "tap to continue" hint

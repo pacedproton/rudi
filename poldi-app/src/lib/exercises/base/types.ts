@@ -39,7 +39,9 @@ export type ExerciseType =
   | 'connect_dots'
   | 'handwriting'
   // Language / Storytelling
-  | 'storytelling';
+  | 'storytelling'
+  // Bonus
+  | 'truefalse';
 
 // ===== EXERCISE CONFIG =====
 

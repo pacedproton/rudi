@@ -1398,6 +1398,48 @@ export const shortTestModule: Module = {
   ]
 };
 
+// ===== BONUS MODULE: WAS GIBT ES IN ECHT? (Real World Facts) =====
+export const bonusRealworldModule: Module = {
+  id: 'bonus-realworld',
+  title: '🌍 Was gibt es in echt?',
+  intro: 'Weißt du, welche Tiere es wirklich in Österreich gibt? Hör gut zu und entscheide: Stimmt das oder nicht?',
+  category: 'bonus',
+  tasks: [
+    // Vienna Parrots (True - there are wild parakeets!)
+    { type: 'truefalse', question: 'Gibt es in Wien im Freien Papageien?', answer: true, explanation: 'Ja! In Wien leben wilde Halsbandsittiche. Sie sind grün und laut!', image: 'parrot' },
+    // Vienna Wolves (False)
+    { type: 'truefalse', question: 'Gibt es in Wien im Freien Wölfe?', answer: false, explanation: 'Nein, in Wien gibt es keine wilden Wölfe. Wölfe leben im Wald weit weg.', image: 'wolf' },
+    // Danube Fish (True)
+    { type: 'truefalse', question: 'Schwimmen in der Donau Fische?', answer: true, explanation: 'Ja! Viele Fische leben in der Donau, zum Beispiel Karpfen und Welse.', image: 'fish' },
+    // Penguins (False)
+    { type: 'truefalse', question: 'Leben in Österreich wilde Pinguine?', answer: false, explanation: 'Nein, Pinguine leben nur am Südpol und in kälteren Ländern.', image: 'penguin' },
+    // Deer (True)
+    { type: 'truefalse', question: 'Gibt es in österreichischen Wäldern Rehe?', answer: true, explanation: 'Ja! Rehe leben in vielen Wäldern in Österreich.', image: 'deer' },
+    // Lions (False)
+    { type: 'truefalse', question: 'Leben in Österreich wilde Löwen?', answer: false, explanation: 'Nein, Löwen leben in Afrika. In Österreich kann man sie nur im Zoo sehen.', image: 'lion' },
+    // Squirrels (True)
+    { type: 'truefalse', question: 'Klettern in Parks Eichhörnchen auf Bäume?', answer: true, explanation: 'Ja! Eichhörnchen leben in vielen Parks und sammeln Nüsse.', image: 'squirrel' },
+    // Crocodiles (False)
+    { type: 'truefalse', question: 'Schwimmen in der Donau Krokodile?', answer: false, explanation: 'Nein! Krokodile brauchen warmes Wasser. Die Donau ist viel zu kalt.', image: 'crocodile' },
+    // Storks (True)
+    { type: 'truefalse', question: 'Bauen Störche ihre Nester auf Dächern in Österreich?', answer: true, explanation: 'Ja! Besonders im Burgenland gibt es viele Störche auf Dächern.', image: 'stork' },
+    // Kangaroos (False)
+    { type: 'truefalse', question: 'Hüpfen in Österreich Kängurus herum?', answer: false, explanation: 'Nein, Kängurus leben nur in Australien!', image: 'kangaroo' },
+    // Hedgehogs (True)
+    { type: 'truefalse', question: 'Gibt es in Gärten manchmal Igel?', answer: true, explanation: 'Ja! Igel leben in Gärten und fressen Schnecken und Käfer.', image: 'hedgehog' },
+    // Elephants (False)
+    { type: 'truefalse', question: 'Laufen in Österreich wilde Elefanten herum?', answer: false, explanation: 'Nein, Elefanten leben in Afrika und Asien. Bei uns nur im Zoo!', image: 'elephant' },
+    // Unicorns (False)
+    { type: 'truefalse', question: 'Gibt es in Wirklichkeit Einhörner?', answer: false, explanation: 'Nein, Einhörner sind Fabelwesen aus Geschichten. Echte Pferde haben kein Horn!', image: 'unicorn' },
+    // Bees (True)
+    { type: 'truefalse', question: 'Sammeln Bienen Honig von Blumen?', answer: true, explanation: 'Ja! Bienen sammeln Nektar und machen daraus leckeren Honig.', image: 'bee' },
+    // Dragons (False)
+    { type: 'truefalse', question: 'Gibt es echte Drachen, die Feuer spucken?', answer: false, explanation: 'Nein, feuerspuckende Drachen gibt es nur in Märchen und Filmen!', image: 'dragon' },
+    // Foxes (True)
+    { type: 'truefalse', question: 'Gibt es in österreichischen Wäldern Füchse?', answer: true, explanation: 'Ja! Füchse leben in vielen Wäldern und kommen manchmal sogar in die Stadt.', image: 'fox' }
+  ]
+};
+
 /**
  * Get shuffled version of modules (shuffle tasks within each module)
  */

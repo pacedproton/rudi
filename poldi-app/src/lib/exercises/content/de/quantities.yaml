@@ -1,0 +1,109 @@
+# Math Modules - Quantities and Counting
+# Mathematical precursor skills
+
+# ===== QUANTITIES MODULE =====
+---
+id: quantities
+title:
+  de: "Mengen vergleichen"
+  en: "Compare Quantities"
+intro:
+  de: "Wo sind MEHR? Schnell, bevor die Eule kommt!"
+  en: "Where are MORE? Quick, before the owl comes!"
+category: mathematisch
+icon: 🔢
+
+tasks:
+  # QUANTITY COMPARISON (18 exercises)
+  - type: quantity
+    l: 1
+    r: 2
+  - type: quantity
+    l: 2
+    r: 1
+  - type: quantity
+    l: 1
+    r: 3
+  - type: quantity
+    l: 3
+    r: 1
+  - type: quantity
+    l: 2
+    r: 3
+  - type: quantity
+    l: 3
+    r: 2
+  - type: quantity
+    l: 2
+    r: 4
+  - type: quantity
+    l: 4
+    r: 2
+  - type: quantity
+    l: 3
+    r: 4
+  - type: quantity
+    l: 4
+    r: 3
+  - type: quantity
+    l: 3
+    r: 5
+  - type: quantity
+    l: 5
+    r: 3
+  - type: quantity
+    l: 4
+    r: 5
+  - type: quantity
+    l: 5
+    r: 4
+  - type: quantity
+    l: 4
+    r: 6
+  - type: quantity
+    l: 6
+    r: 4
+  - type: quantity
+    l: 5
+    r: 6
+  - type: quantity
+    l: 6
+    r: 5
+
+  # DICE RECOGNITION (18 exercises)
+  - type: dice
+    count: 1
+  - type: dice
+    count: 2
+  - type: dice
+    count: 3
+  - type: dice
+    count: 4
+  - type: dice
+    count: 5
+  - type: dice
+    count: 6
+  - type: dice
+    count: 1
+  - type: dice
+    count: 3
+  - type: dice
+    count: 5
+  - type: dice
+    count: 2
+  - type: dice
+    count: 4
+  - type: dice
+    count: 6
+  - type: dice
+    count: 6
+  - type: dice
+    count: 5
+  - type: dice
+    count: 4
+  - type: dice
+    count: 3
+  - type: dice
+    count: 2
+  - type: dice
+    count: 1
