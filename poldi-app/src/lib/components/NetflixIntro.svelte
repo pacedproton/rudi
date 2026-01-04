@@ -14,7 +14,7 @@
 </script>
 
 <div id="container" on:click={onComplete} role="button" tabindex="0" on:keydown={(e) => e.key === 'Enter' && onComplete()}>
-  <!-- Edit the letter attr to: N, E, T, F, L, I or X -->
+  <!-- Edit the letter attr to: N, E, T, F, L, I, X, or V -->
   <div class="netflixintro" letter="N">
     <div class="helper-1">
       <div class="effect-brush">
@@ -284,6 +284,58 @@ body,
   animation-delay: .5s;
 }
 
+/* ===== V LETTER STYLES ===== */
+.netflixintro[letter="V"] {
+  transform-origin: 50% center;
+}
+
+.netflixintro[letter="V"] .helper-1 {
+  width: 19.5%;
+  height: 100%;
+  background-color: rgba(0, 128, 255, 0.5);
+  left: 20%;
+  top: 0;
+  transform-origin: top center;
+  transform: rotate(-20deg);
+  animation-name: fading-lumieres-box-blue;
+  animation-duration: 2s;
+  animation-delay: .6s;
+  animation-fill-mode: forwards;
+}
+
+.netflixintro[letter="V"] .helper-1 .effect-brush {
+  animation-name: brush-moving;
+  animation-duration: 2.5s;
+  animation-fill-mode: forwards;
+  animation-delay: 1.2s;
+}
+
+.netflixintro[letter="V"] .helper-1 [class*="fur-"] {
+  bottom: 0;
+  height: 40%;
+}
+
+.netflixintro[letter="V"] .helper-2 {
+  width: 19.5%;
+  height: 100%;
+  right: 20%;
+  top: 0;
+  transform-origin: top center;
+  transform: rotate(20deg);
+  overflow: hidden;
+}
+
+.netflixintro[letter="V"] .helper-2 .effect-brush {
+  animation-name: brush-moving;
+  animation-duration: 2s;
+  animation-fill-mode: forwards;
+  animation-delay: .5s;
+}
+
+.netflixintro[letter="V"] .helper-3 {
+  display: none;
+}
+
 [class*="helper-"] {
   position: absolute;
 }
@@ -354,6 +406,11 @@ body,
 @keyframes fading-lumieres-box {
   0% { background-color: rgba(0, 102, 204, 0.5); }
   100% { background-color: rgba(0, 102, 204, 0.0); }
+}
+
+@keyframes fading-lumieres-box-blue {
+  0% { background-color: rgba(0, 128, 255, 0.5); }
+  100% { background-color: rgba(0, 128, 255, 0.0); }
 }
 
 .effect-lumieres {
