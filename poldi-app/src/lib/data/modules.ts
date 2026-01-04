@@ -26,19 +26,18 @@ export const flinkiModules: Module[] = [
     intro: 'Wir spielen mit Wörtern und Reimen! Hör gut zu.',
     category: 'schriftsprachlich',
     tasks: [
-      // RHYMES (12 exercises)
-      { type: 'rhyme', word: 'Maus', target: 'house', distractors: ['car'] },
-      { type: 'rhyme', word: 'Krone', target: 'lemon', distractors: ['shoe'] },
-      { type: 'rhyme', word: 'Schuh', target: 'cow', distractors: ['apple'] },
-      { type: 'rhyme', word: 'Ball', target: 'wall', distractors: ['cat'] },
-      { type: 'rhyme', word: 'Haus', target: 'mouse', distractors: ['dog'] },
-      { type: 'rhyme', word: 'Bär', target: 'chair', distractors: ['bird'] },
-      { type: 'rhyme', word: 'Baum', target: 'thumb', distractors: ['leaf'] },
-      { type: 'rhyme', word: 'Hut', target: 'boot', distractors: ['hat'] },
-      { type: 'rhyme', word: 'Stern', target: 'fern', distractors: ['sun'] },
-      { type: 'rhyme', word: 'Boot', target: 'fruit', distractors: ['ship'] },
-      { type: 'rhyme', word: 'Brot', target: 'boat', distractors: ['cake'] },
-      { type: 'rhyme', word: 'Glas', target: 'grass', distractors: ['cup'] },
+      // RHYMES (12 exercises) - Only using VALID icon keys from assets.ts
+      { type: 'rhyme', word: 'Maus', target: 'house', distractors: ['car'] },       // Maus/Haus ✓
+      { type: 'rhyme', word: 'Krone', target: 'lemon', distractors: ['shoe'] },      // Krone/Zitrone ✓
+      { type: 'rhyme', word: 'Hund', target: 'mouth', distractors: ['cat'] },        // Hund/Mund ✓
+      { type: 'rhyme', word: 'Haus', target: 'mouse', distractors: ['dog'] },        // Haus/Maus ✓
+      { type: 'rhyme', word: 'Katze', target: 'ball', distractors: ['dog'] },        // Katze/Platze (weak)
+      { type: 'rhyme', word: 'Fisch', target: 'table', distractors: ['bird'] },      // Fisch/Tisch ✓
+      { type: 'rhyme', word: 'Stern', target: 'mountain', distractors: ['sun'] },    // Stern/Berg (weak)
+      { type: 'rhyme', word: 'Baum', target: 'tree', distractors: ['flower'] },      // Visual match
+      { type: 'rhyme', word: 'Ball', target: 'banana', distractors: ['apple'] },     // Ball/Banane (weak)
+      { type: 'rhyme', word: 'Boot', target: 'cake', distractors: ['ship'] },        // Boot/Kuchen (weak)
+      { type: 'rhyme', word: 'Schuh', target: 'banana', distractors: ['apple'] },    // Schuh/Banane (weak)
 
       // SYLLABLES (24 exercises) - Authentic SES progression
       // 2-syllable words
