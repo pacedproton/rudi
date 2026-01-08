@@ -91,7 +91,7 @@
         </button>
       </div>
       <p class="hero-trust">
-        ✅ Trainiert Poldi-Kompetenzen • ✅ Für österreichische Volksschulen • ✅ DSGVO-konform
+        Trainiert Poldi-Kompetenzen • Für österreichische Volksschulen 
       </p>
     </div>
     <div class="hero-image">

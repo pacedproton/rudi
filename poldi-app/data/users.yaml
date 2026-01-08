@@ -27,4 +27,11 @@ data:
     subscription: paid
     createdAt: 2026-01-07T16:48:55.520Z
     updatedAt: 2026-01-08T08:56:00.000Z
-updatedAt: '2026-01-07T16:48:55.520Z'
+  - id: 9181c3dc-e465-4951-b438-4dc45fa0566f
+    email: m.alexander@scilytics.com
+    passwordHash: $2b$12$y93jAdBM.9HiuYd2U.ClZ.yD08RsSva8Umbfw0nnCJUnfZaaisEKG
+    displayName: Max3
+    subscription: free
+    createdAt: 2026-01-08T20:22:54.313Z
+    updatedAt: 2026-01-08T20:22:54.313Z
+updatedAt: '2026-01-08T20:22:54.313Z'

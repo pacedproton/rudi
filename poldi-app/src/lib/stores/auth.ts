@@ -113,13 +113,14 @@ function createAuthStore() {
     /**
      * Register a new user
      */
-    async register(email: string, password: string, displayName?: string): Promise<boolean> {
+    async register(email: string, password: string, displayName?: string, selectedPlan?: string): Promise<boolean> {
       update(s => ({ ...s, loading: true, error: null }));
 
       const result = await apiRequest('/api/auth/register', 'POST', {
         email,
         password,
-        displayName
+        displayName,
+        selectedPlan
       });
 
       if (result.success && result.user && result.token) {
