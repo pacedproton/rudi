@@ -9,14 +9,14 @@
   let displayName = '';
   let loading = false;
   let error = '';
-  let step = 1; // 1: account, 2: plan selection, 3: payment
+  let step = 1; // 1: account, 2: payment
 
-  // Get plan from URL
-  $: selectedPlan = $page.url.searchParams.get('plan') || 'free';
+  // Get plan from URL (default to lifetime)
+  $: selectedPlan = $page.url.searchParams.get('plan') || 'lifetime';
   
-  const plans = {
-    free: { name: 'Gratis', price: '0€/Monat', requiresPayment: false },
-    family: { name: 'Familie', price: '9,99€/Monat', requiresPayment: true }
+  const plans: Record<string, { name: string; price: string; period: string }> = {
+    lifetime: { name: 'Einmalzahlung', price: '40€', period: 'einmalig' },
+    monthly: { name: 'Monatsabo', price: '10€', period: '/Monat' }
   };
 
   async function handleSignup() {
@@ -38,12 +38,8 @@
       const success = await auth.register(email, password, displayName);
       
       if (success) {
-        if (selectedPlan === 'family') {
-          step = 3; // Go to payment
-        } else {
-          // Free plan - go directly to app
-          goto('/app');
-        }
+        // All plans require payment - go to step 2
+        step = 2;
       } else {
         error = $auth.error || 'Registrierung fehlgeschlagen';
       }

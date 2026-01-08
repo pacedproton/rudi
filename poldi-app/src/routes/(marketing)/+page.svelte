@@ -1,67 +1,46 @@
 <script lang="ts">
   import { goto } from '$app/navigation';
   
-  // Pricing plans
+  // Pricing plans - 2 tiers: one-time and monthly
   const plans = [
     {
-      name: 'Gratis',
-      price: '0€',
-      period: '/monat',
-      description: 'Perfekt zum Ausprobieren',
-      features: [
-        '3 Module freigeschalten',
-        'Basis-Übungen',
-        'Fortschritts-Tracking',
-        'Werbefinanziert'
-      ],
-      cta: 'Kostenlos starten',
-      highlighted: false,
-      planId: 'free'
-    },
-    {
-      name: 'Familie',
-      price: '9,99€',
-      period: '/monat',
-      description: 'Voller Zugang für die ganze Familie',
+      name: 'Einmalzahlung',
+      price: '40€',
+      period: 'einmalig',
+      description: 'Voller Zugang für immer',
       features: [
         'Alle 11 Module',
         '360+ Übungen',
         'Keine Werbung',
         'Detaillierte Auswertungen',
-        'Mehrere Kinderprofile',
-        'Offline-Modus'
+        'Lebenslanger Zugang',
+        'Alle zukünftigen Updates'
       ],
-      cta: 'Jetzt starten',
+      cta: 'Jetzt kaufen',
       highlighted: true,
-      planId: 'family'
+      planId: 'lifetime'
     },
     {
-      name: 'Schule',
-      price: 'Auf Anfrage',
-      period: '',
-      description: 'Für Schulen und Kindergärten',
+      name: 'Monatsabo',
+      price: '10€',
+      period: '/monat',
+      description: 'Flexibel & monatlich neue Übungen',
       features: [
-        'Unbegrenzte Nutzer',
-        'Lehrerportal',
-        'Klassenauswertungen',
-        'API-Zugang',
-        'Eigenes Branding',
-        'Priorisierter Support'
+        'Alle 11 Module',
+        '360+ Übungen',
+        'Keine Werbung',
+        'Detaillierte Auswertungen',
+        'Neue Übungen jeden Monat',
+        'Jederzeit kündbar'
       ],
-      cta: 'Kontakt aufnehmen',
+      cta: 'Abo starten',
       highlighted: false,
-      planId: 'school'
+      planId: 'monthly'
     }
   ];
 
   function selectPlan(planId: string) {
-    if (planId === 'free') {
-      goto('/signup?plan=free');
-    } else if (planId === 'family') {
-      goto('/signup?plan=family');
-    } else if (planId === 'school') {
-      goto('/contact');
-    }
+    goto(`/signup?plan=${planId}`);
   }
 
   function scrollToSection(id: string) {
@@ -70,8 +49,9 @@
 </script>
 
 <svelte:head>
-  <title>Lern-Rudi - Spielerisch schulreif werden</title>
-  <meta name="description" content="Lern-Rudi bereitet Ihr Kind spielerisch auf die Schule vor. Wissenschaftlich fundierte Übungen für Phonologie, Mathematik, Konzentration und mehr." />
+  <title>Poldi Vorbereitung - Schuleingangsscreening Training für die Volksschule | Lern-Rudi</title>
+  <meta name="description" content="Optimal vorbereitet auf das Poldi-Screening und Schuleingangstest. Trainiert gezielt Poldi-Kompetenzen: Phonologie, Mathematik, Konzentration. Für österreichische Volksschulen. Wissenschaftlich fundierte Übungen mit Leistungsanalyse." />
+  <meta name="keywords" content="Poldi, Poldi Vorbereitung, Schuleingangsscreening, Volksschule Österreich, Schulreife Test, Einschulungstest, Vorschule Übungen, Phonologie Training, Schuleingangstest üben" />
 </svelte:head>
 
 <div class="landing">
@@ -79,13 +59,13 @@
   <nav class="nav">
     <div class="nav-brand">
       <span class="nav-icon">🐸</span>
-      <span class="nav-title">Lern-Rudi</span>
+      <span class="nav-title">Lern-Rudi für Poldi</span>
     </div>
     <div class="nav-links">
       <button on:click={() => scrollToSection('features')}>Funktionen</button>
       <button on:click={() => scrollToSection('pricing')}>Preise</button>
       <a href="/login" class="nav-login">Anmelden</a>
-      <a href="/signup" class="nav-cta">Kostenlos testen</a>
+      <a href="/signup?plan=lifetime" class="nav-cta">Jetzt kaufen</a>
     </div>
   </nav>
 
@@ -94,23 +74,24 @@
     <div class="hero-content">
       <h1>
         <span class="hero-icon">🐸</span>
-        Spielerisch schulreif werden
+        Fit für die Volksschule
       </h1>
       <p class="hero-subtitle">
-        Lern-Rudi bereitet Ihr Kind optimal auf das Schuleingangsscreening vor. 
-        Mit wissenschaftlich fundierten Übungen in Phonologie, Mathematik, 
-        Konzentration und Motorik.
+        <strong>Optimal vorbereitet auf das Schuleingangsscreening:</strong> Trainiert gezielt die Kompetenzen, 
+        die beim Poldi-Verfahren und ähnlichen Screenings geprüft werden. 
+        Wissenschaftlich fundierte Übungen in Phonologie, Mathematik, Konzentration und Motorik – 
+        mit automatischer <strong>Leistungsanalyse</strong>.
       </p>
       <div class="hero-buttons">
-        <a href="/signup" class="btn btn-primary">
-          ✨ Kostenlos starten
+        <a href="/signup?plan=lifetime" class="btn btn-primary">
+          🎓 Jetzt für 40€ kaufen
         </a>
-        <button class="btn btn-secondary" on:click={() => goto('/app/exercises?mode=demo')}>
-          🎮 Demo ausprobieren
+        <button class="btn btn-secondary" on:click={() => scrollToSection('pricing')}>
+          📋 Alle Optionen ansehen
         </button>
       </div>
       <p class="hero-trust">
-        ✅ Wissenschaftlich fundiert • ✅ Keine Installation nötig • ✅ DSGVO-konform
+        ✅ Trainiert Poldi-Kompetenzen • ✅ Für österreichische Volksschulen • ✅ DSGVO-konform
       </p>
     </div>
     <div class="hero-image">
@@ -133,9 +114,9 @@
 
   <!-- Features Section -->
   <section id="features" class="features">
-    <h2>Alles was Ihr Kind braucht</h2>
+    <h2>Leistungsanalyse & Förderung</h2>
     <p class="section-subtitle">
-      11 Module mit über 360 Übungen – basierend auf dem österreichischen Schuleingangsscreening
+      11 Module mit über 360 Übungen – speziell entwickelt für den Start in die Volksschule
     </p>
     
     <div class="features-grid">
@@ -179,9 +160,9 @@
 
   <!-- Pricing Section -->
   <section id="pricing" class="pricing">
-    <h2>Faire Preise für alle</h2>
+    <h2>Vorbereitung lohnt sich</h2>
     <p class="section-subtitle">
-      Starten Sie kostenlos und upgraden Sie jederzeit
+      
     </p>
     
     <div class="pricing-grid">
@@ -212,6 +193,14 @@
         </div>
       {/each}
     </div>
+    
+    <!-- Payment Methods -->
+    <div class="payment-methods">
+      <p>🔒 Sichere Zahlung via Stripe</p>
+      <div class="payment-icons">
+        <img src="/visa-mc-logo.png" alt="Visa und Mastercard" class="payment-logo" />
+      </div>
+    </div>
   </section>
 
   <!-- FAQ Section -->
@@ -231,22 +220,22 @@
       
       <div class="faq-item">
         <h4>Kann ich jederzeit kündigen?</h4>
-        <p>Ja, das Familien-Abo ist monatlich kündbar. Keine versteckten Kosten.</p>
+        <p>Ja, das Abo ist monatlich kündbar. Keine versteckten Kosten.</p>
       </div>
       
       <div class="faq-item">
-        <h4>Sind meine Daten sicher?</h4>
-        <p>Ja, wir sind DSGVO-konform. Kinderdaten werden auf europäischen Servern gespeichert.</p>
+        <h4>Wieviele Übungen kommen pro Monat in der Subskription hinzu?</h4>
+        <p>Pro Monat werden 20 neue Übungen hinzugefügt.</p>
       </div>
     </div>
   </section>
 
   <!-- CTA Section -->
   <section class="cta-section">
-    <h2>Bereit zum Lernen?</h2>
-    <p>Starten Sie noch heute kostenlos und sehen Sie, wie viel Spaß Schulvorbereitung machen kann!</p>
-    <a href="/signup" class="btn btn-primary btn-large">
-      🚀 Jetzt kostenlos starten
+    <h2>Bereit für den Schulstart?</h2>
+    <p>Bereiten Sie Ihr Kind optimal auf die Volksschule vor – mit über 360 wissenschaftlich fundierten Übungen!</p>
+    <a href="/signup?plan=lifetime" class="btn btn-primary btn-large">
+      🎓 Jetzt für 40€ kaufen
     </a>
   </section>
 
@@ -561,9 +550,10 @@
   /* Pricing */
   .pricing-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(2, minmax(280px, 350px));
     gap: 2rem;
     align-items: start;
+    justify-content: center;
   }
 
   .pricing-card {
@@ -644,6 +634,37 @@
 
   .plan-features li:last-child {
     border-bottom: none;
+  }
+
+  /* Payment Methods */
+  .payment-methods {
+    text-align: center;
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid #e0e0e0;
+  }
+
+  .payment-methods p {
+    color: #666;
+    font-size: 0.95rem;
+    margin-bottom: 1rem;
+  }
+
+  .payment-icons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+  }
+
+  .payment-logo {
+    height: 28px;
+    width: auto;
+  }
+
+  .stripe-logo {
+    height: 22px;
   }
 
   /* FAQ */

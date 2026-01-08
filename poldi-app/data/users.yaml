@@ -6,4 +6,25 @@ data:
     subscription: free
     createdAt: 2026-01-04T12:35:41.527Z
     updatedAt: 2026-01-04T12:35:41.527Z
-updatedAt: '2026-01-04T12:35:41.528Z'
+  - id: 83dc478f-a680-4781-9bdb-4aa2bb0828f5
+    email: ma@scilytics.com
+    passwordHash: $2b$12$VpzYfiT1KK2Ez12fPHAagu8m4NGRtWV/ntUmj0L97IoIry4hzUo0a
+    displayName: Max
+    subscription: free
+    createdAt: 2026-01-07T16:06:28.967Z
+    updatedAt: 2026-01-07T16:06:28.967Z
+  - id: a860a5cd-e41a-4e6a-8330-24b8099ba367
+    email: mfa@scilytics.com
+    passwordHash: $2b$12$vTm6Qd3qb/J.Oe6toP5lzONZSAr02AODAmPe5htERu3gPajswPkG.
+    displayName: ''
+    subscription: free
+    createdAt: 2026-01-07T16:42:56.671Z
+    updatedAt: 2026-01-07T16:42:56.671Z
+  - id: af6ca124-5bc9-4325-acbe-fd54f75ca598
+    email: michael.alexander@scilytics.com
+    passwordHash: $2b$12$obqKhUqea9hDKzbzYCcE/.vjFhQeJTmxGbAkOCJgqMPwSYiaWiVm2
+    displayName: ''
+    subscription: paid
+    createdAt: 2026-01-07T16:48:55.520Z
+    updatedAt: 2026-01-08T08:56:00.000Z
+updatedAt: '2026-01-07T16:48:55.520Z'

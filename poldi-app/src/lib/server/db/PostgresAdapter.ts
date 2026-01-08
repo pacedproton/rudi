@@ -48,6 +48,10 @@ class PostgresUserRepository implements UserRepository {
     throw new Error('PostgreSQL adapter not implemented');
   }
 
+  async updateStripeCustomerId(_userId: string, _customerId: string): Promise<User> {
+    throw new Error('PostgreSQL adapter not implemented');
+  }
+
   async updateProfile(_userId: string, _data: Partial<Pick<User, 'displayName'>>): Promise<User> {
     throw new Error('PostgreSQL adapter not implemented');
   }
@@ -175,6 +179,7 @@ export class PostgresDatabase implements Database {
  *   password_hash VARCHAR(255) NOT NULL,
  *   display_name VARCHAR(255),
  *   subscription VARCHAR(20) DEFAULT 'free',
+ *   stripe_customer_id VARCHAR(255),
  *   created_at TIMESTAMPTZ DEFAULT NOW(),
  *   updated_at TIMESTAMPTZ DEFAULT NOW()
  * );

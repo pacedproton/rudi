@@ -10,6 +10,7 @@ export interface User {
   passwordHash: string;
   displayName?: string;
   subscription: SubscriptionStatus;
+  stripeCustomerId?: string;
   createdAt: Date;
   updatedAt: Date;
 }

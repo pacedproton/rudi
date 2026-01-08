@@ -31,6 +31,9 @@ export interface UserRepository {
   /** Update user subscription status */
   updateSubscription(userId: string, status: User['subscription']): Promise<User>;
 
+  /** Update Stripe customer ID */
+  updateStripeCustomerId(userId: string, customerId: string): Promise<User>;
+
   /** Update user profile */
   updateProfile(userId: string, data: Partial<Pick<User, 'displayName'>>): Promise<User>;
 

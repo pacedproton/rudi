@@ -1,14 +1,14 @@
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import { verifyToken } from '$lib/server';
+import { STRIPE_SECRET_KEY, STRIPE_PRICE_ID_FAMILY, APP_URL } from '$env/static/private';
 
-// Stripe API configuration
-const STRIPE_SECRET_KEY = process.env.STRIPE_SECRET_KEY;
-const STRIPE_PRICE_ID_FAMILY = process.env.STRIPE_PRICE_ID_FAMILY || 'price_family_monthly';
-const APP_URL = process.env.APP_URL || 'http://localhost:5173';
+// Optional: STRIPE_PRICE_ID_MONTHLY - create in Stripe for monthly subscription
+const STRIPE_PRICE_ID_MONTHLY = (import.meta.env?.STRIPE_PRICE_ID_MONTHLY as string) || '';
 
 /**
  * POST /api/payment/create-checkout - Create Stripe checkout session
+ * Supports: 'lifetime' (one-time €40) and 'monthly' (subscription €10/month)
  */
 export const POST: RequestHandler = async ({ request }) => {
   try {
@@ -27,14 +27,23 @@ export const POST: RequestHandler = async ({ request }) => {
 
     const { planId } = await request.json();
 
-    if (planId !== 'family') {
+    // Validate plan and get price + mode
+    let priceId: string;
+    let mode: 'payment' | 'subscription';
+
+    if (planId === 'lifetime') {
+      priceId = STRIPE_PRICE_ID_FAMILY; // €40 one-time
+      mode = 'payment';
+    } else if (planId === 'monthly') {
+      priceId = STRIPE_PRICE_ID_MONTHLY || STRIPE_PRICE_ID_FAMILY; // €10/month, fallback to family
+      mode = 'subscription';
+    } else {
       return json({ success: false, error: 'Ungültiger Plan' }, { status: 400 });
     }
 
     // Check if Stripe is configured
     if (!STRIPE_SECRET_KEY) {
       console.warn('Stripe not configured, returning mock checkout URL');
-      // For development without Stripe
       return json({
         success: true,
         url: `${APP_URL}/app?payment=success&mock=true`
@@ -42,23 +51,25 @@ export const POST: RequestHandler = async ({ request }) => {
     }
 
     // Create Stripe checkout session
+    const body = new URLSearchParams();
+    body.append('mode', mode);
+    body.append('success_url', `${APP_URL}/app?payment=success&session_id={CHECKOUT_SESSION_ID}`);
+    body.append('cancel_url', `${APP_URL}/signup?plan=${planId}&payment=cancelled`);
+    body.append('line_items[0][price]', priceId);
+    body.append('line_items[0][quantity]', '1');
+    body.append('customer_email', payload.email);
+    body.append('client_reference_id', payload.userId);
+    body.append('metadata[userId]', payload.userId);
+    body.append('metadata[planId]', planId);
+    body.append('subscription_data[metadata][userId]', payload.userId);
+
     const response = await fetch('https://api.stripe.com/v1/checkout/sessions', {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${STRIPE_SECRET_KEY}`,
         'Content-Type': 'application/x-www-form-urlencoded'
       },
-      body: new URLSearchParams({
-        'mode': 'subscription',
-        'success_url': `${APP_URL}/app?payment=success`,
-        'cancel_url': `${APP_URL}/signup?plan=family&payment=cancelled`,
-        'line_items[0][price]': STRIPE_PRICE_ID_FAMILY,
-        'line_items[0][quantity]': '1',
-        'customer_email': payload.email,
-        'client_reference_id': payload.userId,
-        'metadata[userId]': payload.userId,
-        'metadata[planId]': planId
-      })
+      body
     });
 
     if (!response.ok) {
