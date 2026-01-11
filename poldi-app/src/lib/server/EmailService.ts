@@ -28,6 +28,10 @@ interface SendResult {
  * Send an email via Resend API
  */
 export async function sendEmail(options: EmailOptions): Promise<SendResult> {
+  console.log('📧 EmailService: Checking RESEND_API_KEY...');
+  console.log('📧 env.RESEND_API_KEY exists:', !!env.RESEND_API_KEY);
+  console.log('📧 env.RESEND_API_KEY length:', env.RESEND_API_KEY?.length || 0);
+
   if (!env.RESEND_API_KEY) {
     console.warn('RESEND_API_KEY not set, skipping email send');
     return { success: false, error: 'Email service not configured' };

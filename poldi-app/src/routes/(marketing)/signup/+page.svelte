@@ -38,8 +38,8 @@
       const success = await auth.register(email, password, displayName, selectedPlan);
       
       if (success) {
-        // All plans require payment - go to step 2
-        step = 2;
+        // Registration successful - go to payment (step 3)
+        step = 3;
       } else {
         error = $auth.error || 'Registrierung fehlgeschlagen';
       }

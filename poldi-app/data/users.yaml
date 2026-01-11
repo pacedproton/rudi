@@ -34,4 +34,11 @@ data:
     subscription: free
     createdAt: 2026-01-08T20:22:54.313Z
     updatedAt: 2026-01-08T20:22:54.313Z
-updatedAt: '2026-01-08T20:22:54.313Z'
+  - id: 1c77fb2c-cf5d-4232-a64f-5c00eff4bb94
+    email: michael@scilytics.com
+    passwordHash: $2b$12$RWTlp01egovfH8PgvqXBHOq6q5F5qoQjPk3mHlLP6E8ooQ6kCtxty
+    displayName: Max5
+    subscription: free
+    createdAt: 2026-01-08T20:35:11.235Z
+    updatedAt: 2026-01-08T20:35:11.235Z
+updatedAt: '2026-01-08T20:35:11.235Z'
