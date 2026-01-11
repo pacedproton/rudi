@@ -1,7 +1,7 @@
-import { json, redirect } from '@sveltejs/kit';
+import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import { verifyToken, getDatabase } from '$lib/server';
-import { STRIPE_SECRET_KEY, APP_URL } from '$env/static/private';
+import { env } from '$env/dynamic/private';
 
 /**
  * POST /api/payment/create-portal - Create Stripe Customer Portal session
@@ -36,23 +36,23 @@ export const POST: RequestHandler = async ({ request }) => {
     }
 
     // Check if Stripe is configured
-    if (!STRIPE_SECRET_KEY) {
+    if (!env.STRIPE_SECRET_KEY) {
       console.warn('Stripe not configured, returning mock portal URL');
       return json({
         success: true,
-        url: `${APP_URL}/app/account?mock=portal`
+        url: `${env.APP_URL || ''}/app/account?mock=portal`
       });
     }
 
     // Create Portal Session
     const body = new URLSearchParams();
     body.append('customer', user.stripeCustomerId);
-    body.append('return_url', `${APP_URL}/app/account`);
+    body.append('return_url', `${env.APP_URL || ''}/app/account`);
 
     const response = await fetch('https://api.stripe.com/v1/billing_portal/sessions', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${STRIPE_SECRET_KEY}`,
+        'Authorization': `Bearer ${env.STRIPE_SECRET_KEY}`,
         'Content-Type': 'application/x-www-form-urlencoded'
       },
       body
@@ -63,7 +63,7 @@ export const POST: RequestHandler = async ({ request }) => {
       console.error('Stripe portal error:', error);
       return json({
         success: false,
-        error: 'Fehler beim Öffnen des Kundenportals'
+        error: 'Fehler beim Erstellen der Portal-Sitzung'
       }, { status: 500 });
     }
 

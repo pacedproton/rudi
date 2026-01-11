@@ -1,10 +1,7 @@
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import { verifyToken } from '$lib/server';
-import { STRIPE_SECRET_KEY, STRIPE_PRICE_ID_FAMILY, APP_URL } from '$env/static/private';
-
-// Optional: STRIPE_PRICE_ID_MONTHLY - create in Stripe for monthly subscription
-const STRIPE_PRICE_ID_MONTHLY = (import.meta.env?.STRIPE_PRICE_ID_MONTHLY as string) || '';
+import { env } from '$env/dynamic/private';
 
 /**
  * POST /api/payment/create-checkout - Create Stripe checkout session
@@ -32,29 +29,29 @@ export const POST: RequestHandler = async ({ request }) => {
     let mode: 'payment' | 'subscription';
 
     if (planId === 'lifetime') {
-      priceId = STRIPE_PRICE_ID_FAMILY; // €40 one-time
+      priceId = env.STRIPE_PRICE_ID_FAMILY || ''; // €40 one-time
       mode = 'payment';
     } else if (planId === 'monthly') {
-      priceId = STRIPE_PRICE_ID_MONTHLY || STRIPE_PRICE_ID_FAMILY; // €10/month, fallback to family
+      priceId = env.STRIPE_PRICE_ID_MONTHLY || env.STRIPE_PRICE_ID_FAMILY || ''; // €10/month, fallback to family
       mode = 'subscription';
     } else {
       return json({ success: false, error: 'Ungültiger Plan' }, { status: 400 });
     }
 
     // Check if Stripe is configured
-    if (!STRIPE_SECRET_KEY) {
+    if (!env.STRIPE_SECRET_KEY) {
       console.warn('Stripe not configured, returning mock checkout URL');
       return json({
         success: true,
-        url: `${APP_URL}/app?payment=success&mock=true`
+        url: `${env.APP_URL || ''}/app?payment=success&mock=true`
       });
     }
 
     // Create Stripe checkout session
     const body = new URLSearchParams();
     body.append('mode', mode);
-    body.append('success_url', `${APP_URL}/app?payment=success&session_id={CHECKOUT_SESSION_ID}`);
-    body.append('cancel_url', `${APP_URL}/signup?plan=${planId}&payment=cancelled`);
+    body.append('success_url', `${env.APP_URL || ''}/app?payment=success&session_id={CHECKOUT_SESSION_ID}`);
+    body.append('cancel_url', `${env.APP_URL || ''}/signup?plan=${planId}&payment=cancelled`);
     body.append('line_items[0][price]', priceId);
     body.append('line_items[0][quantity]', '1');
     body.append('customer_email', payload.email);
@@ -66,7 +63,7 @@ export const POST: RequestHandler = async ({ request }) => {
     const response = await fetch('https://api.stripe.com/v1/checkout/sessions', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${STRIPE_SECRET_KEY}`,
+        'Authorization': `Bearer ${env.STRIPE_SECRET_KEY}`,
         'Content-Type': 'application/x-www-form-urlencoded'
       },
       body

@@ -1,7 +1,7 @@
 import { json, type RequestHandler } from '@sveltejs/kit';
 import { getDatabase } from '$lib/server';
 import { createHmac } from 'node:crypto';
-import { STRIPE_WEBHOOK_SECRET, STRIPE_SECRET_KEY } from '$env/static/private';
+import { env } from '$env/dynamic/private';
 
 /**
  * POST /api/payment/webhook - Handle Stripe webhook events
@@ -10,7 +10,7 @@ import { STRIPE_WEBHOOK_SECRET, STRIPE_SECRET_KEY } from '$env/static/private';
 export const POST: RequestHandler = async ({ request }) => {
   console.log('=== Stripe Webhook Received ===');
 
-  if (!STRIPE_SECRET_KEY) {
+  if (!env.STRIPE_SECRET_KEY) {
     console.warn('Stripe not configured, ignoring webhook');
     return json({ received: true });
   }
@@ -20,7 +20,7 @@ export const POST: RequestHandler = async ({ request }) => {
     const signature = request.headers.get('stripe-signature');
 
     // Verify signature if secret is present
-    if (STRIPE_WEBHOOK_SECRET && signature) {
+    if (env.STRIPE_WEBHOOK_SECRET && signature) {
       const parts = signature.split(',').reduce((acc, part) => {
         const [key, value] = part.split('=');
         acc[key] = value;
@@ -28,7 +28,7 @@ export const POST: RequestHandler = async ({ request }) => {
       }, {} as Record<string, string>);
 
       const timestamp = parts.t;
-      const hmac = createHmac('sha256', STRIPE_WEBHOOK_SECRET);
+      const hmac = createHmac('sha256', env.STRIPE_WEBHOOK_SECRET);
       hmac.update(`${timestamp}.${payload}`);
       const calculated = hmac.digest('hex');
 

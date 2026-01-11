@@ -9,7 +9,7 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import type { User, Session, CreateSessionData } from './db/types';
 import type { Database } from './db/Repository';
-import { JWT_SECRET } from '$env/static/private';
+import { env } from '$env/dynamic/private';
 
 // ===== CONFIGURATION =====
 
@@ -18,11 +18,11 @@ const JWT_ALGORITHM = 'HS256';
 const TOKEN_EXPIRY_HOURS = 24 * 7; // 1 week
 
 function getJwtSecret(): string {
-  if (!JWT_SECRET) {
+  if (!env.JWT_SECRET) {
     console.warn('JWT_SECRET not set, using development default');
     return 'poldi-app-development-secret-change-in-production';
   }
-  return JWT_SECRET;
+  return env.JWT_SECRET;
 }
 
 // ===== TYPES =====
