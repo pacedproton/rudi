@@ -235,7 +235,7 @@
     <h2>Bereit für den Schulstart?</h2>
     <p>Bereiten Sie Ihr Kind optimal auf die Volksschule vor – mit über 360 wissenschaftlich fundierten Übungen!</p>
     <a href="/signup?plan=lifetime" class="btn btn-primary btn-large">
-      🎓 Jetzt für 40€ kaufen
+      🎓 Jetzt für 30€ kaufen
     </a>
   </section>
 

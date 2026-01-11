@@ -15,7 +15,7 @@
   $: selectedPlan = $page.url.searchParams.get('plan') || 'lifetime';
   
   const plans: Record<string, { name: string; price: string; period: string }> = {
-    lifetime: { name: 'Einmalzahlung', price: '40€', period: 'einmalig' },
+    lifetime: { name: 'Einmalzahlung', price: '30€', period: 'einmalig' },
     monthly: { name: 'Monatsabo', price: '10€', period: '/Monat' }
   };
 
@@ -207,7 +207,7 @@
           <div class="popular-tag">Beste Wahl</div>
           <div class="plan-header">
             <h3>Einmalzahlung</h3>
-            <span class="plan-price">40€<small> einmalig</small></span>
+            <span class="plan-price">30€<small> einmalig</small></span>
           </div>
           <ul>
             <li>Alle 11 Module</li>
@@ -245,7 +245,7 @@
       <div class="payment-section">
         <div class="selected-plan-summary">
           <h3>Gewählter Plan: {plans[selectedPlan]?.name || 'Premium'}</h3>
-          <p class="price-display">{plans[selectedPlan]?.price || '40€'} {plans[selectedPlan]?.period || ''}</p>
+          <p class="price-display">{plans[selectedPlan]?.price || '30€'} {plans[selectedPlan]?.period || ''}</p>
           <ul>
             <li>✅ Alle 11 Module</li>
             <li>✅ 360+ Übungen</li>
