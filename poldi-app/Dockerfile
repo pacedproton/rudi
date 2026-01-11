@@ -8,7 +8,7 @@ WORKDIR /app
 COPY package*.json ./
 
 # Install dependencies
-RUN npm ci
+RUN npm install
 
 # Copy source code
 COPY . .
@@ -26,7 +26,7 @@ COPY --from=builder /app/build build/
 COPY --from=builder /app/package.json .
 
 # Install only production dependencies
-RUN npm ci --omit=dev
+RUN npm install --omit=dev
 
 # Create data directory for YAML storage
 RUN mkdir -p /app/data
