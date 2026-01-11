@@ -5,7 +5,7 @@
   const plans = [
     {
       name: 'Einmalzahlung',
-      price: '40€',
+      price: '30€',
       period: 'einmalig',
       description: 'Voller Zugang für immer',
       features: [
@@ -84,14 +84,14 @@
       </p>
       <div class="hero-buttons">
         <a href="/signup?plan=lifetime" class="btn btn-primary">
-          🎓 Jetzt für 40€ kaufen
+          🎓 Jetzt für 30€ kaufen
         </a>
         <button class="btn btn-secondary" on:click={() => scrollToSection('pricing')}>
           📋 Alle Optionen ansehen
         </button>
       </div>
       <p class="hero-trust">
-        Trainiert Poldi-Kompetenzen • Für österreichische Volksschulen 
+        Trainiert Poldi-Kompetenzen • zur Vorbereitung auf die und im 1. Jahr der österreichischen Volksschule  
       </p>
     </div>
     <div class="hero-image">

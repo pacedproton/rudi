@@ -219,3 +219,87 @@ export async function sendAdminNewUserNotification(
     html
   });
 }
+
+/**
+ * Send admin notification when user initiates checkout (clicks pay)
+ */
+export interface CheckoutInfo {
+  email: string;
+  displayName?: string;
+  planId: string;
+  planName: string;
+  userAgent?: string;
+  ipAddress?: string;
+  referer?: string;
+  language?: string;
+}
+
+export async function sendCheckoutNotification(info: CheckoutInfo): Promise<SendResult> {
+  const adminEmail = env.ADMIN_EMAIL || 'service@volksschule-trainer.at';
+
+  const html = `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+    .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+    .header { background: #4CAF50; color: white; padding: 15px; border-radius: 8px 8px 0 0; }
+    .content { background: #f0fff0; padding: 20px; border-radius: 0 0 8px 8px; }
+    .info-row { margin: 10px 0; padding: 8px; background: white; border-radius: 4px; }
+    .label { font-weight: bold; color: #333; display: block; margin-bottom: 4px; }
+    .value { color: #666; word-break: break-all; }
+    .highlight { background: #e8f5e9; border-left: 4px solid #4CAF50; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h2 style="margin: 0;">💳 Neuer Checkout gestartet!</h2>
+    </div>
+    <div class="content">
+      <div class="info-row highlight">
+        <span class="label">💰 Plan:</span>
+        <span class="value">${info.planName} (${info.planId})</span>
+      </div>
+      <div class="info-row">
+        <span class="label">📧 E-Mail:</span>
+        <span class="value">${info.email}</span>
+      </div>
+      <div class="info-row">
+        <span class="label">👤 Name:</span>
+        <span class="value">${info.displayName || '(nicht angegeben)'}</span>
+      </div>
+      <div class="info-row">
+        <span class="label">⏰ Zeitpunkt:</span>
+        <span class="value">${new Date().toLocaleString('de-AT', { timeZone: 'Europe/Vienna' })}</span>
+      </div>
+      <div class="info-row">
+        <span class="label">🌐 IP-Adresse:</span>
+        <span class="value">${info.ipAddress || 'unbekannt'}</span>
+      </div>
+      <div class="info-row">
+        <span class="label">🖥️ Browser:</span>
+        <span class="value">${info.userAgent || 'unbekannt'}</span>
+      </div>
+      <div class="info-row">
+        <span class="label">🔗 Referrer:</span>
+        <span class="value">${info.referer || '(direkt)'}</span>
+      </div>
+      <div class="info-row">
+        <span class="label">🌍 Sprache:</span>
+        <span class="value">${info.language || 'unbekannt'}</span>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
+  `;
+
+  return sendEmail({
+    to: adminEmail,
+    subject: `💳 Checkout gestartet: ${info.email} - ${info.planName}`,
+    html
+  });
+}

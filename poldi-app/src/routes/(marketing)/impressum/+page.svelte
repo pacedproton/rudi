@@ -33,61 +33,8 @@
         </p>
       </div>
 
-      <div class="info-block">
-        <h3>Umsatzsteuer-Identifikationsnummer (UID)</h3>
-        <p>
-          [ATU12345678 - falls vorhanden, ansonsten diesen Abschnitt entfernen]
-        </p>
-      </div>
-
-      <div class="info-block">
-        <h3>Blattlinie</h3>
-        <p>
-          Information über Lernhilfen für Vorschulkinder zur Vorbereitung auf die Volksschule.
-        </p>
-      </div>
     </section>
 
-    <section>
-      <h2>Haftungsausschluss</h2>
-      
-      <div class="info-block">
-        <h3>Haftung für Inhalte</h3>
-        <p>
-          Die Inhalte unserer Seiten wurden mit größter Sorgfalt erstellt. 
-          Für die Richtigkeit, Vollständigkeit und Aktualität der Inhalte können wir jedoch keine Gewähr übernehmen.
-        </p>
-      </div>
-
-      <div class="info-block">
-        <h3>Haftung für Links</h3>
-        <p>
-          Unser Angebot enthält Links zu externen Webseiten Dritter, auf deren Inhalte wir keinen Einfluss haben. 
-          Deshalb können wir für diese fremden Inhalte auch keine Gewähr übernehmen.
-        </p>
-      </div>
-
-      <div class="info-block">
-        <h3>Urheberrecht</h3>
-        <p>
-          Die durch die Seitenbetreiber erstellten Inhalte und Werke auf diesen Seiten unterliegen dem österreichischen Urheberrecht. 
-          Die Vervielfältigung, Bearbeitung, Verbreitung und jede Art der Verwertung außerhalb der Grenzen des Urheberrechtes 
-          bedürfen der schriftlichen Zustimmung des jeweiligen Autors bzw. Erstellers.
-        </p>
-      </div>
-    </section>
-
-    <section>
-      <h2>EU-Streitschlichtung</h2>
-      <p>
-        Die Europäische Kommission stellt eine Plattform zur Online-Streitbeilegung (OS) bereit: 
-        <a href="https://ec.europa.eu/consumers/odr" target="_blank" rel="noopener">https://ec.europa.eu/consumers/odr</a>
-      </p>
-      <p>
-        Wir sind nicht bereit oder verpflichtet, an Streitbeilegungsverfahren vor einer 
-        Verbraucherschlichtungsstelle teilzunehmen.
-      </p>
-    </section>
   </div>
 </div>
 

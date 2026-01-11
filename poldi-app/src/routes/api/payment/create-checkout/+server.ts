@@ -1,14 +1,23 @@
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
-import { verifyToken } from '$lib/server';
+import { verifyToken, getDatabase } from '$lib/server';
 import { env } from '$env/dynamic/private';
+import { sendCheckoutNotification } from '$lib/server/EmailService';
 
 /**
  * POST /api/payment/create-checkout - Create Stripe checkout session
- * Supports: 'lifetime' (one-time €40) and 'monthly' (subscription €10/month)
+ * Supports: 'lifetime' (one-time €30) and 'monthly' (subscription €10/month)
  */
 export const POST: RequestHandler = async ({ request }) => {
   try {
+    // Get request headers for notification email
+    const userAgent = request.headers.get('User-Agent') || undefined;
+    const referer = request.headers.get('Referer') || undefined;
+    const language = request.headers.get('Accept-Language')?.split(',')[0] || undefined;
+    const ipAddress = request.headers.get('X-Forwarded-For')?.split(',')[0] ||
+      request.headers.get('X-Real-IP') ||
+      'unknown';
+
     // Verify auth token
     const authHeader = request.headers.get('Authorization');
     const token = authHeader?.replace('Bearer ', '');
@@ -27,16 +36,36 @@ export const POST: RequestHandler = async ({ request }) => {
     // Validate plan and get price + mode
     let priceId: string;
     let mode: 'payment' | 'subscription';
+    let planName: string;
 
     if (planId === 'lifetime') {
-      priceId = env.STRIPE_PRICE_ID_FAMILY || ''; // €40 one-time
+      priceId = env.STRIPE_PRICE_ID_FAMILY || '';
       mode = 'payment';
+      planName = 'Einmalzahlung (€30)';
     } else if (planId === 'monthly') {
-      priceId = env.STRIPE_PRICE_ID_MONTHLY || env.STRIPE_PRICE_ID_FAMILY || ''; // €10/month, fallback to family
+      priceId = env.STRIPE_PRICE_ID_MONTHLY || env.STRIPE_PRICE_ID_FAMILY || '';
       mode = 'subscription';
+      planName = 'Monatsabo (€10/Monat)';
     } else {
       return json({ success: false, error: 'Ungültiger Plan' }, { status: 400 });
     }
+
+    // Get user display name from database
+    const db = getDatabase();
+    const user = await db.users.findById(payload.userId);
+    const displayName = user?.displayName;
+
+    // Send admin notification email (async, don't wait)
+    sendCheckoutNotification({
+      email: payload.email,
+      displayName,
+      planId,
+      planName,
+      userAgent,
+      ipAddress,
+      referer,
+      language
+    }).catch(err => console.error('Checkout notification email error:', err));
 
     // Check if Stripe is configured
     if (!env.STRIPE_SECRET_KEY) {
@@ -58,7 +87,9 @@ export const POST: RequestHandler = async ({ request }) => {
     body.append('client_reference_id', payload.userId);
     body.append('metadata[userId]', payload.userId);
     body.append('metadata[planId]', planId);
-    body.append('subscription_data[metadata][userId]', payload.userId);
+    if (mode === 'subscription') {
+      body.append('subscription_data[metadata][userId]', payload.userId);
+    }
 
     const response = await fetch('https://api.stripe.com/v1/checkout/sessions', {
       method: 'POST',
