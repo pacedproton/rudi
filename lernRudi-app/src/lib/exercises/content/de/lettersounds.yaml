@@ -105,7 +105,7 @@ tasks:
 
   - type: initial
     target: mushroom
-    match: arrow
+    match: penguin
     distractor: book
 
   # H-sound
@@ -131,7 +131,7 @@ tasks:
     distractor: worm
 
   - type: initial
-    target: spider
+    target: key
     match: scissors
     distractor: fork
 

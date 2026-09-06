@@ -18,6 +18,7 @@
   // Check if user is admin
   const ADMIN_EMAILS = ['admin@lern-rudi.at', 'mike@example.com'];
   $: isAdmin = $currentUser?.email && ADMIN_EMAILS.includes($currentUser.email.toLowerCase());
+  $: sesTaskCount = flinkiModules.reduce((sum, module) => sum + module.tasks.length, 0);
 
   onMount(async () => {
     // Try to validate existing session
@@ -116,7 +117,7 @@
         <h2>✅ Umfassende Übungsbibliothek</h2>
         <ul>
           <li>✅ <strong>18 Übungstypen</strong> </li>
-          <li>✅ <strong>11 Module</strong> - 360 Übungen gesamt</li>
+          <li>✅ <strong>{flinkiModules.length} Module</strong> - {sesTaskCount} Übungen gesamt</li>
           <li>✅ <strong>Schuleingangsscreening</strong> Vorbereitung</li>
           <li>✅ <strong>Sprache & Töne</strong> - Deutsche TTS aktiv</li>
         </ul>
@@ -184,11 +185,11 @@
         <div class="button-divider"></div>
 
         <button class="btn-primary" on:click={startFullTest}>
-          🎯 Vollständiger Test (288 Aufgaben)
+          Vollständiger Test ({sesTaskCount} Aufgaben)
         </button>
 
         <button class="btn-primary-outline" on:click={startShortTest}>
-          ⚡ Kurzer Test (8 Aufgaben)
+          Kurzer Test (8 Aufgaben)
         </button>
 
         <button class="btn-primary-outline" on:click={startDemo}>

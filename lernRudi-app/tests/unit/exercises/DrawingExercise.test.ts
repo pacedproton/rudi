@@ -15,32 +15,18 @@ vi.mock('$lib/core/SpeechEngine', () => ({
 
 import { DrawingExercise } from '$lib/exercises/drawing/DrawingExercise';
 import type { DrawingConfig } from '$lib/exercises/drawing/DrawingExercise';
+import { sampleDrawingShape } from '$lib/exercises/drawing/sampleShapePath';
+import { createCanvasContext } from '../../helpers/canvasContext';
 
 describe('DrawingExercise', () => {
   let exercise: DrawingExercise;
   let mockConfig: DrawingConfig;
 
-  const createMockContext = () => ({
-    ctx: {
-      clearRect: vi.fn(),
-      fillRect: vi.fn(),
-      fillText: vi.fn(),
-      beginPath: vi.fn(),
-      arc: vi.fn(),
-      stroke: vi.fn(),
-      rect: vi.fn(),
-      moveTo: vi.fn(),
-      lineTo: vi.fn(),
-      closePath: vi.fn(),
-      save: vi.fn(),
-      restore: vi.fn(),
-      setLineDash: vi.fn(),
-      bezierCurveTo: vi.fn()
-    } as any,
-    width: 800,
-    height: 600,
-    scale: 1
-  });
+  const createMockContext = () => createCanvasContext();
+
+  function clickFertig() {
+    return exercise.handleInput({ x: 70, y: 550, type: 'end' });
+  }
 
   beforeEach(() => {
     mockConfig = {
@@ -101,30 +87,8 @@ describe('DrawingExercise', () => {
     });
 
     it('should render without errors', () => {
-      const mockCtx = {
-        ctx: {
-          clearRect: vi.fn(),
-          fillRect: vi.fn(),
-          fillText: vi.fn(),
-          beginPath: vi.fn(),
-          arc: vi.fn(),
-          stroke: vi.fn(),
-          rect: vi.fn(),
-          moveTo: vi.fn(),
-          lineTo: vi.fn(),
-          closePath: vi.fn(),
-          save: vi.fn(),
-          restore: vi.fn(),
-          setLineDash: vi.fn(),
-          bezierCurveTo: vi.fn()
-        },
-        width: 800,
-        height: 600,
-        scale: 1
-      } as any;
-
       expect(() => {
-        exercise.render(mockCtx);
+        exercise.render(createMockContext());
       }).not.toThrow();
     });
   });
@@ -185,6 +149,31 @@ describe('DrawingExercise', () => {
       expect(() => {
         exercise.cleanup();
       }).not.toThrow();
+    });
+  });
+
+  describe('Scoring', () => {
+    it('rejects random points away from the circle', () => {
+      exercise.render(createMockContext());
+      exercise.handleInput({ x: 40, y: 40, type: 'start' });
+      for (let i = 0; i < 24; i++) {
+        exercise.handleInput({ x: 40 + (i % 6) * 8, y: 40 + Math.floor(i / 6) * 8, type: 'move' });
+      }
+      exercise.handleInput({ x: 80, y: 80, type: 'end' });
+      expect(clickFertig()).toBeNull();
+    });
+
+    it('accepts points along the dashed circle', () => {
+      exercise.render(createMockContext());
+      const [guide] = sampleDrawingShape('circle', 800, 600, 1);
+      exercise.handleInput({ x: guide[0].x, y: guide[0].y, type: 'start' });
+      for (const point of guide.slice(1)) {
+        exercise.handleInput({ x: point.x, y: point.y, type: 'move' });
+      }
+      exercise.handleInput({ x: guide[guide.length - 1].x, y: guide[guide.length - 1].y, type: 'end' });
+      const result = clickFertig();
+      expect(result).not.toBeNull();
+      expect(result?.correct).toBe(true);
     });
   });
 

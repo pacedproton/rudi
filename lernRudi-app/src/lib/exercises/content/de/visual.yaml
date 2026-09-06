@@ -357,8 +357,8 @@ tasks:
     correctIndex: 0
 
   - type: pattern
-    sequence: [circle, square, circle, square, null]
-    options: [circle, square, triangle]
+    sequence: [heart, star, heart, star, null]
+    options: [heart, star, moon]
     correctIndex: 0
 
   - type: pattern
@@ -367,8 +367,8 @@ tasks:
     correctIndex: 1
 
   - type: pattern
-    sequence: [red, blue, red, blue, null]
-    options: [red, blue, green]
+    sequence: [fish, bird, fish, bird, null]
+    options: [fish, bird, cat]
     correctIndex: 0
 
   - type: pattern
@@ -377,8 +377,8 @@ tasks:
     correctIndex: 0
 
   - type: pattern
-    sequence: [triangle, circle, square, triangle, circle, null]
-    options: [square, triangle, circle]
+    sequence: [apple, banana, lemon, apple, banana, null]
+    options: [lemon, apple, banana]
     correctIndex: 0
 
   - type: pattern
@@ -402,8 +402,8 @@ tasks:
     correctIndex: 0
 
   - type: pattern
-    sequence: [green, yellow, green, yellow, null]
-    options: [green, yellow, blue]
+    sequence: [leaf, sun, leaf, sun, null]
+    options: [leaf, sun, moon]
     correctIndex: 0
 
   - type: pattern

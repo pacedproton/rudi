@@ -13,6 +13,8 @@ import { ExercisePlugin } from '../base/ExercisePlugin';
 import type { RenderContext } from '$lib/core/CanvasManager';
 import type { InputEvent, ExerciseResult, SpeechRequest, ExerciseType } from '../base/types';
 import { colors } from '$lib/data/colors';
+import { audioEngine } from '$lib/core/AudioEngine';
+import { speechEngine } from '$lib/core/SpeechEngine';
 
 export type LineType = 'horizontal' | 'vertical' | 'diagonal' | 'wavy' | 'zigzag' | 'curve' | 'spiral';
 
@@ -154,7 +156,7 @@ export class LineTracingExercise extends ExercisePlugin {
     ctx.ctx.fillText(this.getInstruction(), width / 2, 20 * scale);
 
     // Draw guide path (dashed line)
-    ctx.ctx.strokeStyle = 'rgba(102, 126, 234, 0.4)';
+    ctx.ctx.strokeStyle = '#667eea';
     ctx.ctx.lineWidth = 6 * scale;
     ctx.ctx.lineCap = 'round';
     ctx.ctx.lineJoin = 'round';
@@ -249,9 +251,16 @@ export class LineTracingExercise extends ExercisePlugin {
       // Check if clicking Done button
       if (this.isInside(event.x, event.y, this.doneButton) && this.tracedPath.length > 10) {
         const accuracy = this.calculateAccuracy();
-        const correct = accuracy > 0.5; // 50% accuracy threshold
+        if (accuracy <= 0.5) {
+          audioEngine.playSound('wrong');
+          speechEngine.speak('Versuche es noch einmal.');
+          this.tracedPath = [];
+          this.isDrawing = false;
+          return null;
+        }
+        speechEngine.speak('Super gemacht!');
         return {
-          correct,
+          correct: true,
           responseTime: this.getElapsedTime(),
           metadata: {
             accuracy,

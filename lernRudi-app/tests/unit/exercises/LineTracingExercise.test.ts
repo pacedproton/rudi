@@ -1,4 +1,12 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
+
+vi.mock('$lib/core/AudioEngine', () => ({
+  audioEngine: { playSound: vi.fn() }
+}));
+vi.mock('$lib/core/SpeechEngine', () => ({
+  speechEngine: { speak: vi.fn() }
+}));
+
 import { LineTracingExercise } from '$lib/exercises/motor/LineTracingExercise';
 import type { LineTracingConfig } from '$lib/exercises/motor/LineTracingExercise';
 import type { RenderContext } from '$lib/core/CanvasManager';
@@ -193,23 +201,24 @@ describe('LineTracingExercise', () => {
 
     it('should complete with sufficient tracing', () => {
       exercise.handleInput({ x: 100, y: 300, type: 'start' });
-      for (let i = 0; i < 20; i++) {
-        exercise.handleInput({ x: 100 + i * 5, y: 300, type: 'move' });
+      for (let i = 0; i <= 60; i++) {
+        exercise.handleInput({ x: 100 + i * 10, y: 300, type: 'move' });
       }
-      exercise.handleInput({ x: 200, y: 300, type: 'end' });
+      exercise.handleInput({ x: 700, y: 300, type: 'end' });
 
       const result = exercise.handleInput({ x: 750, y: 550, type: 'start' });
       expect(result).not.toBeNull();
+      expect(result?.correct).toBe(true);
       expect(result?.metadata).toBeDefined();
       expect(result?.metadata?.lineType).toBe('horizontal');
     });
 
     it('should include accuracy in metadata', () => {
       exercise.handleInput({ x: 100, y: 300, type: 'start' });
-      for (let i = 0; i < 20; i++) {
-        exercise.handleInput({ x: 100 + i * 5, y: 300, type: 'move' });
+      for (let i = 0; i <= 60; i++) {
+        exercise.handleInput({ x: 100 + i * 10, y: 300, type: 'move' });
       }
-      exercise.handleInput({ x: 200, y: 300, type: 'end' });
+      exercise.handleInput({ x: 700, y: 300, type: 'end' });
 
       const result = exercise.handleInput({ x: 750, y: 550, type: 'start' });
       expect(result?.metadata?.accuracy).toBeGreaterThanOrEqual(0);
@@ -224,12 +233,12 @@ describe('LineTracingExercise', () => {
     });
 
     it('should set repeatRequested flag', () => {
-      exercise.handleInput({ x: 750, y: 20, type: 'start' });
+      exercise.handleInput({ x: 685, y: 45, type: 'start' });
       expect(exercise.repeatRequested).toBe(true);
     });
 
     it('should not process tracing when repeat clicked', () => {
-      exercise.handleInput({ x: 750, y: 20, type: 'start' });
+      exercise.handleInput({ x: 685, y: 45, type: 'start' });
       expect(exercise.repeatRequested).toBe(true);
     });
   });

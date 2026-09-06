@@ -1,4 +1,12 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
+
+vi.mock('$lib/core/AudioEngine', () => ({
+  audioEngine: { playSound: vi.fn() }
+}));
+vi.mock('$lib/core/SpeechEngine', () => ({
+  speechEngine: { speak: vi.fn() }
+}));
+
 import { TracePathExercise } from '$lib/exercises/motor/TracePathExercise';
 import type { TracePathConfig } from '$lib/exercises/motor/TracePathExercise';
 import type { RenderContext } from '$lib/core/CanvasManager';
@@ -271,34 +279,22 @@ describe('TracePathExercise', () => {
       expect(result).toBeNull(); // Insufficient tracing
     });
 
-    it('should complete if sufficient tracing (> 10 points)', () => {
-      // Draw enough points
+    it('should complete if the path is followed', () => {
       exercise.handleInput({ x: 100, y: 300, type: 'start' });
-      for (let i = 0; i < 15; i++) {
-        exercise.handleInput({ x: 100 + i * 5, y: 300, type: 'move' });
+      for (let i = 0; i < 100; i++) {
+        exercise.handleInput({
+          x: 100 + i * 6,
+          y: 300 + Math.sin((i / 99) * Math.PI * 3) * 150,
+          type: 'move'
+        });
       }
-      exercise.handleInput({ x: 200, y: 300, type: 'end' });
+      exercise.handleInput({ x: 700, y: 300, type: 'end' });
 
-      // Click Fertig button
       const result = exercise.handleInput({ x: 750, y: 550, type: 'start' });
 
       expect(result).not.toBeNull();
+      expect(result?.correct).toBe(true);
       expect(result?.responseTime).toBeDefined();
-    });
-
-    it('should calculate coverage score', () => {
-      // Trace a good path
-      exercise.handleInput({ x: 100, y: 300, type: 'start' });
-      for (let i = 0; i < 50; i++) {
-        exercise.handleInput({ x: 100 + i * 5, y: 300 + Math.sin(i * 0.5) * 20, type: 'move' });
-      }
-      exercise.handleInput({ x: 350, y: 300, type: 'end' });
-
-      const result = exercise.handleInput({ x: 750, y: 550, type: 'start' });
-
-      // Coverage determines correctness
-      expect(result).not.toBeNull();
-      expect(typeof result?.correct).toBe('boolean');
     });
   });
 
@@ -309,14 +305,14 @@ describe('TracePathExercise', () => {
     });
 
     it('should set repeatRequested flag when repeat button clicked', () => {
-      const result = exercise.handleInput({ x: 750, y: 20, type: 'start' });
+      const result = exercise.handleInput({ x: 685, y: 45, type: 'start' });
 
       expect(result).toBeNull();
       expect(exercise.repeatRequested).toBe(true);
     });
 
     it('should NOT process drawing when repeat button clicked', () => {
-      exercise.handleInput({ x: 750, y: 20, type: 'start' });
+      exercise.handleInput({ x: 685, y: 45, type: 'start' });
 
       // Should not have started tracing
       vi.clearAllMocks();
@@ -361,9 +357,7 @@ describe('TracePathExercise', () => {
 
       const result = exercise.handleInput({ x: 750, y: 550, type: 'start' });
 
-      expect(result).not.toBeNull();
-      // Poor coverage should be marked incorrect
-      expect(result?.correct).toBe(false);
+      expect(result).toBeNull();
     });
   });
 
@@ -384,14 +378,17 @@ describe('TracePathExercise', () => {
 
     it('should enable Fertig button after sufficient tracing', () => {
       exercise.handleInput({ x: 100, y: 300, type: 'start' });
-      for (let i = 0; i < 15; i++) {
-        exercise.handleInput({ x: 100 + i * 5, y: 300, type: 'move' });
+      for (let i = 0; i < 100; i++) {
+        exercise.handleInput({
+          x: 100 + i * 6,
+          y: 300 + Math.sin((i / 99) * Math.PI * 3) * 150,
+          type: 'move'
+        });
       }
-      exercise.handleInput({ x: 200, y: 300, type: 'end' });
+      exercise.handleInput({ x: 700, y: 300, type: 'end' });
 
       exercise.render(mockContext);
 
-      // Button should now work
       const result = exercise.handleInput({ x: 750, y: 550, type: 'start' });
       expect(result).not.toBeNull();
     });

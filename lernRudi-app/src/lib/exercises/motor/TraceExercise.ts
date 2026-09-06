@@ -11,6 +11,10 @@ import { ExercisePlugin } from '../base/ExercisePlugin';
 import type { ExerciseType, ExerciseResult, InputEvent } from '../base/types';
 import type { RenderContext } from '$lib/core/CanvasManager';
 import { colors } from '$lib/data/colors';
+import { audioEngine } from '$lib/core/AudioEngine';
+import { speechEngine } from '$lib/core/SpeechEngine';
+import { scoreStrokes } from '../writing/scoreStrokes';
+import { GRAFOMOTOR_SCORE_OPTIONS, sampleTraceShape } from '../drawing/sampleShapePath';
 
 export type TraceShape = 'circle' | 'cross' | 'triangle';
 
@@ -65,7 +69,7 @@ export class TraceExercise extends ExercisePlugin {
     const radius = 80 * scale;
 
     // Draw guide shape (dashed outline)
-    ctx.ctx.strokeStyle = 'rgba(255, 255, 255, 0.5)';
+    ctx.ctx.strokeStyle = '#667eea';
     ctx.ctx.setLineDash([10 * scale]);
     ctx.ctx.lineWidth = 8 * scale;
     ctx.ctx.beginPath();
@@ -186,15 +190,7 @@ export class TraceExercise extends ExercisePlugin {
         w: buttonW,
         h: buttonH
       })) {
-        // Exercise complete - return immediately, don't process as drawing
-        return {
-          correct: true,  // Motor exercises are always "correct" if completed
-          responseTime: this.getElapsedTime(),
-          metadata: {
-            pathCount: this.drawPaths.length,
-            totalPoints: this.drawPaths.reduce((sum, path) => sum + path.length, 0)
-          }
-        };
+        return this.finishTrace();
       }
 
       // If not button click, start new drawing path
@@ -209,6 +205,34 @@ export class TraceExercise extends ExercisePlugin {
     }
 
     return null;
+  }
+
+  private finishTrace(): ExerciseResult | null {
+    const ctx = this.getRenderContext();
+    const expected = sampleTraceShape(this.shape, ctx.width, ctx.height, ctx.scale);
+    const score = scoreStrokes(this.drawPaths, expected, {
+      ...GRAFOMOTOR_SCORE_OPTIONS,
+      hitRadius: GRAFOMOTOR_SCORE_OPTIONS.hitRadius * ctx.scale
+    });
+
+    if (this.drawPaths.length === 0 || !score.passed) {
+      audioEngine.playSound('wrong');
+      speechEngine.speak('Versuche es noch einmal.');
+      this.drawPaths = [];
+      this.currentPath = null;
+      return null;
+    }
+
+    speechEngine.speak('Super gemacht!');
+    return {
+      correct: true,
+      responseTime: this.getElapsedTime(),
+      metadata: {
+        pathCount: this.drawPaths.length,
+        totalPoints: this.drawPaths.reduce((sum, path) => sum + path.length, 0),
+        accuracy: score.overall
+      }
+    };
   }
 
   /**

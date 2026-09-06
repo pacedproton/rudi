@@ -1,5 +1,14 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
+
+vi.mock('$lib/core/AudioEngine', () => ({
+  audioEngine: { playSound: vi.fn() }
+}));
+vi.mock('$lib/core/SpeechEngine', () => ({
+  speechEngine: { speak: vi.fn() }
+}));
+
 import { TraceExercise } from '$lib/exercises/motor/TraceExercise';
+import { sampleTraceShape } from '$lib/exercises/drawing/sampleShapePath';
 import type { TraceExerciseConfig } from '$lib/exercises/motor/TraceExercise';
 import type { RenderContext } from '$lib/core/CanvasManager';
 import type { InputEvent } from '$lib/exercises/base/types';
@@ -222,13 +231,25 @@ describe('TraceExercise', () => {
       exercise.render(mockContext); // Must render to save context
     });
 
-    it('should complete exercise when Fertig clicked', () => {
-      // Draw something first
-      exercise.handleInput({ x: 100, y: 100, type: 'start' });
-      exercise.handleInput({ x: 110, y: 110, type: 'move' });
-      exercise.handleInput({ x: 120, y: 120, type: 'end' });
+    it('should return null when Fertig is clicked with no paths', () => {
+      expect(exercise.handleInput({ x: 400, y: 550, type: 'start' })).toBeNull();
+    });
 
-      // Click Fertig button (bottom center)
+    it('should retry a scribble far from the guide', () => {
+      exercise.handleInput({ x: 40, y: 40, type: 'start' });
+      exercise.handleInput({ x: 60, y: 50, type: 'move' });
+      exercise.handleInput({ x: 80, y: 40, type: 'end' });
+      expect(exercise.handleInput({ x: 400, y: 550, type: 'start' })).toBeNull();
+    });
+
+    it('should complete exercise when the circle guide is traced', () => {
+      const [guide] = sampleTraceShape('circle', 800, 600, 1);
+      exercise.handleInput({ x: guide[0].x, y: guide[0].y, type: 'start' });
+      for (const point of guide.slice(1)) {
+        exercise.handleInput({ x: point.x, y: point.y, type: 'move' });
+      }
+      exercise.handleInput({ x: guide[guide.length - 1].x, y: guide[guide.length - 1].y, type: 'end' });
+
       const result = exercise.handleInput({ x: 400, y: 550, type: 'start' });
 
       expect(result).not.toBeNull();
@@ -237,12 +258,13 @@ describe('TraceExercise', () => {
     });
 
     it('CRITICAL: should NOT start new path when Fertig clicked', () => {
-      // Draw a path
-      exercise.handleInput({ x: 100, y: 100, type: 'start' });
-      exercise.handleInput({ x: 110, y: 110, type: 'move' });
-      exercise.handleInput({ x: 120, y: 120, type: 'end' });
+      const [guide] = sampleTraceShape('circle', 800, 600, 1);
+      exercise.handleInput({ x: guide[0].x, y: guide[0].y, type: 'start' });
+      for (const point of guide.slice(1)) {
+        exercise.handleInput({ x: point.x, y: point.y, type: 'move' });
+      }
+      exercise.handleInput({ x: guide[guide.length - 1].x, y: guide[guide.length - 1].y, type: 'end' });
 
-      // Click Fertig button
       const result = exercise.handleInput({ x: 400, y: 550, type: 'start' });
       expect(result).not.toBeNull();
 
@@ -257,9 +279,12 @@ describe('TraceExercise', () => {
     });
 
     it('should include metadata in result', () => {
-      exercise.handleInput({ x: 100, y: 100, type: 'start' });
-      exercise.handleInput({ x: 110, y: 110, type: 'move' });
-      exercise.handleInput({ x: 120, y: 120, type: 'end' });
+      const [guide] = sampleTraceShape('circle', 800, 600, 1);
+      exercise.handleInput({ x: guide[0].x, y: guide[0].y, type: 'start' });
+      for (const point of guide.slice(1)) {
+        exercise.handleInput({ x: point.x, y: point.y, type: 'move' });
+      }
+      exercise.handleInput({ x: guide[guide.length - 1].x, y: guide[guide.length - 1].y, type: 'end' });
 
       const result = exercise.handleInput({ x: 400, y: 550, type: 'start' });
 
@@ -277,7 +302,7 @@ describe('TraceExercise', () => {
 
     it('should set repeatRequested flag when repeat button clicked', () => {
       // Click repeat button (top-right corner)
-      const result = exercise.handleInput({ x: 750, y: 20, type: 'start' });
+      const result = exercise.handleInput({ x: 685, y: 45, type: 'start' });
 
       expect(result).toBeNull();
       expect(exercise.repeatRequested).toBe(true);
@@ -285,7 +310,7 @@ describe('TraceExercise', () => {
 
     it('should NOT process other inputs when repeat button clicked', () => {
       // Click repeat button
-      exercise.handleInput({ x: 750, y: 20, type: 'start' });
+      exercise.handleInput({ x: 685, y: 45, type: 'start' });
 
       // Should not start a drawing path at those coordinates
       vi.clearAllMocks();

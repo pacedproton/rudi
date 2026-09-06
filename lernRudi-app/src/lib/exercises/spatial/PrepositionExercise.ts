@@ -9,7 +9,7 @@
 import { ExercisePlugin } from '../base/ExercisePlugin';
 import type { RenderContext } from '$lib/core/CanvasManager';
 import type { InputEvent, ExerciseResult, SpeechRequest, ExerciseType } from '../base/types';
-import { icons } from '$lib/data/assets';
+import { icons, labels } from '$lib/data/assets';
 
 type Preposition = 'auf' | 'unter' | 'neben' | 'in';  // on, under, next to, in
 
@@ -67,7 +67,7 @@ export class PrepositionExercise extends ExercisePlugin {
       'in': 'in'
     };
 
-    return `Wo ist das ${this.object} ${prepositionText[this.targetRelation]} dem ${this.container}?`;
+    return `Wo ist ${labels[this.object]} ${prepositionText[this.targetRelation]} ${labels[this.container]}?`;
   }
 
   render(ctx: RenderContext): void {

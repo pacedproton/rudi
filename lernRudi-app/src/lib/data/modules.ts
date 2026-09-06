@@ -13,7 +13,7 @@
  * 4. Graphomotor Skills (Grafomotorik) - Tracing & Writing
  * 5. Visual Perception - Discrimination, Patterns, Spatial Relations
  *
- * COMPREHENSIVE LIBRARY: 288 exercises (36 per module x 8 modules)
+ * COMPREHENSIVE LIBRARY: 11 modules (runtime: flinkiModules)
  */
 
 import type { Module } from '$lib/core/StateManager';
@@ -31,13 +31,13 @@ export const flinkiModules: Module[] = [
       { type: 'rhyme', word: 'Krone', target: 'lemon', distractors: ['shoe'] },      // Krone/Zitrone ✓
       { type: 'rhyme', word: 'Hund', target: 'mouth', distractors: ['cat'] },        // Hund/Mund ✓
       { type: 'rhyme', word: 'Haus', target: 'mouse', distractors: ['dog'] },        // Haus/Maus ✓
-      { type: 'rhyme', word: 'Katze', target: 'ball', distractors: ['dog'] },        // Katze/Platze (weak)
-      { type: 'rhyme', word: 'Fisch', target: 'table', distractors: ['bird'] },      // Fisch/Tisch ✓
-      { type: 'rhyme', word: 'Stern', target: 'mountain', distractors: ['sun'] },    // Stern/Berg (weak)
-      { type: 'rhyme', word: 'Baum', target: 'tree', distractors: ['flower'] },      // Visual match
-      { type: 'rhyme', word: 'Ball', target: 'banana', distractors: ['apple'] },     // Ball/Banane (weak)
-      { type: 'rhyme', word: 'Boot', target: 'cake', distractors: ['ship'] },        // Boot/Kuchen (weak)
-      { type: 'rhyme', word: 'Schuh', target: 'banana', distractors: ['apple'] },    // Schuh/Banane (weak)
+      { type: 'rhyme', word: 'Nase', target: 'vase', distractors: ['apple'] },
+      { type: 'rhyme', word: 'Fisch', target: 'table', distractors: ['bird'] },
+      { type: 'rhyme', word: 'Hand', target: 'wall', distractors: ['shoe'] },
+      { type: 'rhyme', word: 'Baum', target: 'dream', distractors: ['flower'] },
+      { type: 'rhyme', word: 'Schuh', target: 'cow', distractors: ['cat'] },
+      { type: 'rhyme', word: 'Boot', target: 'bread', distractors: ['ship'] },
+      { type: 'rhyme', word: 'Mund', target: 'dog', distractors: ['apple'] },
 
       // SYLLABLES (24 exercises) - Authentic SES progression
       // 2-syllable words
@@ -61,12 +61,12 @@ export const flinkiModules: Module[] = [
       { type: 'syllables', word: 'Kartoffel', icon: 'potato', count: 3 },
 
       // 4-5 syllable words (challenging)
-      { type: 'syllables', word: 'Marienkäfer', icon: 'ladybug', count: 4 },
+      { type: 'syllables', word: 'Marienkäfer', icon: 'ladybug', count: 5 },
       { type: 'syllables', word: 'Schmetterling', icon: 'butterfly', count: 3 },
       { type: 'syllables', word: 'Feuerwehrauto', icon: 'firetruck', count: 5 },
       { type: 'syllables', word: 'Polizeiauto', icon: 'police', count: 5 },
       { type: 'syllables', word: 'Kindergarten', icon: 'school', count: 4 },
-      { type: 'syllables', word: 'Weihnachtsbaum', icon: 'tree', count: 4 },
+      { type: 'syllables', word: 'Weihnachtsbaum', icon: 'tree', count: 3 },
       { type: 'syllables', word: 'Geburtstag', icon: 'cake', count: 3 },
       { type: 'syllables', word: 'Regenbogen', icon: 'rainbow', count: 4 }
     ]
@@ -107,7 +107,7 @@ export const flinkiModules: Module[] = [
       // P-sound (Pinguin, Pizza, Panda, Papagei, Pilz, Pfeil, Pferd)
       { type: 'initial', target: 'penguin', match: 'pizza', distractor: 'star' },
       { type: 'initial', target: 'panda', match: 'parrot', distractor: 'cow' },
-      { type: 'initial', target: 'mushroom', match: 'arrow', distractor: 'book' },
+      { type: 'initial', target: 'mushroom', match: 'penguin', distractor: 'book' },
 
       // H-sound (Haus, Hund, Hut, Hand, Herz, Hammer, Hase, Hai)
       { type: 'initial', target: 'house', match: 'dog', distractor: 'cat' },
@@ -116,7 +116,7 @@ export const flinkiModules: Module[] = [
 
       // S/Sch-sound (Schlange, Schnecke, Spinne, Schere, Schlüssel, Schuh, Schiff, Schaf)
       { type: 'initial', target: 'snake', match: 'snail', distractor: 'worm' },
-      { type: 'initial', target: 'spider', match: 'scissors', distractor: 'fork' },
+      { type: 'initial', target: 'key', match: 'scissors', distractor: 'fork' },
       { type: 'initial', target: 'key', match: 'shoe', distractor: 'hat' },
 
       // B-sound (Ball, Banane, Bär, Baum, Buch, Boot, Blatt, Blume, Bett, Biene, Bleistift)
@@ -574,8 +574,8 @@ export const flinkiModules: Module[] = [
       },
       {
         type: 'pattern',
-        sequence: ['circle', 'square', 'circle', 'square', null],
-        options: ['circle', 'square', 'triangle'],
+        sequence: ['heart', 'star', 'heart', 'star', null],
+        options: ['heart', 'star', 'moon'],
         correctIndex: 0
       },
       {
@@ -586,8 +586,8 @@ export const flinkiModules: Module[] = [
       },
       {
         type: 'pattern',
-        sequence: ['red', 'blue', 'red', 'blue', null],
-        options: ['red', 'blue', 'green'],
+        sequence: ['fish', 'bird', 'fish', 'bird', null],
+        options: ['fish', 'bird', 'cat'],
         correctIndex: 0
       },
       {
@@ -598,8 +598,8 @@ export const flinkiModules: Module[] = [
       },
       {
         type: 'pattern',
-        sequence: ['triangle', 'circle', 'square', 'triangle', 'circle', null],
-        options: ['square', 'triangle', 'circle'],
+        sequence: ['apple', 'banana', 'lemon', 'apple', 'banana', null],
+        options: ['lemon', 'apple', 'banana'],
         correctIndex: 0
       },
       {
@@ -628,8 +628,8 @@ export const flinkiModules: Module[] = [
       },
       {
         type: 'pattern',
-        sequence: ['green', 'yellow', 'green', 'yellow', null],
-        options: ['green', 'yellow', 'blue'],
+        sequence: ['leaf', 'sun', 'leaf', 'sun', null],
+        options: ['leaf', 'sun', 'moon'],
         correctIndex: 0
       },
       {
@@ -1257,7 +1257,7 @@ export const flinkiModules: Module[] = [
       },
       {
         type: 'storytelling',
-        prompt: 'Die erste Schultag',
+        prompt: 'Der erste Schultag',
         image: '🎒',
         cues: ['Morgens', 'In der Schule', 'In der Pause', 'Nach der Schule'],
         minDuration: 10,
@@ -1303,13 +1303,13 @@ export const flinkiModules: Module[] = [
 
       // 4-5 syllable words (challenging)
       { type: 'syllables', word: 'Schokolade', icon: 'chocolate', count: 4 },
-      { type: 'syllables', word: 'Marienkäfer', icon: 'ladybug', count: 4 },
+      { type: 'syllables', word: 'Marienkäfer', icon: 'ladybug', count: 5 },
       { type: 'syllables', word: 'Schmetterling', icon: 'butterfly', count: 3 },
-      { type: 'syllables', word: 'Kindergarten', icon: 'house', count: 4 },
-      { type: 'syllables', word: 'Weihnachtsbaum', icon: 'tree', count: 4 },
-      { type: 'syllables', word: 'Regenbogen', icon: 'star', count: 4 },
+      { type: 'syllables', word: 'Kindergarten', icon: 'school', count: 4 },
+      { type: 'syllables', word: 'Weihnachtsbaum', icon: 'tree', count: 3 },
+      { type: 'syllables', word: 'Regenbogen', icon: 'rainbow', count: 4 },
       { type: 'syllables', word: 'Feuerwehr', icon: 'fire', count: 3 },
-      { type: 'syllables', word: 'Wasserhahn', icon: 'icecream', count: 3 }
+      { type: 'syllables', word: 'Wasserhahn', icon: 'faucet', count: 3 }
     ]
   }
 ];
@@ -1453,6 +1453,9 @@ export function getShuffledModules(): Module[] {
 /**
  * Fisher-Yates shuffle
  */
+/** Alias for tests and older imports. */
+export const poldiModules = flinkiModules;
+
 function shuffleArray<T>(array: T[]): T[] {
   const shuffled = [...array];
   for (let i = shuffled.length - 1; i > 0; i--) {

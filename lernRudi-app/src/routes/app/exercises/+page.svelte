@@ -11,7 +11,7 @@
     updateCanvasSize
   } from '$lib/core/StateManager';
   import type { Module } from '$lib/core/StateManager';
-  import { flinkiModules, bonusRealworldModule } from '$lib/data/modules';
+  import { flinkiModules, bonusRealworldModule, demoModule, shortTestModule } from '$lib/data/modules';
   import { resolveWritingModule, isWritingModuleId } from '$lib/data/writing-modules';
   import { writingMastery } from '$lib/stores/writingMastery';
   import { get } from 'svelte/store';
@@ -49,17 +49,9 @@
     } else if (modeParam === 'full') {
         modulesToRun = flinkiModules;
     } else if (modeParam === 'demo') {
-        // Construct demo module
-        const demoModule = {
-             id: 'demo',
-             title: 'Demo',
-             intro: 'Demo Version',
-             tasks: flinkiModules[0].tasks.slice(0, 3)
-        };
         modulesToRun = [demoModule];
     } else if (modeParam === 'short') {
-         // Short test: first module only for now
-         modulesToRun = [flinkiModules[0]]; 
+        modulesToRun = [shortTestModule];
     }
 
     if (modulesToRun.length > 0) {

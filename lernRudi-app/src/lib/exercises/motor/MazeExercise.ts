@@ -9,6 +9,8 @@ import { ExercisePlugin } from '../base/ExercisePlugin';
 import type { RenderContext } from '$lib/core/CanvasManager';
 import type { InputEvent, ExerciseResult, SpeechRequest, ExerciseType } from '../base/types';
 import { colors } from '$lib/data/colors';
+import { audioEngine } from '$lib/core/AudioEngine';
+import { speechEngine } from '$lib/core/SpeechEngine';
 
 export type MazeDifficulty = 'easy' | 'medium' | 'hard';
 
@@ -230,9 +232,17 @@ export class MazeExercise extends ExercisePlugin {
       if (this.isInside(event.x, event.y, this.doneButton) && this.path.length > 10) {
         const reachedEnd = this.checkReachedEnd();
         const correct = reachedEnd && !this.hitWall;
-
+        if (!correct) {
+          audioEngine.playSound('wrong');
+          speechEngine.speak('Versuche es noch einmal.');
+          this.path = [];
+          this.isDrawing = false;
+          this.hitWall = false;
+          return null;
+        }
+        speechEngine.speak('Super gemacht!');
         return {
-          correct,
+          correct: true,
           responseTime: this.getElapsedTime(),
           metadata: {
             reachedEnd,

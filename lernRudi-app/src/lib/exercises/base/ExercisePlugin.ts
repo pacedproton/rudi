@@ -95,10 +95,11 @@ export abstract class ExercisePlugin implements IExercisePlugin {
     const { width, scale } = ctx;
     const buttonSize = 50 * scale;
     const margin = 20 * scale;
+    const backButtonClearance = 70 * scale;
 
-    // Position button in top-right corner
+    // Sit left of the HTML back button in the top-right corner
     this.repeatButtonRect = {
-      x: width - buttonSize - margin,
+      x: width - buttonSize - margin - backButtonClearance,
       y: margin,
       w: buttonSize,
       h: buttonSize

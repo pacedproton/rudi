@@ -124,7 +124,7 @@ tasks:
 
   - type: storytelling
     prompt:
-      de: "Die erste Schultag"
+      de: "Der erste Schultag"
       en: "The first day of school"
     image: "🎒"
     cues:

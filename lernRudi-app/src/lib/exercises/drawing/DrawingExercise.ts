@@ -3,6 +3,8 @@ import type { ExerciseType, ExerciseResult, InputEvent } from '../base/types';
 import type { RenderContext } from '$lib/core/CanvasManager';
 import { audioEngine } from '$lib/core/AudioEngine';
 import { speechEngine } from '$lib/core/SpeechEngine';
+import { scoreStrokes } from '../writing/scoreStrokes';
+import { GRAFOMOTOR_SCORE_OPTIONS, sampleDrawingShape } from './sampleShapePath';
 
 export interface DrawingConfig {
   type: 'drawing';
@@ -20,7 +22,6 @@ export class DrawingExercise extends ExercisePlugin {
   private lastY = 0;
   private drawnPoints: Array<{ x: number; y: number }> = [];
   private minPointsRequired = 20;
-  private matchThreshold = 0.6; // 60% accuracy required
 
   get type(): ExerciseType {
     return 'drawing';
@@ -35,9 +36,6 @@ export class DrawingExercise extends ExercisePlugin {
 
     const config = this.config as DrawingConfig;
     const { width, height, scale } = ctx;
-
-    // Clear canvas
-    ctx.ctx.clearRect(0, 0, width, height);
 
     // Draw instruction
     ctx.ctx.fillStyle = '#333';
@@ -238,38 +236,28 @@ export class DrawingExercise extends ExercisePlugin {
     return null;
   }
 
-  private checkDrawing(): ExerciseResult {
-    const accuracy = this.calculateAccuracy();
-    const correct = accuracy >= this.matchThreshold;
+  private checkDrawing(): ExerciseResult | null {
+    const ctx = this.getRenderContext();
+    const config = this.config as DrawingConfig;
+    const expected = sampleDrawingShape(config.shape, ctx.width, ctx.height, ctx.scale);
+    const score = scoreStrokes([this.drawnPoints], expected, {
+      ...GRAFOMOTOR_SCORE_OPTIONS,
+      hitRadius: GRAFOMOTOR_SCORE_OPTIONS.hitRadius * ctx.scale
+    });
 
-    if (correct) {
-      audioEngine.playSound('success');
-      speechEngine.speak('Super gemacht!');
-    } else {
+    if (!score.passed) {
       audioEngine.playSound('wrong');
       speechEngine.speak('Versuche es noch einmal.');
       this.drawnPoints = [];
+      return null;
     }
 
+    speechEngine.speak('Super gemacht!');
     return {
-      correct,
+      correct: true,
       responseTime: Date.now() - this.startTime,
-      metadata: { accuracy, pointsDrawn: this.drawnPoints.length }
+      metadata: { accuracy: score.overall, pointsDrawn: this.drawnPoints.length }
     };
-  }
-
-  private calculateAccuracy(): number {
-    if (this.drawnPoints.length < this.minPointsRequired) return 0;
-
-    // Simple heuristic: if they drew enough points, consider it good
-    // A better implementation would use shape recognition algorithms
-    if (this.drawnPoints.length >= this.minPointsRequired * 2) {
-      return 0.8; // Good coverage
-    } else if (this.drawnPoints.length >= this.minPointsRequired) {
-      return 0.65; // Acceptable coverage
-    }
-
-    return 0.5;
   }
 
   cleanup(): void {

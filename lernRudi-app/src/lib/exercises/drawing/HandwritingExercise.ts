@@ -3,6 +3,8 @@ import type { ExerciseType, ExerciseResult, InputEvent } from '../base/types';
 import type { RenderContext } from '$lib/core/CanvasManager';
 import { audioEngine } from '$lib/core/AudioEngine';
 import { speechEngine } from '$lib/core/SpeechEngine';
+import { scoreStrokes } from '../writing/scoreStrokes';
+import { GRAFOMOTOR_SCORE_OPTIONS, sampleLetterStrokes } from './sampleShapePath';
 
 export interface HandwritingConfig {
   type: 'handwriting';
@@ -33,9 +35,6 @@ export class HandwritingExercise extends ExercisePlugin {
 
     const config = this.config as HandwritingConfig;
     const { width, height, scale } = ctx;
-
-    // Clear canvas
-    ctx.ctx.clearRect(0, 0, width, height);
 
     // Draw instruction
     ctx.ctx.fillStyle = '#333';
@@ -235,24 +234,29 @@ export class HandwritingExercise extends ExercisePlugin {
     return null;
   }
 
-  private finishExercise(): ExerciseResult {
+  private finishExercise(): ExerciseResult | null {
     const config = this.config as HandwritingConfig;
+    const ctx = this.getRenderContext();
+    const expected = sampleLetterStrokes(config.character, ctx.width, ctx.height, ctx.scale);
+    const user = this.strokes.map((stroke) => stroke.map(({ x, y }) => ({ x, y })));
+    const score = scoreStrokes(user, expected, {
+      ...GRAFOMOTOR_SCORE_OPTIONS,
+      hitRadius: GRAFOMOTOR_SCORE_OPTIONS.hitRadius * ctx.scale
+    });
 
-    // Simple heuristic: if they made at least one stroke, consider it practice
-    const correct = this.strokes.length > 0;
-
-    if (correct) {
-      audioEngine.playSound('success');
-      speechEngine.speak('Gut gemacht!');
-    } else {
+    if (!score.passed) {
       audioEngine.playSound('wrong');
       speechEngine.speak('Versuch es noch einmal.');
+      this.strokes = [];
+      this.currentStroke = [];
+      return null;
     }
 
+    speechEngine.speak('Gut gemacht!');
     return {
-      correct,
+      correct: true,
       responseTime: Date.now() - this.startTime,
-      metadata: { strokes: this.strokes.length, character: config.character }
+      metadata: { strokes: this.strokes.length, character: config.character, accuracy: score.overall }
     };
   }
 

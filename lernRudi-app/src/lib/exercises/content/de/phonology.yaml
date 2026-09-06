@@ -43,10 +43,10 @@ tasks:
 
   - type: rhyme
     word:
-      de: "Katze"
-      en: "Cat"
-    target: ball
-    distractors: [dog]
+      de: "Nase"
+      en: "Nose"
+    target: vase
+    distractors: [apple]
 
   - type: rhyme
     word:
@@ -57,37 +57,37 @@ tasks:
 
   - type: rhyme
     word:
-      de: "Stern"
-      en: "Star"
-    target: mountain
-    distractors: [sun]
+      de: "Hand"
+      en: "Hand"
+    target: wall
+    distractors: [shoe]
 
   - type: rhyme
     word:
       de: "Baum"
       en: "Tree"
-    target: tree
+    target: dream
     distractors: [flower]
-
-  - type: rhyme
-    word:
-      de: "Ball"
-      en: "Ball"
-    target: banana
-    distractors: [apple]
-
-  - type: rhyme
-    word:
-      de: "Boot"
-      en: "Boat"
-    target: cake
-    distractors: [ship]
 
   - type: rhyme
     word:
       de: "Schuh"
       en: "Shoe"
-    target: banana
+    target: cow
+    distractors: [cat]
+
+  - type: rhyme
+    word:
+      de: "Boot"
+      en: "Boat"
+    target: bread
+    distractors: [ship]
+
+  - type: rhyme
+    word:
+      de: "Mund"
+      en: "Mouth"
+    target: dog
     distractors: [apple]
 
   # SYLLABLES (24 exercises)
@@ -211,7 +211,7 @@ tasks:
       de: "Marienkäfer"
       en: "Ladybug"
     icon: ladybug
-    count: 4
+    count: 5
 
   - type: syllables
     word:
@@ -246,7 +246,7 @@ tasks:
       de: "Weihnachtsbaum"
       en: "Christmas tree"
     icon: tree
-    count: 4
+    count: 3
 
   - type: syllables
     word:

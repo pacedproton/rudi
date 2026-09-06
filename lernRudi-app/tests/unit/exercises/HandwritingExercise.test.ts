@@ -15,28 +15,18 @@ vi.mock('$lib/core/SpeechEngine', () => ({
 
 import { HandwritingExercise } from '$lib/exercises/drawing/HandwritingExercise';
 import type { HandwritingConfig } from '$lib/exercises/drawing/HandwritingExercise';
+import { sampleLetterStrokes } from '$lib/exercises/drawing/sampleShapePath';
+import { createCanvasContext } from '../../helpers/canvasContext';
 
 describe('HandwritingExercise', () => {
   let exercise: HandwritingExercise;
   let mockConfig: HandwritingConfig;
 
-  const createMockContext = () => ({
-    ctx: {
-      clearRect: vi.fn(),
-      fillRect: vi.fn(),
-      fillText: vi.fn(),
-      beginPath: vi.fn(),
-      moveTo: vi.fn(),
-      lineTo: vi.fn(),
-      stroke: vi.fn(),
-      save: vi.fn(),
-      restore: vi.fn(),
-      setLineDash: vi.fn()
-    } as any,
-    width: 800,
-    height: 600,
-    scale: 1
-  });
+  const createMockContext = () => createCanvasContext();
+
+  function clickFertig() {
+    return exercise.handleInput({ x: 80, y: 550, type: 'end' });
+  }
 
   beforeEach(() => {
     mockConfig = {
@@ -90,51 +80,14 @@ describe('HandwritingExercise', () => {
     });
 
     it('should render without errors', () => {
-      const mockCtx = {
-        ctx: {
-          clearRect: vi.fn(),
-          fillRect: vi.fn(),
-          fillText: vi.fn(),
-          beginPath: vi.fn(),
-          moveTo: vi.fn(),
-          lineTo: vi.fn(),
-          stroke: vi.fn(),
-          save: vi.fn(),
-          restore: vi.fn(),
-          setLineDash: vi.fn()
-        },
-        width: 800,
-        height: 600,
-        scale: 1
-      } as any;
-
       expect(() => {
-        exercise.render(mockCtx);
+        exercise.render(createMockContext());
       }).not.toThrow();
     });
 
     it('should render guide character', () => {
-      const mockCtx = {
-        ctx: {
-          clearRect: vi.fn(),
-          fillRect: vi.fn(),
-          fillText: vi.fn(),
-          beginPath: vi.fn(),
-          moveTo: vi.fn(),
-          lineTo: vi.fn(),
-          stroke: vi.fn(),
-          save: vi.fn(),
-          restore: vi.fn(),
-          setLineDash: vi.fn()
-        },
-        width: 800,
-        height: 600,
-        scale: 1
-      } as any;
-
+      const mockCtx = createMockContext();
       exercise.render(mockCtx);
-
-      // Should render the guide character
       expect(mockCtx.ctx.fillText).toHaveBeenCalled();
     });
   });
@@ -250,6 +203,35 @@ describe('HandwritingExercise', () => {
       };
       const ex = new HandwritingExercise(config);
       expect(ex.config.character).toBe('a');
+    });
+  });
+
+  describe('Scoring', () => {
+    it('rejects a corner scribble', () => {
+      exercise.render(createMockContext());
+      exercise.handleInput({ x: 30, y: 40, type: 'start' });
+      exercise.handleInput({ x: 50, y: 55, type: 'move' });
+      exercise.handleInput({ x: 70, y: 40, type: 'end' });
+      expect(clickFertig()).toBeNull();
+    });
+
+    it('accepts strokes along the A guide', () => {
+      exercise.render(createMockContext());
+      const expected = sampleLetterStrokes('A', 800, 600, 1);
+      for (const stroke of expected) {
+        exercise.handleInput({ x: stroke[0].x, y: stroke[0].y, type: 'start' });
+        for (const point of stroke.slice(1)) {
+          exercise.handleInput({ x: point.x, y: point.y, type: 'move' });
+        }
+        exercise.handleInput({
+          x: stroke[stroke.length - 1].x,
+          y: stroke[stroke.length - 1].y,
+          type: 'end'
+        });
+      }
+      const result = clickFertig();
+      expect(result).not.toBeNull();
+      expect(result?.correct).toBe(true);
     });
   });
 

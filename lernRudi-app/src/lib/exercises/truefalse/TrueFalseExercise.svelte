@@ -75,6 +75,10 @@
           {:else if config.image === 'kangaroo'}🦘
           {:else if config.image === 'hedgehog'}🦔
           {:else if config.image === 'elephant'}🐘
+          {:else if config.image === 'unicorn'}🦄
+          {:else if config.image === 'bee'}🐝
+          {:else if config.image === 'dragon'}🐉
+          {:else if config.image === 'fox'}🦊
           {:else}🌍
           {/if}
         </span>

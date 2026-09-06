@@ -8,6 +8,8 @@
 import { ExercisePlugin } from '../base/ExercisePlugin';
 import type { RenderContext } from '$lib/core/CanvasManager';
 import type { InputEvent, ExerciseResult, SpeechRequest, ExerciseType } from '../base/types';
+import { audioEngine } from '$lib/core/AudioEngine';
+import { speechEngine } from '$lib/core/SpeechEngine';
 
 export interface TracePathConfig {
   type: 'trace_path';
@@ -186,12 +188,19 @@ export class TracePathExercise extends ExercisePlugin {
     if (event.type === 'start') {
       // Check if clicking Done button
       if (this.isInside(event.x, event.y, this.doneButton) && this.tracePoints.length > 10) {
-        // Calculate coverage score
         const coverage = this.calculateCoverage();
-        const correct = coverage > 0.6;  // 60% coverage threshold
+        if (coverage <= 0.6) {
+          audioEngine.playSound('wrong');
+          speechEngine.speak('Versuche es noch einmal.');
+          this.tracePoints = [];
+          this.isDrawing = false;
+          return null;
+        }
+        speechEngine.speak('Super gemacht!');
         return {
-          correct,
-          responseTime: this.getElapsedTime()
+          correct: true,
+          responseTime: this.getElapsedTime(),
+          metadata: { coverage }
         };
       }
 

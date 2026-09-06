@@ -138,7 +138,7 @@ tasks:
       de: "Marienkäfer"
       en: "Ladybug"
     icon: ladybug
-    count: 4
+    count: 5
 
   - type: syllables
     word:
@@ -151,7 +151,7 @@ tasks:
     word:
       de: "Kindergarten"
       en: "Kindergarten"
-    icon: house
+    icon: school
     count: 4
 
   - type: syllables
@@ -159,13 +159,13 @@ tasks:
       de: "Weihnachtsbaum"
       en: "Christmas tree"
     icon: tree
-    count: 4
+    count: 3
 
   - type: syllables
     word:
       de: "Regenbogen"
       en: "Rainbow"
-    icon: star
+    icon: rainbow
     count: 4
 
   - type: syllables
@@ -179,5 +179,5 @@ tasks:
     word:
       de: "Wasserhahn"
       en: "Water tap"
-    icon: icecream
+    icon: faucet
     count: 3

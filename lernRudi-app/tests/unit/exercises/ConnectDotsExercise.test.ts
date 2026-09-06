@@ -13,29 +13,15 @@ vi.mock('$lib/core/SpeechEngine', () => ({
   }
 }));
 
-import { ConnectDotsExercise, generateDotPattern } from '$lib/exercises/drawing/ConnectDotsExercise';
+import { ConnectDotsExercise, generateDotPattern, layoutDots } from '$lib/exercises/drawing/ConnectDotsExercise';
 import type { ConnectDotsConfig } from '$lib/exercises/drawing/ConnectDotsExercise';
+import { createCanvasContext } from '../../helpers/canvasContext';
 
 describe('ConnectDotsExercise', () => {
   let exercise: ConnectDotsExercise;
   let mockConfig: ConnectDotsConfig;
 
-  const createMockContext = () => ({
-    ctx: {
-      clearRect: vi.fn(),
-      fillRect: vi.fn(),
-      fillText: vi.fn(),
-      beginPath: vi.fn(),
-      arc: vi.fn(),
-      fill: vi.fn(),
-      stroke: vi.fn(),
-      moveTo: vi.fn(),
-      lineTo: vi.fn()
-    } as any,
-    width: 800,
-    height: 600,
-    scale: 1
-  });
+  const createMockContext = () => createCanvasContext();
 
   beforeEach(() => {
     mockConfig = {
@@ -145,25 +131,8 @@ describe('ConnectDotsExercise', () => {
     });
 
     it('should render without errors', () => {
-      const mockCtx = {
-        ctx: {
-          clearRect: vi.fn(),
-          fillRect: vi.fn(),
-          fillText: vi.fn(),
-          beginPath: vi.fn(),
-          arc: vi.fn(),
-          fill: vi.fn(),
-          stroke: vi.fn(),
-          moveTo: vi.fn(),
-          lineTo: vi.fn()
-        },
-        width: 800,
-        height: 600,
-        scale: 1
-      } as any;
-
       expect(() => {
-        exercise.render(mockCtx);
+        exercise.render(createMockContext());
       }).not.toThrow();
     });
   });
@@ -217,6 +186,43 @@ describe('ConnectDotsExercise', () => {
       expect(() => {
         exercise.cleanup();
       }).not.toThrow();
+    });
+  });
+
+  describe('Closed house shape', () => {
+    const houseDots = [
+      { x: 250, y: 300, number: 1 },
+      { x: 250, y: 200, number: 2 },
+      { x: 350, y: 150, number: 3 },
+      { x: 450, y: 200, number: 4 },
+      { x: 450, y: 300, number: 5 },
+      { x: 450, y: 450, number: 6 },
+      { x: 250, y: 450, number: 7 },
+      { x: 250, y: 300, number: 8 }
+    ];
+
+    it('completes when the closing tap shares a pixel with dot 1', () => {
+      exercise = new ConnectDotsExercise({
+        type: 'connect_dots',
+        dots: houseDots,
+        shape: 'Haus',
+        instruction: 'Verbinde die Punkte zum Haus!'
+      });
+      exercise.render(createMockContext());
+
+      let result = null;
+      for (const dot of houseDots) {
+        result = exercise.handleInput({ x: dot.x, y: dot.y, type: 'end' });
+      }
+
+      expect(result).not.toBeNull();
+      expect(result?.correct).toBe(true);
+    });
+
+    it('centers the 800x600 pattern on a wide canvas', () => {
+      const laid = layoutDots(houseDots, 1200, 800, 1);
+      expect(laid[0].x).toBe(450);
+      expect(laid[0].x).not.toBe(250);
     });
   });
 

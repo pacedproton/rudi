@@ -108,9 +108,11 @@
    */
   function convertToInputEvent(event: PointerEvent, type: 'start' | 'move' | 'end') {
     const rect = canvas.getBoundingClientRect();
+    const scaleX = canvas.width / Math.max(1, rect.width);
+    const scaleY = canvas.height / Math.max(1, rect.height);
     return {
-      x: event.clientX - rect.left,
-      y: event.clientY - rect.top,
+      x: (event.clientX - rect.left) * scaleX,
+      y: (event.clientY - rect.top) * scaleY,
       type
     };
   }

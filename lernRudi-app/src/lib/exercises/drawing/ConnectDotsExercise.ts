@@ -4,11 +4,36 @@ import type { RenderContext } from '$lib/core/CanvasManager';
 import { audioEngine } from '$lib/core/AudioEngine';
 import { speechEngine } from '$lib/core/SpeechEngine';
 
+export interface ConnectDot {
+  x: number;
+  y: number;
+  number: number;
+}
+
 export interface ConnectDotsConfig {
   type: 'connect_dots';
-  dots: Array<{ x: number; y: number; number: number }>;
+  dots: ConnectDot[];
   shape: string; // Description of what shape it forms
   instruction: string;
+}
+
+export const DOT_PATTERN_WIDTH = 800;
+export const DOT_PATTERN_HEIGHT = 600;
+
+/** Map 800x600 authored dots onto the live canvas, centered. */
+export function layoutDots(
+  dots: ConnectDot[],
+  width: number,
+  height: number,
+  scale: number
+): ConnectDot[] {
+  const offsetX = (width - DOT_PATTERN_WIDTH * scale) / 2;
+  const offsetY = (height - DOT_PATTERN_HEIGHT * scale) / 2;
+  return dots.map((dot) => ({
+    x: dot.x * scale + offsetX,
+    y: dot.y * scale + offsetY,
+    number: dot.number
+  }));
 }
 
 /**
@@ -33,9 +58,7 @@ export class ConnectDotsExercise extends ExercisePlugin {
 
     const config = this.config as ConnectDotsConfig;
     const { width, height, scale } = ctx;
-
-    // Clear canvas
-    ctx.ctx.clearRect(0, 0, width, height);
+    const dots = layoutDots(config.dots, width, height, scale);
 
     // Draw instruction
     ctx.ctx.fillStyle = '#333';
@@ -49,25 +72,25 @@ export class ConnectDotsExercise extends ExercisePlugin {
     ctx.ctx.lineCap = 'round';
 
     for (const line of this.lines) {
-      const fromDot = config.dots.find((d) => d.number === line.from);
-      const toDot = config.dots.find((d) => d.number === line.to);
+      const fromDot = dots.find((d) => d.number === line.from);
+      const toDot = dots.find((d) => d.number === line.to);
 
       if (fromDot && toDot) {
         ctx.ctx.beginPath();
-        ctx.ctx.moveTo(fromDot.x * scale, fromDot.y * scale);
-        ctx.ctx.lineTo(toDot.x * scale, toDot.y * scale);
+        ctx.ctx.moveTo(fromDot.x, fromDot.y);
+        ctx.ctx.lineTo(toDot.x, toDot.y);
         ctx.ctx.stroke();
       }
     }
 
     // Draw dots
-    for (const dot of config.dots) {
+    for (const dot of dots) {
       const isNext = dot.number === this.currentDot;
       const isPast = dot.number < this.currentDot;
 
       // Dot circle
       ctx.ctx.beginPath();
-      ctx.ctx.arc(dot.x * scale, dot.y * scale, 25 * scale, 0, Math.PI * 2);
+      ctx.ctx.arc(dot.x, dot.y, 25 * scale, 0, Math.PI * 2);
 
       if (isNext) {
         ctx.ctx.fillStyle = '#4caf50'; // Next dot - green
@@ -88,7 +111,7 @@ export class ConnectDotsExercise extends ExercisePlugin {
       ctx.ctx.font = `bold ${20 * scale}px Arial`;
       ctx.ctx.textAlign = 'center';
       ctx.ctx.textBaseline = 'middle';
-      ctx.ctx.fillText(dot.number.toString(), dot.x * scale, dot.y * scale);
+      ctx.ctx.fillText(dot.number.toString(), dot.x, dot.y);
     }
 
     // Progress indicator
@@ -121,21 +144,26 @@ export class ConnectDotsExercise extends ExercisePlugin {
 
     const config = this.config as ConnectDotsConfig;
     const ctx = this.getRenderContext();
-    const { scale } = ctx;
+    const { width, height, scale } = ctx;
+    const dots = layoutDots(config.dots, width, height, scale);
+    const hitRadius = 25 * scale;
 
-    // Find clicked dot
-    const clickedDot = config.dots.find((dot) => {
-      const distance = Math.sqrt(
-        Math.pow(x - dot.x * scale, 2) + Math.pow(y - dot.y * scale, 2)
-      );
-      return distance <= 25 * scale;
+    const hits = dots.filter((dot) => {
+      const distance = Math.sqrt(Math.pow(x - dot.x, 2) + Math.pow(y - dot.y, 2));
+      return distance <= hitRadius;
     });
+
+    // Prefer the current target when close dots share a pixel (closed shapes)
+    const clickedDot =
+      hits.find((dot) => dot.number === this.currentDot) ??
+      hits.find((dot) => dot.number >= this.currentDot) ??
+      hits[0];
 
     if (!clickedDot) return null;
 
     // Check if it's the correct next dot
     if (clickedDot.number === this.currentDot) {
-      audioEngine.playSound('success');
+      audioEngine.playSound('pop');
 
       // Add to connected dots
       this.connectedDots.push(clickedDot.number);
@@ -156,7 +184,7 @@ export class ConnectDotsExercise extends ExercisePlugin {
         speechEngine.speak(this.currentDot.toString());
         return null;
       } else {
-        // All dots connected!
+        // All dots connected! CanvasRenderer plays the success sound.
         speechEngine.speak(`Super! Du hast ein ${config.shape} gezeichnet!`);
         return {
           correct: true,
