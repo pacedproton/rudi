@@ -1,0 +1,22 @@
+{
+  "name": "Lern-Rudi",
+  "short_name": "Rudi",
+  "description": "Spielerische Vorbereitung auf die Volksschule für Kinder",
+  "start_url": "/app",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#4CAF50",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/poldi-icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/poldi-icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

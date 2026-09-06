@@ -184,15 +184,6 @@ class YamlUserRepository implements UserRepository {
     return user;
   }
 
-  async updateStripeCustomerId(userId: string, customerId: string): Promise<User> {
-    const user = this.storage.update(userId, {
-      stripeCustomerId: customerId,
-      updatedAt: new Date()
-    });
-    if (!user) throw new Error('User not found');
-    return user;
-  }
-
   async updateProfile(userId: string, data: Partial<Pick<User, 'displayName'>>): Promise<User> {
     const user = this.storage.update(userId, {
       ...data,

@@ -81,6 +81,10 @@
       <span>oder</span>
     </div>
 
+    <button class="btn btn-demo" on:click={() => goto('/app/exercises?mode=demo')}>
+      🎮 Demo ohne Anmeldung
+    </button>
+
     <div class="signup-link">
       Noch kein Konto? <a href="/signup">Jetzt registrieren</a>
     </div>

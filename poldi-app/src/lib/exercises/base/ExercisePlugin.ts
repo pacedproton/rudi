@@ -93,35 +93,29 @@ export abstract class ExercisePlugin implements IExercisePlugin {
    */
   protected drawRepeatButton(ctx: RenderContext): void {
     const { width, scale } = ctx;
-    const buttonSize = 40 * scale;
-    const margin = 15 * scale;
+    const buttonSize = 50 * scale;
+    const margin = 20 * scale;
 
-    // Position button directly left of close button (close is at right:20px, ~40px wide)
-    // Close button ends at ~60px from right edge, so place sound button at ~70px from close
+    // Position button in top-right corner
     this.repeatButtonRect = {
-      x: width - buttonSize - margin - 55 * scale,
+      x: width - buttonSize - margin,
       y: margin,
       w: buttonSize,
       h: buttonSize
     };
 
-    // Draw button background - matching style pill
-    ctx.ctx.fillStyle = 'rgba(102, 126, 234, 0.9)';
-    ctx.ctx.beginPath();
-    ctx.ctx.roundRect(
-      this.repeatButtonRect.x,
-      this.repeatButtonRect.y,
-      this.repeatButtonRect.w,
-      this.repeatButtonRect.h,
-      buttonSize / 2
-    );
-    ctx.ctx.fill();
+    // Draw button background
+    this.drawRoundedRect(ctx, this.repeatButtonRect, {
+      fillStyle: 'rgba(102, 126, 234, 0.9)',
+      strokeStyle: '#555',
+      lineWidth: 2 * scale,
+      borderRadius: buttonSize / 2
+    });
 
-    // Draw speaker icon
-    ctx.ctx.font = `${22 * scale}px Arial`;
+    // Draw speaker icon (simple emoji)
+    ctx.ctx.font = `${28 * scale}px Arial`;
     ctx.ctx.textAlign = 'center';
     ctx.ctx.textBaseline = 'middle';
-    ctx.ctx.fillStyle = '#fff';
     ctx.ctx.fillText(
       '🔊',
       this.repeatButtonRect.x + this.repeatButtonRect.w / 2,
@@ -152,9 +146,9 @@ export abstract class ExercisePlugin implements IExercisePlugin {
    */
   protected isInside(x: number, y: number, rect: Rect): boolean {
     return x >= rect.x &&
-      x <= rect.x + rect.w &&
-      y >= rect.y &&
-      y <= rect.y + rect.h;
+           x <= rect.x + rect.w &&
+           y >= rect.y &&
+           y <= rect.y + rect.h;
   }
 
   /**

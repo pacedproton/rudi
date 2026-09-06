@@ -14,6 +14,25 @@
 			gtag('js', new Date());
 			gtag('config', 'G-2GZD9WVLCB');
 		</script>
+		<link rel="manifest" href="/manifest.json">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+		<style>
+			/* Native App Polish */
+			body {
+				-webkit-tap-highlight-color: transparent;
+				-webkit-touch-callout: none; /* iOS: disable long press menu */
+				overscroll-behavior-y: none; /* Disable pull-to-refresh rubberbanding */
+				user-select: none; /* Disable text selection globally */
+				-webkit-user-select: none;
+			}
+			/* Allow selection in inputs and prevent iOS zoom (16px rule) */
+			input, textarea, select {
+				user-select: text;
+				-webkit-user-select: text;
+				font-size: 16px; /* Prevents auto-zoom on focus in iOS */
+			}
+		</style>
 		%sveltekit.head%
 	</head>
 	<body data-sveltekit-preload-data="hover">

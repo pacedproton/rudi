@@ -9,14 +9,14 @@
   let displayName = '';
   let loading = false;
   let error = '';
-  let step = 1; // 1: account, 2: payment
+  let step = 1; // 1: account, 2: plan selection, 3: payment
 
-  // Get plan from URL (default to lifetime)
-  $: selectedPlan = $page.url.searchParams.get('plan') || 'lifetime';
+  // Get plan from URL
+  $: selectedPlan = $page.url.searchParams.get('plan') || 'free';
   
-  const plans: Record<string, { name: string; price: string; period: string }> = {
-    lifetime: { name: 'Einmalzahlung', price: '30€', period: 'einmalig' },
-    monthly: { name: 'Monatsabo', price: '10€', period: '/Monat' }
+  const plans = {
+    free: { name: 'Gratis', price: '0€/Monat', requiresPayment: false },
+    family: { name: 'Familie', price: '9,99€/Monat', requiresPayment: true }
   };
 
   async function handleSignup() {
@@ -35,11 +35,15 @@
     loading = true;
 
     try {
-      const success = await auth.register(email, password, displayName, selectedPlan);
+      const success = await auth.register(email, password, displayName);
       
       if (success) {
-        // Registration successful - go to payment (step 3)
-        step = 3;
+        if (selectedPlan === 'family') {
+          step = 3; // Go to payment
+        } else {
+          // Free plan - go directly to app
+          goto('/app');
+        }
       } else {
         error = $auth.error || 'Registrierung fehlgeschlagen';
       }
@@ -79,7 +83,9 @@
     }
   }
 
-
+  function skipPayment() {
+    goto('/app');
+  }
 </script>
 
 <svelte:head>
@@ -107,11 +113,13 @@
         <span class="step-number">2</span>
         <span class="step-label">Plan</span>
       </div>
-      <div class="step-line" class:completed={step > 2}></div>
-      <div class="step" class:active={step >= 3}>
-        <span class="step-number">3</span>
-        <span class="step-label">Zahlung</span>
-      </div>
+      {#if selectedPlan === 'family'}
+        <div class="step-line" class:completed={step > 2}></div>
+        <div class="step" class:active={step >= 3}>
+          <span class="step-number">3</span>
+          <span class="step-label">Zahlung</span>
+        </div>
+      {/if}
     </div>
 
     {#if error}
@@ -178,52 +186,43 @@
       <div class="plan-selection">
         <div 
           class="plan-option" 
-          class:selected={selectedPlan === 'monthly'}
-          on:click={() => selectedPlan = 'monthly'}
-          on:keypress={(e) => e.key === 'Enter' && (selectedPlan = 'monthly')}
+          class:selected={selectedPlan === 'free'}
+          on:click={() => selectedPlan = 'free'}
+          on:keypress={(e) => e.key === 'Enter' && (selectedPlan = 'free')}
           tabindex="0"
           role="button"
         >
           <div class="plan-header">
-            <h3>Monatsabo</h3>
-            <span class="plan-price">10€<small>/Monat</small></span>
+            <h3>Gratis</h3>
+            <span class="plan-price">0€</span>
           </div>
           <ul>
-            <li>Alle 11 Module</li>
-            <li>360+ Übungen</li>
-            <li>20 neue Übungen pro Monat</li>
-            <li>Jederzeit kündbar</li>
+            <li>3 Module freigeschalten</li>
+            <li>Basis-Übungen</li>
+            <li>Werbefinanziert</li>
           </ul>
         </div>
 
         <div 
           class="plan-option highlighted" 
-          class:selected={selectedPlan === 'lifetime'}
-          on:click={() => selectedPlan = 'lifetime'}
-          on:keypress={(e) => e.key === 'Enter' && (selectedPlan = 'lifetime')}
+          class:selected={selectedPlan === 'family'}
+          on:click={() => selectedPlan = 'family'}
+          on:keypress={(e) => e.key === 'Enter' && (selectedPlan = 'family')}
           tabindex="0"
           role="button"
         >
-          <div class="popular-tag">Beste Wahl</div>
+          <div class="popular-tag">Beliebteste Wahl</div>
           <div class="plan-header">
-            <h3>Einmalzahlung</h3>
-            <span class="plan-price">30€<small> einmalig</small></span>
+            <h3>Familie</h3>
+            <span class="plan-price">9,99€<small>/Monat</small></span>
           </div>
           <ul>
             <li>Alle 11 Module</li>
             <li>360+ Übungen</li>
-            <li>Dauerhafter Zugang</li>
-            <li>Keine monatlichen Kosten</li>
+            <li>Keine Werbung</li>
+            <li>Detaillierte Auswertungen</li>
           </ul>
         </div>
-      </div>
-
-      <div class="selected-plan-info">
-        {#if selectedPlan === 'lifetime'}
-          <p>💡 Mit der Einmalzahlung erhalten Sie dauerhaften Zugang zu allen Inhalten.</p>
-        {:else}
-          <p>💡 Das Monatsabo können Sie jederzeit kündigen. Nach Kündigung bleibt der Zugang bis zum Ende der Laufzeit aktiv.</p>
-        {/if}
       </div>
 
       <div class="step-buttons">
@@ -235,7 +234,7 @@
           on:click={handleSignup}
           disabled={loading}
         >
-          {loading ? 'Wird erstellt...' : 'Weiter zur Zahlung →'}
+          {loading ? 'Wird erstellt...' : (selectedPlan === 'family' ? 'Weiter zur Zahlung →' : 'Kostenlos starten →')}
         </button>
       </div>
     {/if}
@@ -244,18 +243,13 @@
     {#if step === 3}
       <div class="payment-section">
         <div class="selected-plan-summary">
-          <h3>Gewählter Plan: {plans[selectedPlan]?.name || 'Premium'}</h3>
-          <p class="price-display">{plans[selectedPlan]?.price || '30€'} {plans[selectedPlan]?.period || ''}</p>
+          <h3>Gewählter Plan: Familie</h3>
+          <p class="price-display">9,99€ / Monat</p>
           <ul>
             <li>✅ Alle 11 Module</li>
             <li>✅ 360+ Übungen</li>
-            {#if selectedPlan === 'monthly'}
-              <li>✅ 20 neue Übungen pro Monat</li>
-              <li>✅ Jederzeit kündbar</li>
-            {:else}
-              <li>✅ Dauerhafter Zugang</li>
-              <li>✅ Keine monatlichen Kosten</li>
-            {/if}
+            <li>✅ Keine Werbung</li>
+            <li>✅ Jederzeit kündbar</li>
           </ul>
         </div>
 
@@ -265,6 +259,10 @@
           disabled={loading}
         >
           {loading ? 'Wird vorbereitet...' : '💳 Zur sicheren Zahlung mit Stripe'}
+        </button>
+
+        <button class="btn btn-link" on:click={skipPayment}>
+          Erstmal kostenlos testen →
         </button>
 
         <div class="security-note">
@@ -477,19 +475,6 @@
 
   .step-buttons .btn {
     flex: 1;
-  }
-
-  .selected-plan-info {
-    background: #f8f9ff;
-    border-radius: 10px;
-    padding: 1rem;
-    margin-top: 1rem;
-  }
-
-  .selected-plan-info p {
-    margin: 0;
-    color: #666;
-    font-size: 0.9rem;
   }
 
   /* Plan Selection */

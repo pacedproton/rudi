@@ -86,45 +86,30 @@ export class QuantityExercise extends ExercisePlugin {
   }
 
   /**
-   * Draw coins in scattered random positions within a box
-   * Uses seeded random for consistent display on re-renders
+   * Draw coins in a grid pattern within a box
    */
   private drawCoins(ctx: RenderContext, box: { x: number; y: number; w: number; h: number }, count: number): void {
     const { scale } = ctx;
     const coinRadius = 25 * scale;
-    const padding = coinRadius + 10 * scale;
+    const spacing = 20 * scale;
+    const cols = Math.min(count, 3);  // Max 3 columns
+    const rows = Math.ceil(count / cols);
 
-    // Use box position as seed for consistent random positions
-    const seed = box.x + box.y + count;
-    const seededRandom = (i: number) => {
-      const x = Math.sin(seed * 9999 + i * 7919) * 10000;
-      return x - Math.floor(x);
-    };
-
-    // Generate random positions with collision avoidance
-    const positions: { x: number; y: number }[] = [];
+    const gridWidth = cols * (coinRadius * 2 + spacing) - spacing;
+    const gridHeight = rows * (coinRadius * 2 + spacing) - spacing;
+    const startX = box.x + (box.w - gridWidth) / 2 + coinRadius;
+    const startY = box.y + (box.h - gridHeight) / 2 + coinRadius;
 
     for (let i = 0; i < count; i++) {
-      let attempts = 0;
-      let x: number, y: number;
+      const col = i % cols;
+      const row = Math.floor(i / cols);
+      const x = startX + col * (coinRadius * 2 + spacing);
+      const y = startY + row * (coinRadius * 2 + spacing);
 
-      do {
-        x = box.x + padding + seededRandom(i * 2 + attempts) * (box.w - padding * 2);
-        y = box.y + padding + seededRandom(i * 2 + 1 + attempts) * (box.h - padding * 2);
-        attempts++;
-      } while (attempts < 50 && positions.some(p =>
-        Math.hypot(p.x - x, p.y - y) < coinRadius * 2.2
-      ));
-
-      positions.push({ x, y });
-    }
-
-    // Draw coins at random positions
-    for (const pos of positions) {
       // Gold coin
       ctx.ctx.fillStyle = '#FFD700';
       ctx.ctx.beginPath();
-      ctx.ctx.arc(pos.x, pos.y, coinRadius, 0, Math.PI * 2);
+      ctx.ctx.arc(x, y, coinRadius, 0, Math.PI * 2);
       ctx.ctx.fill();
 
       // Coin border
@@ -135,7 +120,7 @@ export class QuantityExercise extends ExercisePlugin {
       // Coin shine
       ctx.ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
       ctx.ctx.beginPath();
-      ctx.ctx.arc(pos.x - coinRadius * 0.3, pos.y - coinRadius * 0.3, coinRadius * 0.4, 0, Math.PI * 2);
+      ctx.ctx.arc(x - coinRadius * 0.3, y - coinRadius * 0.3, coinRadius * 0.4, 0, Math.PI * 2);
       ctx.ctx.fill();
     }
   }

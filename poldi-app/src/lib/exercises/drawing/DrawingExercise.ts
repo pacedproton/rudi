@@ -63,61 +63,11 @@ export class DrawingExercise extends ExercisePlugin {
       ctx.ctx.stroke();
     }
 
-    // Draw accuracy progress bar
-    this.drawProgressBar(ctx);
-
     // Draw control buttons
     this.drawButtons(ctx);
 
     // Draw repeat instruction button
     this.drawRepeatButton(ctx);
-  }
-
-  private drawProgressBar(ctx: RenderContext): void {
-    const { height, scale } = ctx;
-
-    // Vertical progress bar dimensions - on left side
-    const barWidth = 30 * scale;
-    const barHeight = height * 0.5;
-    const barX = 20 * scale;
-    const barY = (height - barHeight) / 2;
-
-    // Calculate current accuracy
-    const accuracy = this.drawnPoints.length >= this.minPointsRequired
-      ? this.calculateAccuracy()
-      : 0;
-
-    // Background
-    ctx.ctx.fillStyle = '#e0e0e0';
-    ctx.ctx.beginPath();
-    ctx.ctx.roundRect(barX, barY, barWidth, barHeight, 10 * scale);
-    ctx.ctx.fill();
-
-    // Progress fill with color gradient based on accuracy (fills from bottom up)
-    if (accuracy > 0) {
-      const fillHeight = barHeight * accuracy;
-      const fillY = barY + barHeight - fillHeight;
-      // Color from red (0%) through yellow (50%) to green (100%)
-      const hue = accuracy * 120; // 0 = red, 60 = yellow, 120 = green
-      ctx.ctx.fillStyle = `hsl(${hue}, 70%, 50%)`;
-      ctx.ctx.beginPath();
-      ctx.ctx.roundRect(barX, fillY, barWidth, fillHeight, 10 * scale);
-      ctx.ctx.fill();
-    }
-
-    // Labels
-    ctx.ctx.fillStyle = '#333';
-    ctx.ctx.font = `bold ${12 * scale}px Arial`;
-    ctx.ctx.textAlign = 'center';
-    ctx.ctx.fillText('100%', barX + barWidth / 2, barY - 8 * scale);
-    ctx.ctx.fillText('0%', barX + barWidth / 2, barY + barHeight + 16 * scale);
-
-    // Current accuracy percentage in center
-    ctx.ctx.font = `bold ${14 * scale}px Arial`;
-    const percentText = this.drawnPoints.length >= this.minPointsRequired
-      ? `${Math.round(accuracy * 100)}%`
-      : `${this.drawnPoints.length}/${this.minPointsRequired}`;
-    ctx.ctx.fillText(percentText, barX + barWidth / 2, barY + barHeight / 2 + 5 * scale);
   }
 
   private drawTemplate(ctx: RenderContext, dashed: boolean): void {
@@ -311,133 +261,15 @@ export class DrawingExercise extends ExercisePlugin {
   private calculateAccuracy(): number {
     if (this.drawnPoints.length < this.minPointsRequired) return 0;
 
-    const ctx = this.getRenderContext();
-    const templatePoints = this.generateTemplatePoints(ctx);
-
-    if (templatePoints.length === 0) return 0;
-
-    // Calculate average minimum distance from each drawn point to the template
-    let totalDistance = 0;
-    for (const drawnPoint of this.drawnPoints) {
-      let minDist = Infinity;
-      for (const tp of templatePoints) {
-        const dist = Math.hypot(drawnPoint.x - tp.x, drawnPoint.y - tp.y);
-        if (dist < minDist) minDist = dist;
-      }
-      totalDistance += minDist;
+    // Simple heuristic: if they drew enough points, consider it good
+    // A better implementation would use shape recognition algorithms
+    if (this.drawnPoints.length >= this.minPointsRequired * 2) {
+      return 0.8; // Good coverage
+    } else if (this.drawnPoints.length >= this.minPointsRequired) {
+      return 0.65; // Acceptable coverage
     }
 
-    const avgDistance = totalDistance / this.drawnPoints.length;
-    // Normalize: 0 distance = 100%, >40px avg = 0%
-    const maxAllowedDistance = 40 * ctx.scale;
-    return Math.max(0, Math.min(1, 1 - avgDistance / maxAllowedDistance));
-  }
-
-  private generateTemplatePoints(ctx: RenderContext): Array<{ x: number; y: number }> {
-    const config = this.config as DrawingConfig;
-    const { width, height, scale } = ctx;
-    const centerX = width / 2;
-    const centerY = height / 2 + 20 * scale;
-    const size = Math.min(width, height) * 0.4;
-    const points: Array<{ x: number; y: number }> = [];
-    const numPoints = 100; // Number of template points to generate
-
-    switch (config.shape) {
-      case 'circle':
-        for (let i = 0; i < numPoints; i++) {
-          const angle = (i / numPoints) * Math.PI * 2;
-          points.push({
-            x: centerX + Math.cos(angle) * (size / 2),
-            y: centerY + Math.sin(angle) * (size / 2)
-          });
-        }
-        break;
-
-      case 'square':
-        const halfSize = size / 2;
-        const corners = [
-          { x: centerX - halfSize, y: centerY - halfSize },
-          { x: centerX + halfSize, y: centerY - halfSize },
-          { x: centerX + halfSize, y: centerY + halfSize },
-          { x: centerX - halfSize, y: centerY + halfSize }
-        ];
-        // Generate points along each edge
-        for (let edge = 0; edge < 4; edge++) {
-          const start = corners[edge];
-          const end = corners[(edge + 1) % 4];
-          for (let i = 0; i < numPoints / 4; i++) {
-            const t = i / (numPoints / 4);
-            points.push({
-              x: start.x + (end.x - start.x) * t,
-              y: start.y + (end.y - start.y) * t
-            });
-          }
-        }
-        break;
-
-      case 'triangle':
-        const triPoints = [
-          { x: centerX, y: centerY - size / 2 },
-          { x: centerX + size / 2, y: centerY + size / 2 },
-          { x: centerX - size / 2, y: centerY + size / 2 }
-        ];
-        for (let edge = 0; edge < 3; edge++) {
-          const start = triPoints[edge];
-          const end = triPoints[(edge + 1) % 3];
-          for (let i = 0; i < numPoints / 3; i++) {
-            const t = i / (numPoints / 3);
-            points.push({
-              x: start.x + (end.x - start.x) * t,
-              y: start.y + (end.y - start.y) * t
-            });
-          }
-        }
-        break;
-
-      case 'star':
-        const spikes = 5;
-        const outerRadius = size / 2;
-        const innerRadius = size / 4;
-        for (let i = 0; i < spikes * 2; i++) {
-          const angle = (i * Math.PI) / spikes - Math.PI / 2;
-          const radius = i % 2 === 0 ? outerRadius : innerRadius;
-          points.push({
-            x: centerX + Math.cos(angle) * radius,
-            y: centerY + Math.sin(angle) * radius
-          });
-        }
-        // Add intermediate points between vertices
-        const starVertices = [...points];
-        points.length = 0;
-        for (let i = 0; i < starVertices.length; i++) {
-          const start = starVertices[i];
-          const end = starVertices[(i + 1) % starVertices.length];
-          for (let j = 0; j < 10; j++) {
-            const t = j / 10;
-            points.push({
-              x: start.x + (end.x - start.x) * t,
-              y: start.y + (end.y - start.y) * t
-            });
-          }
-        }
-        break;
-
-      case 'heart':
-        // Approximate heart shape with parametric curve
-        for (let i = 0; i < numPoints; i++) {
-          const t = (i / numPoints) * Math.PI * 2;
-          const heartSize = size / 2;
-          const x = 16 * Math.pow(Math.sin(t), 3);
-          const y = -(13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t));
-          points.push({
-            x: centerX + (x / 16) * heartSize,
-            y: centerY + (y / 16) * heartSize
-          });
-        }
-        break;
-    }
-
-    return points;
+    return 0.5;
   }
 
   cleanup(): void {
