@@ -1,0 +1,231 @@
+# Writing track - Buchstabenfamilien
+# Druckschrift by motor family (not part of the SES test)
+
+id: writing-letters
+title:
+  de: "Buchstabenfamilien"
+  en: "Letter families"
+intro:
+  de: "Wir schreiben Druckschrift. Folge zuerst den Linien, dann schreibe allein."
+  en: "We write print letters. Trace first, then write on your own."
+category: schriftsprachlich
+
+tasks:
+  # Family 1 - round
+  - type: letter_trace
+    character: "c"
+    instruction:
+      de: "Zeichne den Buchstaben c"
+      en: "Trace the letter c"
+  - type: letter_write
+    character: "c"
+    guide: faded
+    instruction:
+      de: "Schreibe ein c"
+      en: "Write a c"
+  - type: letter_write
+    character: "c"
+    guide: hidden
+    instruction:
+      de: "Schreibe ein c ohne Hilfe"
+      en: "Write a c without help"
+
+  - type: letter_trace
+    character: "o"
+    instruction:
+      de: "Zeichne den Buchstaben o"
+      en: "Trace the letter o"
+  - type: letter_write
+    character: "o"
+    guide: faded
+    instruction:
+      de: "Schreibe ein o"
+      en: "Write an o"
+  - type: letter_write
+    character: "o"
+    guide: hidden
+    instruction:
+      de: "Schreibe ein o ohne Hilfe"
+      en: "Write an o without help"
+
+  - type: letter_trace
+    character: "a"
+    instruction:
+      de: "Zeichne den Buchstaben a"
+      en: "Trace the letter a"
+  - type: letter_write
+    character: "a"
+    guide: faded
+    instruction:
+      de: "Schreibe ein a"
+      en: "Write an a"
+  - type: letter_write
+    character: "a"
+    guide: hidden
+    instruction:
+      de: "Schreibe ein a ohne Hilfe"
+      en: "Write an a without help"
+
+  - type: letter_trace
+    character: "d"
+    instruction:
+      de: "Zeichne den Buchstaben d"
+      en: "Trace the letter d"
+  - type: letter_write
+    character: "d"
+    guide: faded
+    instruction:
+      de: "Schreibe ein d"
+      en: "Write a d"
+  - type: letter_write
+    character: "d"
+    guide: hidden
+    instruction:
+      de: "Schreibe ein d ohne Hilfe"
+      en: "Write a d without help"
+
+  - type: letter_trace
+    character: "g"
+    instruction:
+      de: "Zeichne den Buchstaben g"
+      en: "Trace the letter g"
+  - type: letter_write
+    character: "g"
+    guide: faded
+    instruction:
+      de: "Schreibe ein g"
+      en: "Write a g"
+  - type: letter_write
+    character: "g"
+    guide: hidden
+    instruction:
+      de: "Schreibe ein g ohne Hilfe"
+      en: "Write a g without help"
+
+  # Family 2 - downstroke
+  - type: letter_trace
+    character: "i"
+    instruction:
+      de: "Zeichne den Buchstaben i"
+      en: "Trace the letter i"
+  - type: letter_write
+    character: "i"
+    guide: faded
+    instruction:
+      de: "Schreibe ein i"
+      en: "Write an i"
+  - type: letter_write
+    character: "i"
+    guide: hidden
+    instruction:
+      de: "Schreibe ein i ohne Hilfe"
+      en: "Write an i without help"
+
+  - type: letter_trace
+    character: "u"
+    instruction:
+      de: "Zeichne den Buchstaben u"
+      en: "Trace the letter u"
+  - type: letter_write
+    character: "u"
+    guide: faded
+    instruction:
+      de: "Schreibe ein u"
+      en: "Write a u"
+  - type: letter_write
+    character: "u"
+    guide: hidden
+    instruction:
+      de: "Schreibe ein u ohne Hilfe"
+      en: "Write a u without help"
+
+  - type: letter_trace
+    character: "l"
+    instruction:
+      de: "Zeichne den Buchstaben l"
+      en: "Trace the letter l"
+  - type: letter_write
+    character: "l"
+    guide: faded
+    instruction:
+      de: "Schreibe ein l"
+      en: "Write an l"
+  - type: letter_write
+    character: "l"
+    guide: hidden
+    instruction:
+      de: "Schreibe ein l ohne Hilfe"
+      en: "Write an l without help"
+
+  - type: letter_trace
+    character: "t"
+    instruction:
+      de: "Zeichne den Buchstaben t"
+      en: "Trace the letter t"
+  - type: letter_write
+    character: "t"
+    guide: faded
+    instruction:
+      de: "Schreibe ein t"
+      en: "Write a t"
+  - type: letter_write
+    character: "t"
+    guide: hidden
+    instruction:
+      de: "Schreibe ein t ohne Hilfe"
+      en: "Write a t without help"
+
+  # Family 3 - bridge
+  - type: letter_trace
+    character: "n"
+    instruction:
+      de: "Zeichne den Buchstaben n"
+      en: "Trace the letter n"
+  - type: letter_write
+    character: "n"
+    guide: faded
+    instruction:
+      de: "Schreibe ein n"
+      en: "Write an n"
+  - type: letter_write
+    character: "n"
+    guide: hidden
+    instruction:
+      de: "Schreibe ein n ohne Hilfe"
+      en: "Write an n without help"
+
+  - type: letter_trace
+    character: "m"
+    instruction:
+      de: "Zeichne den Buchstaben m"
+      en: "Trace the letter m"
+  - type: letter_write
+    character: "m"
+    guide: faded
+    instruction:
+      de: "Schreibe ein m"
+      en: "Write an m"
+  - type: letter_write
+    character: "m"
+    guide: hidden
+    instruction:
+      de: "Schreibe ein m ohne Hilfe"
+      en: "Write an m without help"
+
+  - type: letter_trace
+    character: "h"
+    instruction:
+      de: "Zeichne den Buchstaben h"
+      en: "Trace the letter h"
+  - type: letter_write
+    character: "h"
+    guide: faded
+    instruction:
+      de: "Schreibe ein h"
+      en: "Write an h"
+  - type: letter_write
+    character: "h"
+    guide: hidden
+    instruction:
+      de: "Schreibe ein h ohne Hilfe"
+      en: "Write an h without help"

@@ -1,0 +1,107 @@
+# Writing track - Woerter abschreiben
+
+id: writing-copy
+title:
+  de: "Wörter abschreiben"
+  en: "Copy words"
+intro:
+  de: "Lies das Wort und schreibe es auf die Linien."
+  en: "Read the word and copy it onto the lines."
+category: schriftsprachlich
+
+tasks:
+  - type: word_copy
+    word: da
+    instruction:
+      de: "Schreibe das Wort da"
+      en: "Write the word da"
+  - type: word_copy
+    word: tag
+    instruction:
+      de: "Schreibe das Wort tag"
+      en: "Write the word tag"
+  - type: word_copy
+    word: gut
+    instruction:
+      de: "Schreibe das Wort gut"
+      en: "Write the word gut"
+  - type: word_copy
+    word: alt
+    instruction:
+      de: "Schreibe das Wort alt"
+      en: "Write the word alt"
+  - type: word_copy
+    word: tal
+    instruction:
+      de: "Schreibe das Wort tal"
+      en: "Write the word tal"
+  - type: word_copy
+    word: gold
+    instruction:
+      de: "Schreibe das Wort gold"
+      en: "Write the word gold"
+  - type: word_copy
+    word: laut
+    instruction:
+      de: "Schreibe das Wort laut"
+      en: "Write the word laut"
+  - type: word_copy
+    word: oma
+    instruction:
+      de: "Schreibe das Wort oma"
+      en: "Write the word oma"
+  - type: word_copy
+    word: mama
+    instruction:
+      de: "Schreibe das Wort mama"
+      en: "Write the word mama"
+  - type: word_copy
+    word: mal
+    instruction:
+      de: "Schreibe das Wort mal"
+      en: "Write the word mal"
+  - type: word_copy
+    word: und
+    instruction:
+      de: "Schreibe das Wort und"
+      en: "Write the word und"
+  - type: word_copy
+    word: hut
+    icon: hat
+    instruction:
+      de: "Schreibe das Wort hut"
+      en: "Write the word hut"
+  - type: word_copy
+    word: hand
+    icon: hand
+    instruction:
+      de: "Schreibe das Wort hand"
+      en: "Write the word hand"
+  - type: word_copy
+    word: hund
+    icon: dog
+    instruction:
+      de: "Schreibe das Wort hund"
+      en: "Write the word hund"
+  - type: word_copy
+    word: mund
+    icon: mouth
+    instruction:
+      de: "Schreibe das Wort mund"
+      en: "Write the word mund"
+  - type: word_copy
+    word: mond
+    icon: moon
+    instruction:
+      de: "Schreibe das Wort mond"
+      en: "Write the word mond"
+  - type: word_copy
+    word: halt
+    instruction:
+      de: "Schreibe das Wort halt"
+      en: "Write the word halt"
+  - type: word_copy
+    word: land
+    instruction:
+      de: "Schreibe das Wort land"
+      en: "Write the word land"

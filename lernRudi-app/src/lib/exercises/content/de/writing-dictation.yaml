@@ -1,0 +1,100 @@
+# Writing track - Woerter aus dem Kopf (look-cover-write + dictation)
+
+id: writing-dictation
+title:
+  de: "Wörter aus dem Kopf"
+  en: "Words from memory"
+intro:
+  de: "Erst merken, dann hören, dann schreiben."
+  en: "First remember, then listen, then write."
+category: schriftsprachlich
+
+tasks:
+  - type: word_memory
+    word: da
+    instruction:
+      de: "Schreibe da aus dem Kopf"
+      en: "Write da from memory"
+  - type: word_dictation
+    word: da
+    instruction:
+      de: "Schreibe das Wort, das du hörst"
+      en: "Write the word you hear"
+  - type: word_memory
+    word: tag
+    instruction:
+      de: "Schreibe tag aus dem Kopf"
+      en: "Write tag from memory"
+  - type: word_dictation
+    word: tag
+    instruction:
+      de: "Schreibe das Wort, das du hörst"
+      en: "Write the word you hear"
+  - type: word_memory
+    word: gut
+    instruction:
+      de: "Schreibe gut aus dem Kopf"
+      en: "Write gut from memory"
+  - type: word_dictation
+    word: gut
+    instruction:
+      de: "Schreibe das Wort, das du hörst"
+      en: "Write the word you hear"
+  - type: word_memory
+    word: oma
+    instruction:
+      de: "Schreibe oma aus dem Kopf"
+      en: "Write oma from memory"
+  - type: word_dictation
+    word: oma
+    instruction:
+      de: "Schreibe das Wort, das du hörst"
+      en: "Write the word you hear"
+  - type: word_memory
+    word: hund
+    icon: dog
+    instruction:
+      de: "Schreibe hund aus dem Kopf"
+      en: "Write hund from memory"
+  - type: word_dictation
+    word: hund
+    icon: dog
+    instruction:
+      de: "Schreibe das Wort, das du hörst"
+      en: "Write the word you hear"
+  - type: word_memory
+    word: hand
+    icon: hand
+    instruction:
+      de: "Schreibe hand aus dem Kopf"
+      en: "Write hand from memory"
+  - type: word_dictation
+    word: hand
+    icon: hand
+    instruction:
+      de: "Schreibe das Wort, das du hörst"
+      en: "Write the word you hear"
+  - type: word_memory
+    word: mund
+    icon: mouth
+    instruction:
+      de: "Schreibe mund aus dem Kopf"
+      en: "Write mund from memory"
+  - type: word_dictation
+    word: mund
+    icon: mouth
+    instruction:
+      de: "Schreibe das Wort, das du hörst"
+      en: "Write the word you hear"
+  - type: word_memory
+    word: mond
+    icon: moon
+    instruction:
+      de: "Schreibe mond aus dem Kopf"
+      en: "Write mond from memory"
+  - type: word_dictation
+    word: mond
+    icon: moon
+    instruction:
+      de: "Schreibe das Wort, das du hörst"
+      en: "Write the word you hear"
